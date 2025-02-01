@@ -1,0 +1,601 @@
+Célja:
+1. A stílusok (megjelenés) megváltoztatása a weblapon
+
+Módosíthatók :
+A) HTML TAG-ek stílusai. 
+pl.: main{color:red;}
+B) Osztályokba sorolt elemek stílusai 
+pl.: .XYclass{color:red;}
+C) EGyedi azonosítóval elátott elemek
+pl.: #egyediID{color:red;}
+D) Ezek kombinációi
+pl.: .XYclass li{color:red;} - szóközzel elválasztva csak akkor működik, ha az XYclass rajta van a tartalmazó TAG-en és a saját TAG-je <li> 
+Egy TAG-on belüli másik TAG megcélzása:
+nav > ul{margin: 10px;} - Itt a navigációs sáv <nav> -on belüli rendezetlen lista <ul> -re lesz igaz a szabályozás. 
+
+E) Pszeudo szelektorok (pseudo selectors) - az szabályozandó elem helyét a html dokumentumban valamilyen relációban adja meg:
+pl.:    li:last-of-type - az utolsó listaelemre szól.
+	h2:first-of-type - az első h2-es címre vonatkozik a dokumentumban
+	li:nth-of-type (2n) - az n-dik számú elemre szól, itt az n=2	
+	p:not(.bold){font-weigt:normal;} - a kivétel beállítható a TAG:not(amire ne vonatkozzon) -módon.
+
+
+F) Ál (tisztán CSS-el létrehozott) elemek (azaz Pseudo elements) helyét meghatározók (jelük a dupla :: )
+TAG::before{} - ezzel az adott TAG elé lehet célozni. A pseudo element az első child-ja lesz a TAG-nek. Ezzel lehet pl. beszúrni szöveget így:
+TAG::before{content:"szöveg";}. Azért fontos ez, mert a pseudo element addig nem is kerül renderelésre, amíg nincs tartalma. Ezért érdemes automatikusan content:""; szabályt is megadni.  
+TAG::after{}-ugyanaz csak utolsó childdal. 
+
+TAG::first-letter{font-size: 5rem; color:red; float:left;} - Egy szöveg első betűjét is így lehet megváltoztatni (iniciálé jelleggel) Ekkor ajánlott float:left;-et is beállítani, hogy körbefollya a szöveg a nagy kezdőbetűt, illetve adni a kezdőbetűnek egy kis margin-t is.
+
+F)A felhasználó akciójától függő szelektorok pl.: 
+a:hover - ha az anchor <a> tag fölé viszik a kurzort, akkor változik meg a CSS szabálya az itt leírtra
+
+ 
+F) Html TAG-re attribútumával hivatkozás:
+input[name="password"]{color:red;} -itt az attribútum értékét is megadom.
+span[class]{color:red;} -itt csak azt, hogy milyen típusú attribútuma legyen az adott TAG-nek
+
+De lehet csak az attribútumra hivatkozni a TAG típusa nélkül (tehát minden olyan elemre vonatkozik majd, aminek ilyen típusú és értékű attribútuma van):
+[data-theme='dark']{background-color: var(--dark)}
+
+Ha minden olyan TAG-re hivatkoznék, aminek van adott class-a IS, akkor így tehetem:
+span[class~="osztalyNev"] -az altGr+1 -el érhető el a ~ jel, és jelentése: includes 
+
+
+Minden elemre egyszerre alkalmazza a szabályt:
+*{color:red;}
+
+Kényszerített alkalmazás:
+p{color:red !important;} - az !important a tulajdonság értéke után írható. Ebben az esetben ez lesz a legerősebb szabály! Még ha csak egy TAG-hez is van rakva, akkor is erősebb mint az #IDszabály!
+
+HTML TAG-ek fazonírozása:
+Címsorok, Sorrendezetlen listák, paragrafusok, stb.-n lehet ezt:
+h1 {
+tulajdonság1 : értéke;
+tulajdonság2 : értéke;
+}
+címsor megnevezése, kapcsos-zárójelekbe a formázási parancs. 
+SŐT!
+Több TAG-et is felsorolhatok vesszővel elválasztva, így mindre igazak lesznek ugyanazok a formázási paracsok. 
+ul, p, ol, div{color:red;}
+
+
+Mértékegységek:
+___________________
+Általánosságban bármely CSS szabálynál megadhatók így:
+CSS-szabály:100mértékegység;
+
+Abszolút mértékegységek: 
+pixel: jele: px 
+centiméter (cm), miliméter (mm),  incs (in), és egyéb nyomdai mértékegységek...
+Relatív mértékegységek:
+a tartalmazó elem méretének százaléka: jele: %
+az éppen vonatkozó betűméret sokszorosa: jele: em
+a dokumentum alap betűméretének sokszorosa: jele: rem
+a képernyőméret szélességének 1%-a (viewport-width): jele: vw
+a képernyőméret magasságának 1%-a (viewport-height): jele: vh
+
+
+DE lehet maximalizálni az értéket, vagy minimum méretet is megadni így:
+a képernyőméret rövidebb oldalának 1%-a: jele: vmin
+a képernyőméret hosszabb oldalának 1%-a: jele: vmax
+Ezzel kizárhatjuk, hogy elnyúljon valamelyik irányba az adott elem, 
+akkor is, ha időközben megváltozik a látható felület (reszponzív lesz). 
+
+__________________________________________________
+Szöveg tulajdonságok:
+__________________________________________________
+SZÍN:
+color : red;
+szín : a szín angol neve - van belőlük rengeteg amit elfogad. VAGY
+color : #FFFFFF
+A szín hexadecimális kódja. VAGY
+color : rgb(255,255,255);
+Keverje ki a RedGreenBlue 0-255-ig tartó erősségéből a színt (kb. ugyanaz mint a Hexadecimális) (lásd még:SZÍNEK MEGADÁSA)
+
+Átlátszó szín kikeverése:
+background-color: rgba(248, 247, 216, 0.7); - ahol az utolsó tag az láthatóság szorzója (itt 0.7 = 70%)
+
+HÁTTÉR:
+background: blue;
+A háttér lehet szín (lásd fent), VAGY kép is:
+background-image: url("valami.png"); 
+background-size: cover; - a kép kitölti a teljes keretet.
+background-position:-300px 0px; - a háttér képet eltolja x, majd y pozíció mentén.
+  
+
+BETŰTÍPUS BEÁLLÍTÁS:
+1. Használhatok olyan konkrét betűtípust, ami minden gépen 99%, hogy rajta van:
+font-family: "Arial"; - Ha nincs rajta mégse, akkor ciki, mert máshogy néz majd ki.
+2. Csak a betűtípus kategóriát választom ki, ami nem pontosan azonos, de hasonló betűtípusok csoportja, amiből, ha van az adott gépen valamelyik, akkor kb. ugyanúgy jeleníti meg mint nálam itthon:
+Rákeresek Google-ön: "CSS font family categories" -és választok onnan egyet
+font-family: fantasy; - Itt nincs idézőjel!
+3. A weboldalam betöltésekor egy külső szolgáltatótól töltök be egy betűtípust. Ajánlott:
+fonts.google.com - ott kiválasztod, és bemásolod a HTML <head> részébe. Utána a "CSS rules to specify families" részből lehet szintén másolni a felhasználáshoz így:
+font-family: 'Edu VIC WA NT Beginner', cursive;
+
+Betűtípus megadásánál lehet egy fallback (tartalék)-ot is megadni, ha nem lenne elérhető az oda szánt betűtípus valamiért, vesszővel elválsztva az eredeti után így:
+CSSselector {font-family: Impact,serif;} - a serif a pót.
+
+BETŰ VASTAGSÁG 
+font-weight:100;
+Egy számot írsz, 100-900-ig. VAGY
+font-weight:bold; VAGY bolder VAGY lighter VAGY normal
+
+BETŰ MÉRET:
+font-size:60px;
+
+BETŰKÖZ:
+letter-spacing: 1px; - a normál helyett 1 pixel lesz a  távolság két karakter között.
+
+SORKÖZ:
+line-height: normal; - Alapértelmezett;
+line-height: 1.5; - másfeles szorzóval az eredeti
+line-height: 80%; - eredeti százaléka 
+
+NAGYBETŰS:
+text-transform: uppercase;
+
+DŐLTBETŰS:
+font-style: italic;
+_________________________________________
+KÜLSŐ-BELSŐ MARGÓ, ÜRES HELYEK
+_________________________________________
+
+MARGÓ:
+margin: 15px;
+Minden oldalon egyenlő távolságot ad meg, amit megadhatunk pixelben egybeírva így: 33px;
+/Ezt a megoldást nevezik Shorthand-for-all-sides  -nak/
+VAGY
+
+De minden oldalra lehet külön is szabályozni.
+margin-left:15px;
+margin-right: 21px;
+margin-top:0px;
+margin-bottom:10px; VAGY
+
+Az óra járásának megfelelően fent, jobb, lent, majd bal oldalon is lehet sorban így:
+margin: 12px 3px 6px 9px;
+/shorthand-for-different-sides/ VAGY
+
+Automatikusra állítani -ezzel lehet pl középre zárni is, ha szimmetrikusan mindkét oldalon / fent lent így van:
+margin-left:auto;
+margin-right:auto;
+
+
+SZÖVEG KÖZÉPRE, BALRA, JOBBRA ZÁRÁSA:
+text-align:center;
+text-align:left;
+text-align:right;
+FIGYELEM! Képeket is így kell zárni!
+
+Sorkizárt:
+text-align: justify;
+
+HASÁBOK:
+Az adott elem CSS-ébe ezt kell írni:
+ column-width: méret;
+
+_____________________________________________________
+DOBOZOKNÁL:
+_____________________________________________________
+Minden ami előbb volt,plusz még:
+
+ELTARTÁS A doboz SZÉLÉTŐL (pl.<div>-nél):
+padding: 15px; VAGY
+Egyszerre adom meg a fönt-lent (itt:15px) és a jobb-bal (itt:40px) értéket így: 
+padding: 15px 40px; VAGY lásd még MARGÓnál
+
+
+ÁRNYÉKVETÉS:
+box-shadow: 5px 15px 20px 25px grey; - Ahol 5px-re vízszintesen jobbra és 15px-re függőlegesen lefelé eltolt, 20px-nyi elmosódással és 25 px-nyi kiterjedéssel, szürke árnyék keletkezik.
+
+SZŰRŐK:
+A filter CSS szabály képes külön-külön szabályozni a fentieket a box-shadow-hoz hasonlóan, de pl. szöveggel is működik:
+filter:blur(5px); - elmosódott lesz 5 pixelnyire az adott objektum. 
+
+SZEGÉLY:
+Három értéket kér sorrendben: vastagság, stílus, szín így:
+border:1px solid red; - folyamatos vonal
+border:1px dotted red; - pöttyözött, stb.
+DE szét is lehet bontani egyesével:
+border-width: 1px; -egységesen körbe VAGY 
+border-width: 12px 3px 6px 9px; -külön minden oldal
+border-style: solid; -egységesen körbe VAGY
+border-style: solid dotted dashed double; -külön minden oldal
+border-color: red green blue black;
+
+border-radius: 20px; - a szegély sarkait lekerekíti, ennek sugarát adhatom meg.
+border-radius: 50%; - teljes kört /ellipszist kapok, magasság és szélességtől függően
+border:none; - szegély törlése alapértelmezetten szegélyezett dolgoknál (pl. button)
+
+MAGASSÁG ÉS SZÉLESSÉG:
+height: 200px; - magasság
+width: 400px;  - szélesség
+
+
+ELHELYEZÉS TÍPUSA: 
+display: inline; - szöveggel egy lesz az elem
+display: block; - egész sorra kiterjedő 
+display: none; - nem is jelzi ki (rejtett)
+
+FLEXBOX 
+
+display:flex; - rugalmas elrendezés ezt kell tovább szabályozni még:
+
+Szabályozható, hogy milyen SORRENDben helyezze el őket. Ehhez viszonyítás alapból az olvasás iránya. Alapértelmezés: 
+flex-direction: row;
+flex-direction: row-reverse; - sorba, de fordított sorrendbe rakja.
+flex-direction: column; - fentről le oszlopba rakja,
+flex-direction: column-reverse; - lentről fel oszlopba rakja,
+
+Szabályozható a fennmaradó üres területek elosztása a justify azaz IGAZÍTÁS
+	justify-content: space-between; - igazítsd a tartalmat: teret rakj közé!
+	justify-content: flex-start; - igazítsd a tartalmat: sor/oszlop elejére
+	justify-content: flex-end; - igazítsd a tartalmat: sor/oszlop végére.
+	justify-content: space-around; - igazítsd a tartalmat: teret rakj köréje egyenletesen!
+
+(Itt használható a gap: Xpx Ypx; CSS szabály finomhangolni a sorok és oszlopok közötti hézag mértékét pontosan is)
+
+Szabályozható, hogy TÖBB SORBA TÖRJE, ha nem fér ki a tartalmazó dobozba így:
+  flex-wrap: wrap; 
+
+align-items:center; - állítsd sorba az elemeket (függőlegesen, ha row, vízszintesen, ha column a flex-direction szabály)  így: középre!
+
+RÉSZLETES LEÍRÁS: https://css-tricks.com/snippets/css/a-guide-to-flexbox/
+
+Azonos oszlopszélesség flexboxszal:
+Az adott flex item CSS szabályai közé mindegyikre vonatkoztatva:
+flex-basis: 100%;
+Ekkor mindegyik azonos szélességű lesz, akármennyi legyen, mert mind kitöltené, és a flexbox leszabályozza őket egyenlőre.
+
+GIRD - Rácsszerkezet
+____
+
+A flexboxhoz hasonlóan az elrendezést lehet vele beállítani számos részletező paranccsal. Egy tartalmazó elemben kell a displayt beállítani először. 
+TARTALMAZÓ ELEM PARANCSAI:
+Két változata van:
+display:gird; - teljes szélesség használata
+ÉS 
+display:inline-gird; - csak egy rész használata
+
+Oszlopok szélességének meghatározása:
+grid-template-columns: auto auto auto; - így egyforma széles oszlopokba lesznek sorolva az elemek.
+grid-template-columns: 3fr 1fr 2fr; - egy különleges mértékegység a töredék vagy fraction azaz fr, ami a fennmaradó hely arányait szabályozza az fr oszlopok között.
+
+Az oszlopszélesség minimumát és maximumát is lehet szabályozni így:
+
+grid-template-columns: 1fr minmax(30px, 50%) 1fr; - ekkor a középső oszlop a 3-ból minimum 30px lesz, de max a teljes terület 50%-ig terjeszkedhet.
+
+Az oszlopok összevonása:
+Úgy lehet több hasábon átnyúló elemet a GIRD-be rakni, hogy megadjuk a kezdő és befejező oszlop számát a gird-column:; paranccsal így:
+grid-column: 1 / span 2; - itt az 1. oszlop terjeszkedjen ki (span-oljon) 2. oszlopra is.
+
+Ha nem tudjuk, hogy hány column lesz, de szeretnénk a teljes hosszában kiterjeszteni rá az elemet, akkor a -1 értéket adjuk (visszafelé körbe a végére jutunk az oszlopoknak).:
+grid-column: 1 / -1;
+Mivel sok oszlopunk lehet, érdemes value-nak a repeat() funkciót használni. A repeat kér argumentumot vesz be: repeat(hányszor ismételje, milyen értéket ismételjen)
+grid-template-columns:repeat(5, fr) - azaz 5 fr-t hozzon létre.
+
+grid-auto-flow: argumentum; -az automaikus elrendező algoritmusnak ezzel lehet megadni hogy hogyan illeszkedjenek a tartalmi elemek a rácsban.
+grid-auto-flow: row; - soronként tölti fel a hasábokat, ha kell ad hozzá új sorokat
+grid-auto-flow: column; - oszloponként tölti fel a hasábokat, ha kell ad hozzá új oszlopokat
+grid-auto-flow: dense; - az elemek mérete alapján pakolja őket minél sűrűbben (kb. mozaikszerűen), de ezzel felborul a HTML sorrendjük.
+grid-auto-flow: row dense; - A sorok szerint tölti fel, de "sűrűre" (angolul dense), így felborulhat a eredeti sorrend.
+grid-auto-flow: column dense; - ugyanaz oszloppal
+
+Középre zárás a grid-ben hasonló flexboxhaz, csak éppen 
+-content helyett -items megnevezést kapott.
+justify-items: center; - vízszintesen zárhatjuk az oszlopban középre a tartalmat.
+align-items: center; - függőlegesen zárhatjuk a sorban középre a tartalmat.  
+Shorthand is van hozzá:
+place-items: (align-items érték) (justify-items érték);
+ha csak egy értéket adunk meg, akkor ugyanúgy rendezi mindkét irányból.
+
+BLOCK elemek összerendezéséről: 
+I.) KÜLÖNBÖZŐ MÉRET esetén:
+A böngésző a relatív (%-ban megadott) szélességet abból számolja, hogy összeadja
+a megadott szélességet (width), plusz a paddingot plusz a szegélyt (border). Tehát ha megadom a width-et és a height-ot egy block elemnek, de teszek hozzá paddingot, meg bordert, akkor annyival szélesebb lesz a box. Ezeket vagy levesszük, VAGY
+box-sizing: border-box; - csak a width-et és a hight-ot vegye figyelembe a számításnál. Például: ha 100px a width, akkor a böngésző úgy számol, hogy a tartalom rovására zsugorítja az elemet, levonva a paddingot, margint, bordert. 
+box-sizing: content-box; - alapértelmezett - minden fentit figyelembe vesz
+
+____________________________________
+B) AZONOSÍTÓK, OSZTÁLYOK HASZNÁLATA:
+____________________________________
+Ha CSS-ben akarom csak az azonosítós TAG részét formázni, akkor így kell megadni:
+#azonositoNeve {
+color:red;
+}
+Ha CSS-ben akarom csak az azonosítós TAG részét formázni, akkor így kell megadni:
+.osztalyNeve {
+color:red;
+}
+
+ÖRÖKLÉS ALAPELVE (inheritance):
+Ha van egy tartalmazó doboz <div>, és abba rakok más elemeket, akkor minden igaz lesz rá, amit CSS-ben a <div>-class-ére már szabályoztam.
+Ezt elkerülni úgy lehet, hogy specifikálom, hogy a classon belül bizonyos elemekre legyen csak igaz valami szabály így:
+.classNév button{ color:red;} ekkor csak a gomb szövege lesz piros.
+
+SPECIFIKUSSÁG ALAPELVE (specificity):
+Azt jelenti, hogy ha két különböző forrásból is szabályoznánk ugyanazt a tulajdonságot, akkor a szorosabb kategoriával meghatározott győz.
+.mindenLegyenZold {color:green;} -nél erősebb a
+.mindenLegyenZold h3 {color:red;} - csak az osztállyal jelzett <h3>-as TAG-ekre
+Erősebb még az id="azonosító", mint a class="osztály".
+
+.mindenLegyenZold.nagybetu {color:purple} -NINCS SZÓKÖZ az osztályok között
+Ebben az esetben csak azokra az elemekre vonatkozik, akik mindkettő osztállyal jelölve lettek egyszerre, MÍG
+.mindenLegyenZold .nagybetu {color:purple} - VAN SZÓKÖZ az osztályok között
+Csak az első osztállyal megjelölt TAG-en belüli második osztállyal megjelölt TAG-eket választja ki , tehát olyanokat, melyeknek a class=""-ban nem mindkettő szerepel egyszerre, hanem a magasabb szintű (pl. <div>) "mindenLegyenZold", az abba ágyazott TAG pedig "nagybetu"-vel jelölt.
+
+LISTÁK:
+Sorrendezetlen listák <ul> stílusai:
+list-style-type: circle; - körök
+list-style-type: square; - teli négyzetek
+VAGY kép:
+list-style-image: url('sqpurple.gif');
+
+Sorrendezett listák <ol> stílusai:
+Különböző lista számozások lehetségesek:
+list-style-type: upper-roman; - nagybetűs római számos
+list-style-type: lower-alpha; - kisbetűs 
+list-style-type: none - Ha valmiért nem akarok listajelet
+Az upper VAGY lower mindkettőnél működik!
+
+
+
+__________________________________
+POZICIONÁLÁS:
+__________________________________
+Alapértelmezett:
+position:static; - Ahová amúgy is kerülne.
+
+Relatív pozíconálás: Ahhoz képest helyezem át az elemet, ahol az alapértelmezett/ máshol már leírt szabályok szerint lenne:
+position:relative;
+top: 2px; - felülről tolja el 2 pixellel pl.
+left: 10px; -balról tolja el 10 pixellel mondjuk.
+
+Abszolút pozícionálás: Alapértelmezésként a teljes weblaphoz képest helyezem el valahová az elemet. Figyelem! Ha az aljára teszem, akkor le kell tökig görgetni, hogy lássam!   
+position:absolute;
+top: 0px;
+right:0px; - A böngésző jobb felső sarkába pozícionálja így pl.
+Ha kötni akarom valamilyen tartalmazó elemhez, akkor a tartalmazó elem CSS-ébe be kell ínrni, hogy position:relative; -így lesz az a viszonyítási alapom.
+
+Fixált pozícionálás: Alapértelmezésként a weblap látható részéhez képest helyezem el valahová az elemet. Figyelem! Ha az aljára teszem, akkor görgetéskor is végig ugyanott látom! 
+position:fixed; 
+bottom:10px;
+right:10px; - a böngészőablak jobb-alsó sarkától 10-10 pixelre ragasztottam most.
+
+position:sticky; - ha lejjebb görgetjük a tartalmat, a már megjelent sticky elemek felgyűlnek. Csak akkor tűnnek el, ha feljebb görgetünk ismét annál, mint ahol megjelentek eredetileg.
+_________________________________________
+LINK (<a>)
+_________________________________________
+
+Speciális beállítások (pseudo-selectors):
+Ha a link fölé viszik a kurzort, akkor csináljon valamit, itt pl. kékre színezik:
+a:hover {color: lightblue;}
+Ha már volt kattintva, csináljon valamit:
+a:visited {color: purple;}
+Amikor éppen rákattintanak:
+a:active {color:white;}
+
+Ezeket a TAG:feltétel {} típusú szabályokat pseudo class-nak nevezik.
+
+Az aláhúzás eltüntetése:
+text-decoration:none;
+
+________________________________________
+KÉPEK MÉRETEZÉSE
+_________________________________________
+The CSS object-fit property is used to specify how an <img> or <video> should be resized to fit its container.
+fill - This is default. The image is resized to fill the given dimension. If necessary, the image will be stretched or squished to fit
+contain - The image keeps its aspect ratio, but is resized to fit within the given dimension
+cover - The image keeps its aspect ratio and fills the given dimension. The image will be clipped to fit
+	Itt lehet tologatni a képet, hogy megadjuk mi kerül 	levágásra és mi nem ezzel: 
+	object-position: 80% 100%; - csak %-al működik jól.
+
+none - The image is not resized
+scale-down - the image is scaled down to the smallest version of none or contain
+________________________________________
+KÉPEK MÓDOSÍTÁSA CSS-ben:
+________________________________________
+
+Az alap transformációkra mind képes a CSS,
+mint nyújtás, tükrözés, forgatás, stb
+https://developer.mozilla.org/en-US/docs/Web/CSS/transform
+
+Alapértelmezett:
+transform:none; -így lehet levenni is róla.
+
+Eltolás:
+transform: translate(-110px; 20%); - előbb az x, majd az y tengelyen tolom el.
+
+Nyújtás:
+transform: scale (2, 0.5); -itt is (X,Y) a sorrend, de szorzót kell megadni.
+
+Tükrözés:
+transform: scale (-1,-1); - valójában negatív számmal nyújtom, akkor tükrözöm!
+
+Forgatás:
+transform: rotate (0.5turn) - itt az óra járásának megfelelően forgat, a mértékegység turn, ahol az 1=360 fok! Fokban is meg lehet adni így: 180deg - fejjel lefelé forgat.
+
+Ferdítés:
+tranform: skew(10deg, 20deg) - ilyenkor a téglalap alakú keretből paralelogrammát csinál, X, Y tengely szintén. 
+
+
+ANIMÁCIÓ CSS-EL
+_____________________________________________
+A transform css paranccsal animálni is lehet.
+
+A mozgatás fix pontját forgatásnál a következő módon kell megadni:
+transform-origin: 0% 0%;
+
+A mozgások kulcsképkockáihoz parancs:
+@keyframes animacioNeve {
+from {top: 30px;}
+to {top:300px;}
+} - ahol létrehozunk egy animációt, amelynek a végállapotait kijelöljük a from (kezdőpont) és to (célpont) értékeket. A from {} és to {} értéke bármelyik animálható CSS tulajdonságot tartalmazhat, nem csak helyet, de betűméretet, színt, stb. A kulcskockák helye megadható még a % ponjával is így: 0% {} (from helyett) 20% {} ... 100% {} (to helyett).
+
+Animáció alkalmazása:
+CSSszelektor {
+animation-name: animacioNeve; - így lehet a @keyframes-el összekapcsolni
+animation-duration: 10s; - időtartama s, vagy ms-ban 
+animation-timing-function: linear; - gyorsulások-lassulások itt: egyenletes (=linear)
+
+animation-iteration-count:infinite; - ismétlések száma 1- végtelenig (=infinite)
+
+Shorthand az előbbi adatokkal:
+animation: animacioNeve 10s linear infinite; - de elvileg még egy csomó egyebet is tud fogadni lásd: https://developer.mozilla.org/en-US/docs/Web/CSS/animation
+
+
+KÉPEK LEVÁGÁSA:
+clip: rect(0px,60px,200px,0px); - a bal-felső saroktól számított koordináták mentén beállítható a kép levágásának sarkai.
+clip-path: circle (50%); - kör alakban levágja a kép felét.
+Egyébként működik más típusú elemekkel, pl szöveggel is.
+
+
+________________________________________________
+KÉPEK ELHELYEZÉSE
+________________________________________________
+
+A szöveg kép (vagy bármely látható elem) körölfutásához használható:
+float:left; - a bal oldalra zárja, és a szöveg körül fogja futni.
+float:right; - u.a., csak jobb oldalra zárva.
+Ha le akarjuk tiltani a körbefutást, akkor CSS-el így lehet:
+clear:right; - jobb oldalon nem megy a floatolt elem köré a szöveg. Ugyanez left-el is működik. Ez arra jó, hogy kivételt képezzünk a sok float-olt elem közül egy-kettőnél, egyébként simán nem használni a flatot esetleg???
+
+______________________________________________
+KÜLÖNBÖZŐ KÉSZÜLÉPTÍPUSOKRA OPTIMALIZÁLÁS
+______________________________________________
+  "et szabályoknak" (at -rules), vagy "media query" (média kérdés)-nek nevezzük őket.
+
+@media only screen and (max-width: 600px) {
+  body {
+    background-color: lightblue;
+  }
+} - Itt ha a képernyő maximum 600 pixel széles, akkor világoskék lesz a háttér. Mint látható a két szabály (only screen és (max-width:600px) "and" kötőszóval van kapcsolva egymáshoz.
+
+Can be used to check many things, such as:
+
+-width and height of the viewport
+-width and height of the device
+-orientation (is the tablet/phone in landscape or portrait mode?)
+-resolution
+Az et-szabályok gyűjteménye is {}-be kerül, és azon belül jönnek a klasszikus CSS szelektorok. 
+
+_________________________________________________________
+SZÍNEK MEGADÁSA:
+__________________________________________________________
+A) RGB színkeverési modell:
+fekete-fehér: csak minimális (0), vagy maximális (255) értéket kap.
+rgb(0,0,0) = black	rgb(255,255,255) = white
+
+primary (elsődleges színek) - maximlis értéket csak az egyik fő szín kap:
+rgb(255,0,0) = red  
+rgb(0,255,0) = green stb.
+
+secondary colors: - maximális értéket kap két fő szín:
+rgb(255,255,0) = yellow; magenta, cyan
+
+tertiary colors: - egy maximális (255) és egy fél (127) értékből áll:
+ rgb(255, 127, 0) -orange; spring green; violet;chartreuse green (green + yellow); azure (blue + cyan); and rose (red + magenta);
+
+B) HSL színkeverési modell:
+H -hue azaz árnyalat (0-360-ig fogad értéket színkör fok miatt)
+S - saturation azaz telítettség (0-100%-ig)
+L - lightness - világosság (0-100%-ig)
+
+Színátmenet létrehozása CSS-el:
+_______________________________
+Valójában egy képet hozunk létre, ezért csak ott használható, ahol képek amúgy is használhatók (pl. háttér)
+paraméterei: 
+-színátmenet iránya azaz gradientDirection fokban megadva (pl. 90deg), vagy  to right / to left/ to up /to down /to diagonally Alapértelmezésben 180deg, így akár el is hagyható.
+-színek (legalább kettő): rgb, hsl, hexadecimális, vagy színnév szerint akár. Csak szóközzel elválasztva opcionálisan adható meg annak a pontnak a távolsága, ahol az adott színnek lennie kell. Ez lehet px, %, stb.)
+
+Így:
+linear-gradient(gradientDirection, color1 50%, color2, ...);
+
+repeating-linear-gradient(gradientDirection, color1 5%, color2 10%, ...); - így csíkos lesz, ismétli a színátmenetet.
+
+radial-gradient
+
+Átlátszóság azaz opacity megadása:
+Az értéke lehet 0-100%, vagy 0.0 -1.0-ig;
+opacity: 10%; - 10%-nyi láthatósága lesz az elemnek. Ha tartalmazó TAG-re érvényes, akkor minden tartalmára is, így nehezen olvsható lehet a szöveg pl.!
+___________________________________________________________
+TATRALOM TÚLFOLYÁS:
+___________________________________________________________
+
+Ha nem fér ki a tartalom a tartalmazó elemben, akkor azt hívjuk 
+overflow-nak. CSS-ben szabályozható, hogy mi legyen vele ekkor:
+Csak block típusú elemeknél jó, és ha van magasság megadva.
+Alapértelmezett:
+overflow:visible; - egyszerűen folytatódik a szöveg "a levegőben" tovább a box-án túl.
+overflow:hidden;  - ami nem fér bele a tartalmazó elembe, az rejtve marad. Ez a verzió Js-ben scrollolható még scrollTo() paranccsal.
+overflow:scroll; - megjelenik egy görgetősáv x és y irányba is.
+overflow:auto; - megjelenik egy görgetősáv x és/vagy y irányba, de csak amelyikre szükség van.
+overflow:clip; - levágja a tartalmat - Js-ben se lehet scrollolni.
+Lehet az x és y dimenzió mentén is külön szabályozni így:
+
+_____________________________________________
+ÁL ELMEK (PSEUDO ELEMNTS) BESZÚRÁSA
+_____________________________________________
+
+Lehet CSS-el ál emeket létrehozni, amelyek nincsenek a HTML kódban, ezzel pl üres helyeket csinálni.
+.CSSclass::after{
+content: "";
+width:600px;} - így teszünk bele egy 600 pixeles üres helyet.
+Ha a contetnt parancsba írunk, akkor lehet szöveget is beszúrni CSS-el a pseudo elementbe:
+content: "CSS-el beszúrt szöveg";
+
+_____________________________________________
+LASSÚ GÖRGETÉS (ARIA)
+____________________________________________
+Ezzel a funkcióval ha az oldalon belül ugranánk egyet a tartalom egy későbbi/korábbi pontjára, helyette gyorsan végiggörget és úgy jut el arra a helyre. Ez segít követhetőnek megtartani a történéseket.
+ÍGy:
+*{scroll-behavior:smooth;} - így minden elemre (* -CSS szelektor miatt) igaz lesz, hogy lassan görget oda.
+
+_____________________________________________
+BILLENTYŰPARANCS BEÁLLÍTÁSA (ARIA)
+_____________________________________________
+
+Gombokhoz lehet rendelni billentyűparancsot is így:
+
+<button  accesskey="s">Gomb szövege</button> - itt az s billenytyű plusz a böngésző alapbeállítású parancsbillentyűjének együttes lenyomásával lehet aktiválni a gombot. Ez is ARIA (akadálymentesítő) funkció 
+
+_____________________________________________
+VÁLTOZÓK CSS-BEN
+_____________________________________________
+A CSS-ben is lehet előre meg nem határozott értéket adni szabályoknak, és az értéket később külön bevinni. Tipikusan a színek meghatározásánál használják, vagy a megjelenítőképernyő szabályozással.
+DEFINIÁLHATÓ:
+a.) GLOBÁLISAN (bárhonnan elérhető a dokumentumban):
+:root {
+--blue: #1E90FF;
+--white: #ffffff;
+} - itt a dokumentum "gyökerében" definiálom. A változónév mindig két kötőjellel kezdődik, de kb. bármi lehet amúgy.
+
+b.) LOKÁLISAN (csak helyileg elérhető):
+Abban a CSS szabályban érhető el, ahol definiálták. Így:
+.classX{
+--blue: "blue"
+}
+Ezzel a root-ban tárolt érték helyileg felül is írható.
+
+BEÍVHATÓ ÍGY:
+var(--Valtozonev) - a var azaz variable rövidítése, zárójel majd a mindig két kötőjellel kezdődő név jön.
+pl.: background-color: var(--blue);
+A biztonság kedvéért megadható egy második (fallback) konkrét érték, ha a változó nem lenne definiálva, nem támogatná a böngésző, stb. Ekkor ugyanúgy, mint a betűtípusnál, vesszővel elválasztva a változónév mőgé írjuk így:
+background-color: var(--my-green, green);
+
+JavaScript-el is be lehet állítani CSS változó :root-ban tárolt értékét így:
+document.documentElement.style.setProperty('--my-green','green');
+
+DINAMIKUS ÉRTÉKEK FÜGGVÉNYEKKEL:
+min(elsődleges, másodlagos)
+Több számszerű értéket fogad vesszővel elválasztva, és mindig azt választja, ami éppen a kisebb. Így:
+width: min(2em, 5vw); - itt alapból 2em lesz a szélesség, de ha az a rövidebb, akkor 5vw.
+
+max(elsődleges, másodlagos, harmadlagos)
+Több számszerű értéket fogad vesszővel elválasztva, és mindig azt választja, ami éppen a legnagyobb. Így:
+width: max(2em, 5vw); - itt alapból 2em lesz a szélesség, de ha az a rövidebb, akkor 5vw.
+
+clamp(legkisebb, preferált, legnagyobb)
+Három értéket fogad, a legkisebb megengedett, a preferált, és legnagyobb megengedett értéket. Dinamikusan vált köztük. 

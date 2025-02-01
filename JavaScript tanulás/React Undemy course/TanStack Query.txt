@@ -1,0 +1,194 @@
+A TanStack Query egy React-tól független gyártótól származó kiegészítő csomag.
+Első sorban a FETCH-elés és SERVER STATE kezelés megkönnyítésére lehet használni Reactban, és más async funkciókhoz, (de más funkciókkal nem foglalkozunk itt.)
+
+# TELEPÍTÉSE:
+Node.js kell hozzá.
+Ekkor a terminálba:
+npm i @tanstack/react-query
+
+# Rövid példa a használatra:
+```javascript
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+} from '@tanstack/react-query'
+
+const queryClient = new QueryClient()
+
+export default function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Example />
+    </QueryClientProvider>
+  )
+}
+
+function Example() {
+  const { isPending, error, data } = useQuery({
+    queryKey: ['repoData'],
+    queryFn: () =>
+      fetch('https://api.github.com/repos/TanStack/query').then((res) =>
+        res.json(),
+      ),
+  })
+
+  if (isPending) return 'Loading...'
+
+  if (error) return 'An error has occurred: ' + error.message
+
+  return (
+    <div>
+      <h1>{data.name}</h1>
+      <p>{data.description}</p>
+      <strong>👀 {data.subscribers_count}</strong>{' '}
+      <strong>✨ {data.stargazers_count}</strong>{' '}
+      <strong>🍴 {data.forks_count}</strong>
+    </div>
+  )
+}
+```
+Ez a kód egy egyszerű React alkalmazás, amely a @tanstack/react-query könyvtárat használja az adatok aszinkron lekérdezésére és kezelésére. Lássuk részletesen:
+
+## Könyvtárak importálása
+
+```javascript
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+} from '@tanstack/react-query'
+```
+A @tanstack/react-query könyvtárból három dolgot importálunk:
+
+QueryClient: a QueryClient osztály felelős a lekérdezések kezeléséért és gyorsítótárazásáért.
+QueryClientProvider: ez a komponens egy kontextust biztosít a React komponens fán keresztül, amelyben elérhetővé teszi a QueryClient-et.
+useQuery: egy hook, amelyet a lekérdezések futtatására használunk; aszinkron adatlekérésre és annak állapotának kezelésére szolgál.
+QueryClient példány létrehozása
+javascript
+Kód másolása
+const queryClient = new QueryClient()
+Itt létrehozunk egy QueryClient példányt, amely majd az összes lekérdezésünket kezeli és gyorsítótárazza.
+
+## Fő App komponens definiálása
+```javascript
+
+export default function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Example />
+    </QueryClientProvider>
+  )
+}
+```
+Az App komponens a teljes alkalmazás kezdőpontja. A QueryClientProvider köré csomagolja az Example komponenst, és a client propként átadja neki a queryClient példányt. Ezzel a kontextus minden belső komponens számára elérhetővé válik, hogy használni tudják a @tanstack/react-query szolgáltatásait.
+
+## Example komponens definiálása
+```javascript
+Kód másolása
+function Example() {
+  const { isPending, error, data } = useQuery({
+    queryKey: ['repoData'],
+    queryFn: () =>
+      fetch('https://api.github.com/repos/TanStack/query').then((res) =>
+        res.json(),
+      ),
+  })
+```
+Az Example komponens végzi az adatlekérést a useQuery hook segítségével:
+
+queryKey: A queryKey egy egyedi azonosító a lekérdezés számára. Itt a ['repoData'] kulcsot használjuk, ami segít a react-query-nek a gyorsítótárazás és újrakérés kezelésében.
+queryFn: A queryFn egy függvény, amely végrehajtja az adatlekérést. Itt a fetch API-t használjuk, hogy adatokat kérjünk le a GitHub API-ról. Az URL végén a TanStack/query elérési út a TanStack projekt query repository-jára mutat. A lekért adatokat .json()-ná alakítjuk.
+Visszatérési értékek és feltételek
+```javascript
+  if (isPending) return 'Loading...'
+  if (error) return 'An error has occurred: ' + error.message
+```
+isPending: Ha az adatok lekérése még folyamatban van, Loading... szöveget jelenítünk meg.
+error: Ha hiba történt az adatok lekérésekor, egy hibaüzenetet adunk vissza.
+Adatok megjelenítése
+```javascript
+
+  return (
+    <div>
+      <h1>{data.name}</h1>
+      <p>{data.description}</p>
+      <strong>👀 {data.subscribers_count}</strong>{' '}
+      <strong>✨ {data.stargazers_count}</strong>{' '}
+      <strong>🍴 {data.forks_count}</strong>
+    </div>
+  )
+}
+```
+Ha az adatlekérés sikeres volt, megjelenítjük a következő adatokat:
+
+data.name: a repository neve
+data.description: a repository leírása
+data.subscribers_count: a repository figyelőinek száma 👀
+data.stargazers_count: a repository csillagainak száma ✨
+data.forks_count: a repository forkolásainak száma 🍴
+Ez a kód tehát aszinkron módon lekérdezi egy GitHub repository adatait, és megjeleníti azokat a felületen, kezelve a töltési és hibaállapotokat is.
+
+# Főbb alapfogalmak
+
+* 1. Queries
+* 2. Mutations
+* 3. Query Invalidation
+
+## 1. Queries
+  Bármilyen Promise alapú adatkinyerésre használható (főleg fetch-re fogjuk.)
+ Alpja a useQuery hook, amelyet olyan komponensekben lehet használni, amik <QueryClientProvider client={peldanyositottQueryClient}>-be vannak ágyazva.
+
+A useQuery TanStak hook minimum elvárja a következő beállításokat:
+	- queryKey : egyedi azonosító a lekérdezéshez
+	- queryFn : a funkció, ami egy fetch-et tartalmaz
+
+Visszad egy objektumot, egy sor információval az API hívással kapcsolatban. A legfontosabbak:
+	- status: ez "pending"/"success"/"error", ugyanezek boolen-ben:
+	- isError, isPending, isSucces;
+	- data: Maga a fetch eredménye, ami akkor áll rendelkezére, ha már lezárult (isPending == false) és sikeres volt a fetch (isSucces== true || isError == false).
+	- error: Ha hiba van, rendelkezésre áll egy error object, amiből pl. a message kiolvasható.
+ÍGY:
+```javascript
+
+ const { status, data, error } = useQuery({
+    queryKey: ['todos'],
+    queryFn: fetchTodoList,
+  })
+```
+## 2. Mutations
+Ez teszi lehetővé a szerver oldali változtatásokat (create/ update/ delete, vagy egyéb szerver oldali side-effects).
+Ehhez a useMutation TanStack hookot használhatjuk.
+
+A mutation can only be in one of the following states at any given moment:
+
+isIdle or status === 'idle' - The mutation is currently idle or in a fresh/reset state
+isPending or status === 'pending' - The mutation is currently running
+isError or status === 'error' - The mutation encountered an error
+isSuccess or status === 'success' - The mutation was successful and mutation data is available
+Ha pedig már lefutott:
+error - ha a mutation hiba állapotban van, akkor az error objektum elérhető az 'error' property-n keresztül.
+data - ha a mutation sikeres, azaz 'success' állapotban van, akkor az adat objektum a 'data' property-n keresztül.
+
+Használata így:
+```javascript
+ const mutation = useMutation({
+    mutationFn: (formData) => {
+      return fetch('/api', formData)
+    },
+  })
+```
+## 3. Query Invalidation - lekérdezés érvénytelenítés
+	A TanStack Query egyik előnyös funkciója, hogy tárolja az előző szerver kérések eredményét, ezzel gyorsítva a felhasználói élményt. Ugyanakkor emiatt lehetséges, hogy nem aktuális ("stale" "állott") szerver-információt ad vissza (például, mert a User éppen megváltoztatta azt). Ennek lehet elejét venni a Query Invalidation-el, mert így mi törölhetjük az előző lekérdezés adatait.
+
+A QueryClient metódusa ez.
+```javascript
+// Invalidate every query in the cache
+queryClient.invalidateQueries();
+// Invalidate every query with a key that starts with `todos`
+queryClient.invalidateQueries({ queryKey: ['todos'] })
+```
+Az invalidateQueries metódus hatására elavulttá (stale) válik a megadott lekérdezés, 
+am miatt:
+	* 1) Felülírja a useQuery hookok "staleTime" bellításait (ami nem tudom mire kell);
+	* 2) Ha éppen folyamatban van lekérdezés az adott azonosítóval, akkor az újraindul

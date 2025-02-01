@@ -1,0 +1,28 @@
+GAME LOOP
+_________________________
+A game loop az az ismétlődés, ami időbeliséget ad a játék futásának.
+
+Egy képkocka létrehozása:
+window.requestAnimationFrame(kepkockaFunkcio)
+Ez egy beépített funkció, ami animációk képkockáinak létrehozására van kitalálva. Ennek a bemenete egy pointer az általunk írt funkcióra (itt: kepkockaFunkcio), amit ha meghív a böngésző, hogy az majd elvégzze a következő képkockához szükséges számításokat. 
+
+window.requestAnimationFrame() csak egy képkockát rajzol ki, de a tipikus display (képernyő?) frissítési gyakorisága alapból 60x frissít 1mp alatt, de 75, 144 hz-re is beállítható. Amikor a böngsző a háttérbe kerül, akkor leáll a loop.
+
+A Callback (általában "main") funkció
+window.requestAnimationFrame(kepkockaFunkcio)-be küldött callback (itt: kepkockaFunkcio) egyetlen argumentumot kap: a legutóbbi frissítés időbélyegét. Ha a követjező esedékes képernyő-újrarajzolás-hoz több window.requestAnimationFrame() lett beütemezve, akkor azok egyszerre rajzolódnak majd ki.
+
+Ahhoz, hogy valódi game loop legyen újra és újra ki kell rajzolni a képernyőt. - Ehhez újra és újra meg kell hívni a Callback-et a requestAnimationFrame-el. Hogy ez megtörténjen a callbacken beül, annak végén hívjuk meg a maint rekurzívan így:
+
+function main(currentTime){
+    window.requestAnimationFrame(main);
+}
+És így indítjuk be a loopot:
+window.requestAnimationFrame(main);
+
+A frame-gyakoriság beállítása:
+Pontosan azért küldi az előző frissítés időbélyegét a callback-nek a window.requestAnimationFrame(), mert így lehet kalkulálni az időtávot, amire elhelyezkednek egymástó a kirajzolások. Természetesen ehhez el kell menteni az előző kirajzolás idejét egy külső változóba, és ahhoz tudjuk hasonlítani a mostanit.
+Ha nem telt el elég idő, akkor egyszerűen anélkül rajzoljuk ki a kövi frame-et, hogy bármit tennénk.
+
+Ter
+
+

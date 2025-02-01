@@ -1,0 +1,306 @@
+
+
+Alap HTML alkotóelemek:
+Először közölni kell a böngészővel, hogy miféle dokumentum jön így: (egyes böngészők kérik csak, de elvárás.):
+<!DOCTYPE html>
+Minden HTML file-nak így kell kezdődnie és végződnie:
+<html></html> 
+Ennek bővítménye az oldal nyelve:
+<html lang="en"> - így angol, <html lang="hu"> így magyar
+Lennie kell még:
+<head></head> - ide kerül, ami nem jelenik meg, de "fejben kell tartania" a böngészőnek. pl:
+-A böngésző fejlécében a cím így:
+<title>cím</title>
+-betűtípusok, ha nincsenek a gépen, így:
+<link rel="preconnect" href="https://fonts.akarmilyenhely.com/"> -ez azt jelenti, hogy előre kell betölteni az oldalt.
+
+-meta adatok ide:
+<meta charset="utf-8"> - a karakterkódolás típusa
+-stílus-szabályok (Cascading Style Sheets azaz CSS) így:
+<style> minden szokásos CSS szabályok </style> VAGY- lehet külön fileba is írni (pl. file.css), és azt hivatkozni. Ekkor az kerül a head-be, hogy: 
+ <link rel="stylesheet" href="behivatkozva a .css file helye">
+
+-üzenetek a felhasználónak
+
+Vannak olyan meta-adatok, amiknek a name="meta-adat-típus" és content="érték" argumentumokon keresztül lehet beadni az értékét így:
+
+<meta name="description" content="leírás"> - itt például a keresőnek adjuk meg a tartalmat szöveggel (pl. Google)
+
+<meta name="keywords" content="kisállatok, pets, hamster, hörcsög, petshop"> - itt  a keresőnek már a konkrét keresési kulcsszavakat írjuk vesszővel elválasztva. Ez a kereséshez optimalizálja
+<meta name="author" content="Máté Zoltán Géza">
+
+CSOPORTSÍTÓ azaz container elemek:
+<body></body> Csak az jelenik meg, ami ebbe kerül.
+
+Vannak nem látható, csak csoportosításra való TAG-ek: 
+Főrész azaz main jele: 
+<main></main>
+Fejléc:
+<header></header>
+Lábléc:
+<footer></footer>
+Oldalsáv:
+<aside></aside>
+Navigációs sáv:
+<nav></nav>
+Szekció azaz section jele:
+<section></section> 
+Csoport azaz division jele:
+<div> - célja: a kódon belül csoportokat hozni létre
+vége: </div>
+
+Vannak önmagukban álló (self closing, mert nincs </TAG> -je) elemek, mint:
+-elválasztóvonal:
+<hr>
+-sortörés azaz break line:
+<br> 
+
+Parancs típusok:
+Soron belüli, azaz inline típus:
+Pl. a formázások (<strong>,<em>,<span> stb.); 
+
+Egész sor szélességre kiterjeszkedődő, azaz block megjelenítésű típus:
+pl. paragrafusok <p> sortörés, azaz break line:<br>
+(CSS-ben lehet átprogramozni a display:inline; VAGY display:block;-al) 
+
+Cím azaz header jele: 
+<h1> -főcím vége: </h1>
+<h2> -től <h6> -ig mehetnek alcímek
+<!--Ezek nem csak azért fontosak, mert így szép, hanem mert a keresőrobotok ezek alapján (derítik fel?) indexelik az oldalunk tartalmát--> 
+
+Bekezdés azaz paragraph jele:
+<p> vége: </p>
+Fontos, hogy a paragrafusban nincs alapból formázás. Az oldal teljes hosszára kiterjed a szöveg, akár egy nagyon hosszú sorba, az entereket, tab-okat egyszerűen nem veszi figyelembe. Ha azt akarjuk, hogy tördelve legyen a szöveg, használhatunk több <p>-t, <br>-t (lásd később), vagy <pre> TAG-et. A <pre></pre> közötti szöveg-be írt enter/tabulátor már meglátszik a renderelt Html-en is.
+
+Félkövér azaz strong jele:
+<strong>félkövér lett itt</strong>
+Dőlt azaz emphasized jele:
+<em>dőlt lett itt</em>
+
+Sorrendezetlen felsorolás azaz Unordered List és a tartalma a listaelem azaz List Item. 
+Van egy tartalmazó elem aminek jele: <ul></ul>
+És a listaelemek benne (alapértelmezésben pöttyök):
+<li></li>
+
+Sorrendezett felsorolás azaz ordered list és a tartalma a listaelem azaz list item. 
+Van egy tartalmazó elem aminek jele: <ol></ol>
+És a listaelemek benne automatikusan számozva ugyanúgy:
+<li></li>
+___________________________________________
+	Az ŰRLAP
+___________________________________________
+Űrlap azaz form jele: <form ATTRIBÚTUM  ></form>
+Alapértelmezett attribútuma: 
+<form action=""> Mit kezdjen az űrlapba bevitt adattal, hová küldje azt feldolgozásra.  
+
+Bevitel azaz input jele:<input> - záróTAGje nincs! 
+Funkciója: Adatot lehet bevinni vele. 
+Attribútumai: 
+<input type="text"> - szöveget lehet begépelni vele.
+<input type="password"> - amit beírsz, kipöttyözve látod csak. Megadható minimum hosszúság így:
+<input type="password" minlength="8"> - itt 8 karakteresnek kell legalább lennie.
+Megadható a jelszó összetétele is így:
+<input type="password" pattern="[a-z0-5]{8,}">
+<input type="email"> - tudja a böngésző, hogy email, vár bele @-ot, és kitöltetheted esetleg automatikusan.
+Előre beírható érték javaslat így:
+<input type="text" value="cherry"> -ekkor ki kell törölni a cherryt és mást beírni, mert ha marad, akkor el is menti az értéket. 
+<input type="text" placeholder="Mit kell beírni"> - ez is kitölti a mezőt, de nem ajánlott szöveg, csak magyarázat, üresnek tekinti a böngésző küldéskor.
+
+<input type="number" min="5" max="100" step="5" defaultValue='50' > - Itt számot fogad, tipikusan életkor megadására, és beállítható minimum (min) és maximum (max) érték hozzá. Ha felfelé nyomjuk (step) 5-ösével emelkedik, alapból pedig (defaultValue) 50-en kezdi.  
+
+<input type="date"> - ekkor egy dátumválasztó felület jelenik meg, amire kattintva naptár is nyitható. 
+
+Előre meg lehet határozni, hogy milyen választ fogadunk el. Ennek nem csak a tipus, hanem a felépítés szempontjából is konfigurálható regex (lásd javascript) segítségével a pattern argumentummal így: 
+<input type="text" pattern="[A-Za-z]{3}"> - itt pl. kis és nagybetűkből álló három tagú karaktersort fogad csak el az input mező. Ekkor ajánlott a title="Kis és nagybetűből álló három karakter" üzenetet is csatolni argumentumként. 
+
+Egyszerű választásos kérdőívhez:
+<input type="radio"> - FONTOS ilyenkor kötelező a name="kérdésNeve" attribútum megadása, hogy tudja a böngésző, melyik tételek tartoznak egy kérdés alá. Érdemes még id="" megadása, a válasz belső nevével. Címke azaz <label> is csatolható két féleképpen, vagy beletesszük az input TAGET a label TAG-ek közé így:
+<label><input type="radio">Cimkém</label>
+VAGY
+Használom a for attribútomot a címkéhez így:
+<input type="radio" id="azonosito"><label for="azonosito">Cimkém</label>
+Itt is kiválasztható alapértelmezett így: 
+<input type="radio" checked> - ekkor alapból be lesz pipálva.
+Kötelezővé tehető a válasz a befogadáshoz, ha a required attribútumot használjuk így:
+<input type="text" required>
+
+Többszörös választásos kérdőívhez:
+<input type="checkbox"> Itt is érdemes name="" és id=""-t megadni.
+
+Egyéb beviteli TAG-ek: 
+Szintén hosszú szöveg beíratható nem <input>-tal így:
+<textarea rows="10" cols="30">Alapértelmezett szöveg</textarea> - itt van záró TAG! Megadható a sorok és "oszlopok mérete" a rows="" és a cols="" attribútummal. 
+Érdemes a TAG-ek közé írás helyett inkább placeholder="" -be írni a javaslatot, mert előbbit kitöltött értéknek veszi, míg utóbbi kattintáskor törlődik.
+Ez is <label></label>, vagy label for="kérdésIDje" -t igyényel. 
+
+<input type="file"> - bármilyen file bevitelt lehetővé tesz, (ami megnyitható a böngészővel) és elérhetővé válik szerkesztésre is akár. Én arra használtam, hogy háttérképet tettem feltölthetővé a PIxBox-ban.
+
+CIMKÉZÉS FORMOKBAN: 
+________________
+
+
+AKADÁLYMENTESÍTÉS:
+Az akadálymentesítés nemztközi protokollja az ARIA - ennek utána kell nézni, ha akadálymentes weblapot csinálunk.
+<ul aria-labelledby="címkeID-je"> - ha egy összefogó TAG minden gyerekét ugyanúgy akarom felcímkézni, akkor jó ez az argumentum. Itt minden <li>-nek az lesz az EGYIK labelje, ami a hivatkozott TAG szövegtartalma.
+
+Bizonyos dolgokat (rövidítéseket pl.) a gyengénlátók számára ki kell fejteni, de úgy, hogy csak a screenreader program számára látszódjon, amúgy ne. Erre szokásos eljárás:
+a kifejtendő rész után tenni:
+<span class="sr-only">Kifejteni szavakkal ami nem látható vagy érthető</span>
+A .sr-only class CSS-e:
+.sr-only{
+position: absolute;
+width: 1px;
+height: 1px;
+padding: 0;
+margin: -1px;
+overflow: hidden;
+clip: rect(0, 0, 0, 0);
+white-space: nowrap;
+border: 0;
+} - ezzel a CSS-el nem fog látszódni, de az olvasó progi felolvassa.
+
+
+GOMBOK:
+_______
+Gomb azaz button jele: <button></button>
+rányomsz, akkor végrehajtja a <form action-ját, amit beprogramoztál hozzá.
+Attribútuma:
+<button type="button"> - vak nyomógomb, nyomkodhatod világnak
+<button type="submit"> - alapértelmezés, végrehajtja a <form action-ját, amit beprogramoztál hozzá.
+<button type="reset"> - Visszaállítja az alapértelmezett tartalmat, ha az nincs akkor kiüríti a <form>-ot
+
+LEGÖRDÜLŐ MENÜ
+______________
+A legördülő menühöz azaz dropdown-hoz NEM kell az input, hanem <select></select> TAGok közé kell tenni az opciókat így: 
+<select>
+<option>egyik</option>
+<option>másik</option>
+</select>
+Ezt is érdemes megcímkézni <label>-be ágyazva a <select> TAGokat. Az <option> TAG-ek közé mehetnek a szövegek, az első fog látszani alapból, ez lehet pl. "select one" -felirat, mint instrukció. Ahhoz, hogy a beküldött információ kezelhető legyen a back-enden adni kell az opciókhoz értéket a value="" attribútummal így:
+<select>
+<option value="">Válassz egyet!</option> - ez üres, mert nem infó!
+<option value="1">egyik</option>
+<option value="2">másik</option>
+</select>
+
+Lehet még előre kiválasztani egy opciót a selected attribútummal így:
+<select><option selected>alapételmezett válasz</option></select>
+
+
+A kérdések elválasztásához:
+<fieldset></fieldset> Egybe foglalja (vizuálisan kerettel is) a kérdés válaszopcióit.
+
+A keret vonalára írt cím:
+<legend>Cím</legend> A <fieldset> bővítménye lehet.
+
+____________________________________________
+GOMBOK HASZNÁLATA:
+____________________________________________
+Már a HTML-be be kell illeszteni a javascript funkció nevét. Az onclick="" attribútummal egészítem ki  button TAG-et, majd megnevezem a function-t a javascriptből.
+<button onclick="myFunction()">Gomb szöveg</button>
+_____________________________________________
+ARIA (akadálymentes) BILLENTYŰPARANCS BEÁLLÍTÁSA
+_____________________________________________
+
+Gombokhoz, linkekhez lehet rendelni billentyűparancsot is így:
+
+<button accesskey="s">Gomb szövege</button> - itt az s billenytyű lenyomásával lehet aktiválni a gombot, de böngészőkként változik, hogy milyen kísérő billenytűt kell hozzá még nyomva tartani! 
+
+Azonosítók:
+Minden TAG-nek lehet adni azonosítót a későbbi programozáshoz, ami egy ATTRIBÚTUM, így a <>-be kell beírni a parancs után szóközzel elválasztva. Jele:  
+<TAG id="azonosítónk">
+
+Valaminek a címkje azaz label for jele:
+<label for="korábban már megadott címke neve"></label>
+A korábban beazonosítózótt (id="azonsító") parancsot lehet becímkézni ezzel. 
+
+Valaminek lehet osztálya azaz class jele is:
+Ez is olyan mint az azonosító, csak több helyre is be lehet írni, és ezeket együtt kezelve lehet CSS-ben programozni:
+<valamiTAG class ="osztálynév"> 
+
+_________________________________
+KÉPEK BEILLESZTÉSE:
+_________________________________
+
+Képet így kell behivatkozni:
+<img src="source azaz forráshely a weben" alt="helyettesítő szöveg vakoknak"> 
+Lehet megadni HTML-ben is méreteket (bár jobb CSS-ben) így:
+<img width="300" height="200" src="./xyz.jpg"> - ekkor 300x200 px-es lesz, mert px-ként értelmezi alapból a számot. 
+
+Ha nagy képet akarunk betölteni, és valósznű lassú internete van a fogadó oldalnak, akkor használható a loading="lazy" attribítum az <img> TAG-hez. Ekkor előbb minden mást tölt be a böngésző, és csak akkor a képet, ha oda görgetünk.
+
+Tartalék FALLBACK kép beállítása így:
+<img src="source azaz forráshely a weben" onerror="this.onerror=null; this.src='tartalék forráshely'" >
+Itt ha nem elérhető az első forráshely, akkor a másodikkal próbálkozik. Fontos, hogy szimpla idézőjelbe legyen téve a fallback forráshely, hogy betöltődjön!
+
+__________________________________
+VIDEÓ/HANG BEILLESZTÉSE:
+__________________________________
+
+Van a böngészőknek beépített videó- és hanglejátszójuk is. 
+A videó beszúrása:
+A <video> TAG-en keresztül érhető el, amibe be kell ágyazni a forrás <source> TAG-et, src="" attribútummal. Ekkor csak a kezdő képkocka látszik. Ahhoz, hogy le is játsza a <video>-ba további érték nélküli attribútumok kellenek: 
+controls - ekkor jelenik meg a play és az idősáv.
+autoplay - ekkor lejátsza a videót 1x amint betöltődött. 
+A <source> attribútuma:
+type="video/mp4" - így adhatjuk meg a böngészőnek, hogy milyen videótípusról van szó, habár manapság már a modern böngészők nem kérik ezt. 
+így:
+<video controls autoplay>
+<source src="video.mp4" type="video/mp4">
+</video>
+
+A hang lejátszás a <audio> TAG-al
+Hasonló a Videóhoz, ugyanúgy <source tag és azonos attribútum típusok vannak>
+
+<audio controls>
+  <source src="horse.ogg" type="audio/ogg">
+  <source src="horse.mp3" type="audio/mpeg">
+  Your browser does not support the audio tag.
+</audio>
+
+_________________________________
+HIPERHIVATKOZÁS / LINK:
+__________________________________
+
+Jele:
+<a href="https://akarmi.hu" target="ujablak">Link</a>
+
+Argumentuma:
+href="a linket ide kell beírni"
+
+target="_blank" - így új lapot nyit a böngészőben, mert alapértelmezettként lecseréli az aktuális oldalt az újra.
+
+Ez ABSZOLÚT hivatkozási forma, mert az interneten a pontos helyét adom meg.
+
+Van RELATÍV hivatkozási forma is, ha ugyanazon a 
+szerveren van fenn a hivatkozott állomány. Ekkor 
+<a href="./akarmi.htm" >Akármi</a> A DOS-os jelöléseket lehet alkalmazni, mit anno a cd paraancs után írtam volna.
+
+<a rel="noreferrer"> - a rel="noreferer" megtiltja a böngészőnek, hogy a belinkelt célnak megküldje, hogy honnan hivatkozták be.
+
+OLDALON BELÜLI HIVATKOZÁS:
+<a href="#aCelIdje">A Cél</a> - ekkor meg kell adni az azonosítót az elemhez, amire ugorjon <TAG id="aCelIdje">
+
+________________________________________
+TÁBLÁZATOK KÉSZÍTÉSE
+________________________________________
+
+Nagyon bonyolúlt, nem érdemes vele vesződni, de kell ismerni az elemeket:
+
+<table></table> - maga a táblázat befoglaló eleme.
+<caption></caption> - táblázat címe, vagy ennek kell lennie az első TAG-nek a táblázatban, a táblázat után is írható.
+<thead></thead> - a táblázat fejléce
+<tbody></tbody> - a táblázat lényegi, adatokat tartalmazó része
+<tfooter></tfooter> - a táblázat lábléce
+<tr></tr> - táblázatsor - ebbe ágyazzuk az adatokat (<td>), belső alcímeket (<th>) 
+<td></td> - táblázat adat 
+<th></th> - táblázaton belüli cím (table header)
+Cellák egyesítése:
+<td rowspan="2">kétsor egyben</td> - itt két sorba (az alatta levő cellára is) kiterjed Ekkor a következő sorba eggyel kevesebb <td> kell, mivel oda is számít. Ezt nehezebb tervezni, mert ugyanabban a oszlopban ki kell hagyni az adatot.
+
+____________________________________________________
+MAGYARÁZAT SZÖVEGGEL ELEMEKHEZ (title="cím")
+_____________________________________________________
+title='Magyarázó szöveg!'
+Bármilyen TAG attribútuma lehet. Ha az elem fölé visszük a cursor-t, akkor kiírja sárga mezőben a title szövegét.
+

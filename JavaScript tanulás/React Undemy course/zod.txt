@@ -1,0 +1,107 @@
+A Zod, react-hook-form és MUI <TextField> használata kombináltan egy elegáns megoldás az űrlapok validálására a React-ben. A Zod-ot a validáció logika definiálására használhatjuk, míg a react-hook-form kezeli az űrlap állapotát, a MUI <TextField> pedig a komponens megjelenítését biztosítja. Íme egy példakód, ami bemutatja, hogyan valósítható meg ez:
+
+Telepítendő csomagok
+Győződj meg róla, hogy telepítetted a szükséges csomagokat:
+
+bash
+Kód másolása
+npm install @mui/material react-hook-form zod @hookform/resolvers
+Példakód
+tsx
+Kód másolása
+import React from 'react';
+import { useForm, Controller } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+
+// Zod séma validációhoz
+const schema = z.object({
+  firstName: z.string().min(2, { message: 'A keresztnév legalább 2 karakter legyen' }),
+  lastName: z.string().min(2, { message: 'A vezetéknév legalább 2 karakter legyen' }),
+  email: z.string().email({ message: 'Érvényes email címet adj meg' }),
+});
+
+// FormData típus Zod alapján
+type FormData = z.infer<typeof schema>;
+
+export default function App() {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>({
+    resolver: zodResolver(schema),
+  });
+
+  const onSubmit = (data: FormData) => {
+    console.log('Űrlap adatok:', data);
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <Controller
+        name="firstName"
+        control={control}
+        defaultValue=""
+        render={({ field }) => (
+          <TextField
+            {...field}
+            label="Keresztnév"
+            error={!!errors.firstName}
+            helperText={errors.firstName?.message}
+            fullWidth
+          />
+        )}
+      />
+
+      <Controller
+        name="lastName"
+        control={control}
+        defaultValue=""
+        render={({ field }) => (
+          <TextField
+            {...field}
+            label="Vezetéknév"
+            error={!!errors.lastName}
+            helperText={errors.lastName?.message}
+            fullWidth
+          />
+        )}
+      />
+
+      <Controller
+        name="email"
+        control={control}
+        defaultValue=""
+        render={({ field }) => (
+          <TextField
+            {...field}
+            label="Email"
+            error={!!errors.email}
+            helperText={errors.email?.message}
+            fullWidth
+          />
+        )}
+      />
+
+      <Button type="submit" variant="contained" color="primary">
+        Küldés
+      </Button>
+    </form>
+  );
+}
+Kódmagyarázat
+Zod séma: Meghatározzuk az űrlap bemenetek szabályait a z.object használatával.
+A min és email metódusok biztosítják az adat típusát és hosszát.
+react-hook-form:
+A useForm horgot használjuk az űrlap állapotának kezelésére.
+A zodResolver biztosítja, hogy a Zod séma alapján validáljunk.
+Controller komponens:
+Az MUI <TextField> és a react-hook-form között hidat képez, így az űrlapvezérlők együttműködhetnek.
+Hibaüzenetek: Az MUI error és helperText attribútumaival kezelhetők a validációs hibák.
+Működés közben
+Ha egy mező nem felel meg a Zod séma szabályainak, a hozzá tartozó hibaüzenet jelenik meg.
+A Küldés gombra kattintva a validált adatokat látod a konzolon.
+Ez a megközelítés skálázható és egyszerűen fenntartható nagyobb űrlapokhoz is.

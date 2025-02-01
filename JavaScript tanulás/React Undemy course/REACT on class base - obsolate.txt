@@ -1,0 +1,136 @@
+A régi fajta React még osztály alapon működött. Egyes nagyon régi oldalak még ma is használják, érdemes ismerni valamennyire.
+
+Az ilyen fájlt így kell kezdeni:
+import React from 'react'; -be kell importálni a könyvtárt, bár az újabbaknál már nem fontos ez, ha class használunk még elengedhetetlen.
+
+Ez classokon alapult, így a JSX készítő funkciók helyett classok vannak. A classnak mindig van egy render metódusa, és abban van JSX kód visszaküldve. ÍGY:
+
+class App extends React.Component {
+	render(){
+ 	  return (
+ 	  <h1> EZ az APP.js</h1>
+	)
+	}
+}
+
+KOMPONENSEK LÉTREHOZÁSA CLASS ALAPON:
+
+Minden azonos mint a funkció alapú komponenseknél, de a class alapúakhoz be kell importálni a komponens könyvtárat is így:
+
+import React, {Component} from 'react';
+
+class Hello extends Component {
+    render() {
+        return <h1>{this.props.udvozlet}</h1>
+    }
+}
+
+export default Hello;
+
+ITT: az osztály amit létrehoztunk használja (extends) a  beimportált Component csomagot, van neki render metódusa a JSX kóddal. Hasonlóan a funció alapú változathoz lehetnek props-ok, azaz a JSX elem magasabb szinten (pl. az App.js-ben) történő meghívásakor attribútumként beküldött adatok. Itt a szöveget küldjük be magasabb szintről a parent JSX render metódusában így: <Hello udvozlet={"Csá!"}/> Végül exportáljuk a classt, hogy használhassuk máshol. 
+
+STATE HASZNÁLATA CLASS ALAPON:
+Amikor kiterjesztünk egy Class-t akkor a kiterjesztett class meghívásához használnunk kell a super() parancsot, illetve a super.szuperMethodusa() úton lehet elérni a kiterjesztett class metódusait. Ez a React-nál is így van, ezért, ha szükségünk van state metódusra, akkor kell a JSX készítő class-unknak is konstruktorra, amiben meghívhatjuk a super()-t is. A construktorral hozatjuk létre a state-et is this.state néven, ami egy objektum lesz.  Így:
+
+class App extends React.Component{
+constructor(){
+    super();
+    this.state = {
+	egyikState: '0',
+	masikState: ''
+	}
+}
+onValtozas(){
+//Az az eseménykezelő, ami a state-et fogja változtatni
+const kapottErtek
+setState({egyikState: kapottErtek})
+}
+
+render(){    return( 
+            <h1>State használat</h1>
+    );}
+}
+
+A második szakasz az a handler metódus, amiben a this.setState()-en belül a this.state key-eit az új value megadásával írhatjuk felül. 
+
+FORMÁZÁS:
+Előre gyártott CSS minták komponensekhez itt:
+https://tachyons.io/-n!
+A Ract projekt mappájában kell idítani a 
+npm install tachyons@4.12.0 parancsot.
+Majd importálni kell az index.js-be így:
+import 'tachyons';
+
+Ezek után a JSX készítő fájlban className ="" -be lehet egyszerűsítve a különböző CSS formázásokat beírni pl:
+bg-light-blue //világoskék háttér
+pa3 // 3-as padding
+Fel vannak sorolva ezek a tacyons.io-n.
+
+Hasznos eszköz még: 
+https://cssgradient.io/ - gradient-eket csinálni.
+
+KOMPONENS FÁJL KÉSZÍTÉSE:
+
+.jsx kiterjesztésű fájlok a hagyományos komponensfájlok a Reactban. Szokás volt a fájlnévben is jelezni a komponenst így:
+valami.component.jsx
+
+Tartalma:
+import React from "react";
+
+A props -ot úgy is lehet használni, hogy rögtön a JSX készítő funkció paraméterénél megejtünk egy destrukturálást így:
+
+const Terminator = ({id,name,serialNumber}) =>{
+return <p id={id}>{name}, SN: {serialNumber}</p>
+} 
+Mint látható sehol sem írom le, hogy props.id, mert már eleve destrukturáltam a props objektumot.
+
+ÉLETCIKLUS METÓDUSOK:
+Olyan függvények, amik a komponens létezésének bizonyos fázisában futnak. HA JÓL ÉRTEM, többségük nem kötelező, mert arra jók, hogy a folyamatot személyre szabjuk. Az itt leírt sorrendben hívja meg őket a React, ha léteznek.
+
+A Komponensek "életének" 3 fő szakasza van:
+I.) Mounting
+II.) Updating
+III.) Unmounting
+
+I.) Mounting:
+...............
+Amikor a DOM-ba kerül a komponens által leírt Elment. 4 beépített metódust hívnak meg ekkor:
+1.
+constructor() // itt hívjuk a super(props)-ot, hogy örökölhessen a React.Component-től
+2.
+getDerivedStateFromProps(props,state) // ahogy a neve is mutatja ez hozza létre a props-ok által leírt példányát a komponensnek, de úgy, hogy a state-et is beveszi  argumentumként, feldolgozza
+3.
+render() // ez mindig kötelező elem, ekkor kerül a DOM-ba az Element
+4.
+componentDidMount() //olyan változtatásokhoz, amikhez már a DOM-ban kell lennie az Elementnek pl. aszinkron változtatások, később letöltődő elemekhez
+
+II.) Updateing:
+...............
+Akkor következik, ha változás történik a komponens state-ében vagy a neki lepasszolt props-okban.
+Ebben a sorban futnak le ebben a szakaszban a beépített funkciók:
+1.
+getDerivedStateFromProps() // ugyanaz a metódus mint a mountingnál, ez változtatja a state-et, ha a props változik útközben
+2.
+shouldComponentUpdate() // ez dönti el, hogy kell-e update-elni ezt a komponenst. Boolean-t ad vissza, alapból true, tehát ha nem változtatom, akkor biztosan fogja updatelni. Ha false, akkor nem megy tovább a 3.-ra már. 
+3.
+render()
+4.
+getSnapshotBeforeUpdate() 
+// azt teszi, ami a neve, elmenti a state és props update előtti értékét (így össze lehet majd vetni, hogy volt-e változás)
+5.
+componentDidUpdate() 
+// kéz a kézben jár az előzővel, mert ez végzi el az összehasonlítást, és annak következményeit foganatosítja a DOM-ban
+
+III.) Unmounting: 
+.................
+Egyetlen metódusa van:
+1.
+componentWillUnmount() //
+Akkor hívódik meg, mielőtt törlésre kerülne a DOM-ból az adott komponens.
+
+forrás:
+https://www.w3schools.com/react/react_lifecycle.asp
+
+
+API HÍVÁSOK REACT-BÓL:
+Az API (Application Programming InterFace) Alkalmazás Programozási Felület magyarul.

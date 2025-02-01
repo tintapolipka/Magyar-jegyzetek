@@ -1,0 +1,161 @@
+Application Programming Interface
+Olyan közvetítő, amivel programot lehet írni egy platformra. Az interface olyan felszín, ami egyszerűsíti, absztrahálja a mögé rejtett működést, és irányíthatóvá teszi a felhasználója számára. Min
+
+REST
+Representational State Transfer
+A manapság (2019) legnépszerűbb API a webhez. Azokat a rendszereket, amelyek eleget tesznek a REST megszorításainak, "RESTful"-nak nevezik
+
+Kliens oldal (web-browser)
+Abban adjuk meg az általános forrás helyazonosítót azaz 
+Universal Resource Locator (URL)-t ami tartalmazza a az elérési utat is így az
+Universal Resource Identifyer (URI) egy pontosított fajtája.
+
+Az URL a HyperText Transfer Protocol (http)-vel kezdődik.
+Ezen a kommunikációs sémán át küldünk egy URI-t (kinek küldöm) és egy felszólítást (GET = aggyá'!, vagy POST = fogaggyad!). A kérés a 'request'.
+Az üzenet eljut a... 
+Szerver oldal-ra, ami feldolgozza, és választ 'response' küld vissza a kliensnek.
+
+Az üzenet felépítése:
+Response HTML (Hypertext Markup Language)-ben van megfogalmazva és a browser rendereli (lefordítja).
+	Az elküldött request és a fogadott response felépítése:
+	header: ez tartalmaz további infókat arról, hogy milyen formában várja a választ. HTTP header fields wikipedia szócikkben a részletezés.
+
+A REST alapelvei:
+1. Kliens-szerver architektúra 
+(Client-Server Architecture)
+A kliensek el vannak különítve a szerverektől egy egységes interfész által. ÍGY a csak a szerver foglalkozik adattárolással, és csak a kliens foglalkozik a felhasználói felülettel vagy a kliens állapotával. ÍGY a szerverek egyszerűbbek és áthelyezhetőek, a kliensektől fejleszthetőek külön is.
+
+2. Állapotmentesség (Statelessness)
+Az állapotmentesség egy olyan kommunikációs protokoll, amiben a kérést fogadó szerver nem tárol el adatot a kliensről. Minden egyes kérés bármelyik klienstől tartalmazza az összes szükséges információt a kérés kiszolgálásához, és minden állapotot a kliens tárol.
+
+https://hu.wikipedia.org/wiki/REST#A_HTTP_p%C3%A9ld%C3%A1ja
+
+3.Gyorsítótárazhatóság (Cacheable)
+A kliensek és a közvetítők képesek gyorsítótárazni a válaszokat. A válaszoknak ezért közvetlenül vagy közvetve tartalmazniuk kell, hogy gyorsítótárazhatóak-e vagy sem. Így elkerülhető, hogy a kliens téves vagy elavult adatokat használjon fel újra. Egy jól implementált gyorsítótár lehetővé teszi, hogy teljesen megkerüljünk egyes kliens-szerver interakciókat, ezzel megnövelve a rendszer skálázhatóságát és a teljesítményét.
+
+
+4. 
+Egységes interfész (Uniform Interface)
+Az egységes kliens-szerver interfész alapvető a RESTful rendszerek tervezéséhez. Egyszerűsíti és elválasztja az architektúrát. Ezáltal lehetővé teszi, hogy egymástól függetlenül fejlődjenek az egyes részek.
+
+5. Réteges felépítés (Layered System)
+Egy kliens általában nem tudja megmondani, hogy közvetlen csatlakozott-e a végpont szerverhez, vagy közvetítő segítségével. A közvetítő szerverek megnövelhetik a rendszer skálázhatóságát terheléseloszlással és megosztott gyorsítótárak használatával.
+
+CRUD 
+A 4 alap művelet amit az  adatbázisokkal dolgozó applikációknak meg kell tudni csinálni: 
+Create, Read, Update, Delete.
+Ugyanezek HTTP-ben rendre:
+POST/PUT, GET, PATCH, DELETE
+
+Az infó gyakran JSON-ban jön 
+(JavaScript Object Notation)
+
+______________________________________________
+RENDEZÉSRE VÁRÓ (Saját kutakodásból összehordott) online kommunikációs parancsok:
+_______________________________________________
+
+FILE INTERFACE 
+---------------------------------------------
+(interfész = olyan felület ami mindkét kommunikáló oldal számára érthetőre fordítja a kommunikáció tartalmát)
+Infókat tárol a (feltöltött?, betöltött?) fileokról, és lehetővé teszi, hogy JS segtségével weboldalak hozzáférhessenek. 
+
+A File -ok általában FileList objektumból nyerhetők ki, úgy, hogy a felhasználó <input type="file">-t használ /or from drag and drop operation's DataTransfer object. Ez még nemtommi/
+*******KÉSŐBB EZT IS KIKUTATNI*****
+FileList:
+---------
+JS-el így lehet elérni az <input>-ba a felhasználó által feltöltött fileok listáját:
+const file = document.getElementById('imputMezoAzonositoja').files[0];
+Egy collection-t ad vissza ezért kell a [0] a végére.
+
+Hogyan lehet online eredetű file-okat tárolni a felhasználói gépen?
+A) Blob objektum segítségével
+A Blob objektum egy módosíthatatlan, nyers adat 'buborék' amit ki lehet olvasni szövegként (Blob.text()) vagy binárisan (Blob.arrayBuffer()), vagy át lehet alakítani (Blob.stream()) ReadableStream segítségével, hogy egyéb módon legyen feldolgozva.
+
+Konstruktora a Blob(). Ha új blobot hozunk létre, akkor egy tömbbe fűzi össze az összes argumentumként beadott adatot.
+Két nekem fontos beépített metódus:
+
+Blob.prototype.text()
+Szövegként értelmezi a Blob objektum tartalmát, és (aszinkron promise-el) UTF-8 kódolással adja vissza azt.
+
+URL generálása Blob objektumhoz:
+URL.createObjectURL(blobObjektumNeve);
+
+URL generálása File objektumhoz:
+URL.createObjectURL(document.getElementById('inputAzonitoAhovaFeltoltottem').files[0])
+Ha már nem kell tovább az URL:
+ (mert mondjuk töröltük a file-t)
+URL.revokeObjectURL(blobObjektumNeve);
+
+
+
+FileReader objektum:
+___________________
+
+A felhasználó gépén tárolt fileokat aszinkron módon tudja beolvasni, és műveleteket végrehajtani rajtuk.
+
+Bemenetként használja: 
+File / Blob objectumot, amit FileList-tel azonosít.
+CSAK AZOKHOZ FÉRHET HOZZÁ, AMIT A FELHASZNÁLÓ TÖLT ODA!
+
+Konstruktora:
+
+FileReader() - létrehozás:
+let ujFileReader = new FileReader();
+
+Properties:
+a)
+FileReader.readyState
+Mivel a háttérben tölti be olvasásra a filet, így ez jelzi, hogy készen van-e már. Állapotai:
+EMPTY - értéke: 0 Jelentése: még semmit se töltött be
+LOADING - értéke: 1 Jelentése: a betöltés folyamatban van
+DONE - értéke: 2 Jelentése: készen van a beolvasás
+
+b)
+FileReader.result  
+Ha kész van a betöltés, így lehet elérni a tartalmát
+
+c)
+FileReader.readAsText()
+Ezzel az új FileReader a teljesen betöltött adatot tartalmazó Blob-ot beolvasva szövegként adja vissza annak tartalmát. 
+ÍGY:
+ const [file] = document.querySelector('input[type=file]').files;
+  const reader = new FileReader();
+reader.readAsText(file);
+
+
+Használata:
+https://developer.mozilla.org/en-US/docs/Web/API/File_API/Using_files_from_web_applications
+
+1.) Először beolvassuk a file-t a gépről:
+Html-el ÍGY:
+<input type="file" id="input" multiple onchange="openFile(event)" />
+Itt a multiple azt jelenti, hogy több fájl is beolvasható.
+Az onchange="funkcio(event)" -Az input tartalmának változtatására aktiválja az argumentumként beadott funkciót.  
+
+VAGY Event listenerrel a 'change' eventtel és this.files; paraccsal 
+ÍGY:
+const inputElement = document.getElementById("input");
+inputElement.addEventListener("change", handleFiles, false);
+function handleFiles() {
+  const fileokListaja = this.files; 
+/* Innentől a fileokLisaja collectionnal lehet dolgozni a funkción belül*/
+}
+
+2.) Elérherhető már a FileList mint egy html collection ÍGY:
+document.querySelector('input[type=file]').files[0];
+
+Ugyanígy elérhető a collection 
+FileList.item(0) - itt a szám az indexe annak a file-nak, amit el akarok érni.
+
+A fileList-ek File objektumokból állnak, amik több infót is tartalmazó objektumok, mint pl. a file neve (.name) mérete (.size), fájltípus (.type) stb. Ezek kíírathatók, felhasználhatók különböző célokra. 
+
+3. Mostmár használhatóvá vált a FileReader így: 
+ -> létrehoztuk egy új fájlolvasó objektumot (fajlOlvasom):
+const fajlOlvasom = new FileReader(); 
+ -> küldhetjük a feladatot a FileReaderünknek:
+fajlOlvasom.readAsText(fileBehivatkozva);
+ -> meg kell várni míg végez a  FileReader a betöltéssel, amit egy olyan eventlistener tud nekünk jelzi, amit így kell létrehozni:
+fajlOlvasom.addEventListener('load'),function(){
+let eredmeny = fajlOlvasom.result;
+return eredmeny;
+}

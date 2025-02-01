@@ -1,0 +1,66 @@
+kommenthagyás:
+Itt javasolják:
+<!-- kezdete és a vége pedig -->
+
+indentation - behúzás. Itt két space-et ajánlanak a nested (belefoglalt) elemek jelzésére.
+ self closing TAG - azok a HTML TAG-ek, amiknek nem kell záró TAG a végére.
+
+attribute - attribútum - speciális szavak az elemen belül, amik módosítják annak viselkedését.
+
+<a> TAG az anchor azaz horgony rövidítése és a hiperhivatkozásra utal.
+<a target="_blank"> az új lapon történő megnyitáshoz.
+
+<figure> TAG: ebbe lehet összefoglalni részeket a  figure jelentése illusztráció, alakzat (is)
+<figcaption></figcaption> - az adott <figure>-on belüli TAG leírását jelöli
+<em>dőltbetűs írás</em>
+<strong>félkövér írás</strong>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0" /> - Ez a sor arra való, hogy mobilról is jól nézzeen ki az oldal. 
+
+<article></article> - összetartozó információkat tartalmazó TAG
+
+Betűtípus megadásánál lehet egy fallback (tartalék)-ot is megadni, ha nem lenne elérhető az oda szánt betűtípus valamiért, vesszővel elválsztva az eredeti után így:
+CSSselector {font-family: Impact,serif;} - a serif a pót.
+_________________________________________________________
+SZÍNEK MEGADÁSA:
+__________________________________________________________
+A) RGB színkeverési modell:
+fekete-fehér: csak minimális (0), vagy maximális (255) értéket kap.
+rgb(0,0,0) = black	rgb(255,255,255) = white
+
+primary (elsődleges színek) - maximlis értéket csak az egyik fő szín kap:
+rgb(255,0,0) = red  
+rgb(0,255,0) = green stb.
+
+secondary colors: - maximális értéket kap két fő szín:
+rgb(255,255,0) = yellow; magenta, cyan
+
+tertiary colors: - egy maximális (255) és egy fél (127) értékből áll:
+ rgb(255, 127, 0) -orange; spring green; violet;chartreuse green (green + yellow); azure (blue + cyan); and rose (red + magenta);
+
+B) HSL színkeverési modell:
+H -hue azaz árnyalat (0-360-ig fogad értéket színkör fok miatt)
+S - saturation azaz telítettség (0-100%-ig)
+L - lightness - világosság (0-100%-ig)
+
+Színátmenet létrehozása CSS-el:
+_______________________________
+Valójában egy képet hozunk létre, ezért csak ott használható, ahol képek amúgy is használhatók (pl. háttér)
+paraméterei: 
+-színátmenet iránya azaz gradientDirection fokban megadva (pl. 90deg), vagy  to right / to left/ to up /to down /to diagonally Alapértelmezésben 180deg, így akár el is hagyható.
+-színek (legalább kettő): rgb, hsl, hexadecimális, vagy színnév szerint akár. Csak szóközzel elválasztva opcionálisan adható meg annak a pontnak a távolsága, ahol az adott színnek lennie kell. Ez lehet px, %, stb.)
+
+Így:
+linear-gradient(gradientDirection, color1 50%, color2, ...);
+
+Átlátszóság azaz opacity megadása:
+Az értéke lehet 0-100%, vagy 0.0 -1.0-ig;
+opacity: 10%; - 10%-nyi láthatósága lesz az elemnek. Ha tartalmazó TAG-re érvényes, akkor minden tartalmára is, így nehezen olvsható lehet a szöveg pl.!
+
+_____________________________________________
+BILLENTYŰPARANCS BEÁLLÍTÁSA
+_____________________________________________
+
+Gombokhoz lehet rendelni billentyűparancsot is így:
+
+<button  accesskey="s">Gomb szövege</button> - itt az s billenytyű lenyomásával lehet aktiválni a gombot. 

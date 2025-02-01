@@ -1,0 +1,58 @@
+assignment operator  - egyenlőség jel (=)
+curly brace - kapcsos zárójel {}
+initialize - "kezdő pozíciót", értéket adni egy változónak
+backtick - `` - az Alt Gr+7 billenytűkombinációval elérhető idézőjel
+asterisk  - * - csillag
+hyphen character - kötőjel (-)
+caret character - ^ (alt Gr + 3-as)
+ampersand - & "and" jel
+exclamation mark - ! felkiálltó jel
+
+undefined - meghatározatlan - annak a változónak az értéke, amit nem inicializáltun még
+NaN azaz Not a Number - hibakód
+assign - definiál 
+concatenate - összefűz - két változó egyesítése amiből az egyik string
+camelCase - azAmódAhogyASzavakatNagybetűvelKezdveEgybeÍrunk
+
+increment - azonos mennyiséggel NÖVEL (pl i++)
+decrement - azonos mennyiséggel CSÖKKENT (pl i++)
+
+floating point numbers /floats - tizedestört
+remainder - maradék az  osztásban (a%b)
+
+Escaping Literal Quotes - amikor a string-ből kilépek \-jellel, hogy sima karakternek, ne műveleti jelnek vegyen valamit 
+
+immutable - megváltoztazhatatlan tartalmú (változó, pl. const)
+re-assignable - újra definiálható
+
+invoke - meghívni a függvényt (function)
+
+parameter - ami a funkció bemenete
+global scope variable - mindenhonnan elérhető a program futása során (miután létrehozták)
+
+queue -  is an abstract Data Structure where items are kept in order. New items can be added at the back of the queue and old items are taken off from the front of the queue.
+
+Strict Equality Operator - === -azaz szigorú egyenlőség jel: a tartalmom és változótípus együttes megegyezését összehasonlító jel
+inequality operator  - != - azaz nemegyenlőség jel
+greater than operator - > - azaz nagyobb mint jel. Itt fontos, hogy a bal oldalihoz hasonlítunk mindig.
+greater than or equal to operator - >= -nagyobb vagy egyenlő jel
+
+less than operator  - < - kisebb mint jel 
+
+logical and operator - && - logikai ÉS jel
+
+logical or operator - || - logikai vagy jel
+
+
+property - az objektum címkéjét hívják így, ez az objectName{propety:value, 'property 2':value2} Csak akkor kell 'idézőjelbe' tenni a property nevét, ha több szóból áll.
+
+Regular expressions vagy regex - string típusú adatok összehasonlítására való kifejezésmódok.
+
+wildcard character - bármit behelyettesítő karakter (ami a JS-ben a pont (.)
+
+arity - annak száma, amennyi argumentumot fogad a funkció
+
+currying - The technique of converting a function that takes multiple arguments into a sequence of functions that each take a single argument
+
+
+

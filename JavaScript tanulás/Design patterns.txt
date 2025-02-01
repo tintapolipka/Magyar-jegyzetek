@@ -1,0 +1,273 @@
+# Design patterns
+Forrás:
+https://www.freecodecamp.org/news/javascript-design-patterns-explained/#heading-what-are-design-patterns
+https://fireship.io/lessons/typescript-design-patterns/
+Ajánlott:
+https://www.youtube.com/watch?v=tv-_1er1mWI
+
+Eredetileg az 1994-es "Design Patterns: Elements of Reusable Object-Oriented Software" című könyvben jelentek meg C++ programozási nyelvre. Objektum orientált nyelvekre találták ki azért, hogy csökkentsék a kód ismétléseket. Ezek közül nem mind alkalmazható JavaScriptben, de ami igen, azok itt vannak:
+
+## Három csoportjuk van:
+* Creational Design Patterns
+* Structural Design Patterns
+* Behavioral Design Patterns
+---
+## Creational Design Patterns
+### 1. Singleton:
+Egy olyan objektumot jelöl, aminek csak egy módosíthatatlan változata létezik a kódban. Érdemes globálisan definiálni, hogy mindenhonnan elérhető legyen a kódban.
+
+Typescriptben:
+A logikája az, hogy a class-on belül egy constructor-tól különböző metódussal hozzuk létre önmaga példányát. Ez a példány "static" előtaggal védett, így a class-hoz tartozik, és nem az egyes példányokhoz, tehát minden példány osztozna rajta. Ugyanakkor nem is lehet létrehozni "new" kulcsszóval új példányt máshogyan, csak a belső metódussal, mivel a constructor-t "private" előtaggal definiáljuk, ami csak a class-on belülről elérhető. Végül az egyetlen példányt a classon belül létrehozó metódusban ellenőrizzük, hogy van-e már belső példány. Ha van, akkor visszadja, ha nincs akkor létrehozza és utána adja vissza a kész singletont.
+
+~~~typescript
+
+class Settings {
+
+  static instance: Settings; /*
+	static kulcsszó: Ez azt jelenti, hogy az instance változó az osztályhoz tartozik, nem az egyes példányokhoz. Minden osztálypéldány ugyanazt a instance értéket osztja meg.
+	Típusmegjelölés: Az instance típusát Settings osztályra állítjuk, azaz csak ilyen típusú értékeket vehet fel.
+Ez a változó tárolja majd a Singleton példányt.
+*/
+  public readonly mode = 'dark';
+  
+  private constructor(){}
+/*
+A private kulcsszó biztosítja, hogy az osztály konstruktorát kívülről (azaz a new kulcsszóval) ne lehessen meghívni.
+Ez a Singleton egyik legfontosabb része, mert így garantálható, hogy csak az osztályon belül (statikus metódusokon keresztül) lehet példányt létrehozni.
+*/
+
+  static getInstance(): Settings {
+    if (!Settings.instance) {
+      Settings.instance = new Settings();
+    }
+
+    return Settings.instance;
+  }
+	/*
+Ez egy statikus metódus, amely az osztály szintjén érhető el (így: Settings.getInstance()). A célja, hogy biztosítsa a példányhoz való hozzáférést. Ellenőrzi, hogy a Settings.instance változó tartalmaz-e már egy példányt.
+Ha nincs példány (azaz undefined az értéke), akkor létrehoz egyet. Mivel a constuctor privát, ezért csak belülről hozható létre példánya, ami itt történik meg. Ha azonban már létezik egy példány, akkor az újbóli létrehozás helyett azonnal vissza is tér vele.
+	*/
+}
+
+const settings = new Settings() /*
+Hibát dob, mivel a new kulcsszó használata nem lehetséges kívülről, mert a konstruktor privát. Ez garantálja a Singleton minta működését.
+*/ 
+const settings = Settings.getInstance(); // így működik csak.
+~~~
+
+Hagyományos definiálással:
+~~~javascript
+const Config = {
+  start: () => console.log('App has started'),
+  update: () => console.log('App has updated'),
+}
+
+// We freeze the object to prevent new properties being added and existing properties being modified or removed
+Object.freeze(Config)
+
+Config.start() // "App has started"
+Config.update() // "App has updated"
+
+Config.name = "Robert" // We try to add a new key
+console.log(Config) // And verify it doesn't work: { start: [Function: start], update: [Function: update] }
+~~~
+
+Class segítségével létrehozva:
+~~~javascript
+class Config {
+    constructor() {}
+    start(){ console.log('App has started') }  
+    update(){ console.log('App has updated') }
+}
+
+const instance = new Config()
+Object.freeze(instance)
+~~~
+Mindkét módon létrehozva az Object.freeze() metódussal lehet "befagyasztani" a létrehozott példányt.
+
+TypeScriptben:
+A constructor-t kell private-ként megadni, így
+
+### 2. Factory Method Pattern
+A lényege, hogy egy helyre van centralizálva több különböző helyen felhasználható objektum váza. Ezek gyakorlatilag a Js-ben a class-ok és a factory funkciók.
+
+### 3. Abstract Factory Pattern
+Ha jólértem ezek olyan funkciók, amikben összegyűjtenek classokat, és a beadott adat alapján eldöntik, hogy milyen konkrét class-okat kell használni ebben az esetben a példányosításra. Ezek tehát egy absztrakt szintet tesznek a sima classokra, de cserébe nem kell emlékezni a fejlesztőnek, hogy pontosan melyik konkrét classt példányosítsák, mert ezt tudja az abstract factory class.
+
+~~~javascript
+
+// We have a class or "concrete factory" for each vehicle type
+class Car {
+    constructor () {
+        this.name = "Car"
+        this.wheels = 4
+    }
+    turnOn = () => console.log("Chacabúm!!")
+}
+
+class Truck {
+    constructor () {
+        this.name = "Truck"
+        this.wheels = 8
+    }
+    turnOn = () => console.log("RRRRRRRRUUUUUUUUUMMMMMMMMMM!!")
+}
+
+
+// And and abstract factory that works as a single point of interaction for our clients
+// Given the type parameter it receives, it will call the corresponding concrete factory
+const vehicleFactory = {
+    createVehicle: function (type) {
+        switch (type) {
+            case "car":
+                return new Car()
+            case "truck":
+                return new Truck()
+            
+            default:
+                return null
+        }
+    }
+}
+
+const car = vehicleFactory.createVehicle("car") // Car { turnOn: [Function: turnOn], name: 'Car', wheels: 4 }
+const truck = vehicleFactory.createVehicle("truck") // Truck { turnOn: [Function: turnOn], name: 'Truck', wheels: 8 }
+~~~
+### 4.Builder Pattern
+A builder funkció egy objektumot fogad, és hozzáad bizonyos új metódusokat/mezőket. A lényege, hogy lépésekree bontják az objektumok felépítését, de egyes lépések és ezzel egyes nem szükséges metódusok/mezők kihagyhatók lesznek. 
+~~~javascript
+// We declare our objects
+const bug1 = {
+    name: "Buggy McFly",
+    phrase: "Your debugger doesn't work with me!"
+}
+
+const bug2 = {
+    name: "Martiniano Buggland",
+    phrase: "Can't touch this! Na na na na..."
+}
+
+// These functions take an object as parameter and add a method to them
+const addFlyingAbility = obj => {
+    obj.fly = () => console.log(`Now ${obj.name} can fly!`)
+}
+
+const addSpeechAbility = obj => {
+    obj.saySmthg = () => console.log(`${obj.name} walks the walk and talks the talk!`)
+}
+
+// Finally we call the builder functions passing the objects as parameters
+addFlyingAbility(bug1)
+bug1.fly() // output: "Now Buggy McFly can fly!"
+
+addSpeechAbility(bug2)
+bug2.saySmthg() // output: "Martiniano Buggland walks the walk and talks the talk!"
+~~~
+
+### Prototype Pattern
+The Prototype pattern allows you to create an object using another object as a blueprint, inheriting its properties and methods.
+Kulcsa az Object.setPrototypeOf(aminekBeallitom, amitbeallitok) metódus.
+
+~~~javascript
+const supertype = { attack: ()=>{console.warn("Attack!")} };
+const subtype = {weapon: "sword"};
+Object.setPrototypeOf(subtype,supertype);
+// Innentől a subtype is rendekezik attack metódussal:
+subtype.attack() // Attack!
+// A supertype-hoz adott további metódust/mezőt pedig örökli a subtype is!
+supertype.defend = ()=>{console.log("Defend!")};
+subtype.defend() // Defend!
+~~~
+## Structural Design Patterns
+
+Structural patterns refer to how to assemble objects and classes into larger structures.
+
+### Adapter Pattern
+Az adapter minta lehetővé teszi két inkompatibilis objektum interakcióját egymással. Pl.: Xml és JSON átalakítása egymássá.
+
+~~~javascript
+// kétféle számkifejezés illesztése:
+const citiesHabitantsInMillions = [
+    { city: "London", habitants: 8.9 },
+    { city: "Rome", habitants: 2.8 },
+] 
+// A tömbbe kellene illeszteni ezt:
+const BuenosAires = { city: "Buenos Aires", habitants: 3100000}
+
+// ez lesz az adapter:
+const toMillionsAdapter = city => { city.habitants = parseFloat((city.habitants/1000000).toFixed(1)) }
+
+// azonos formátumra hozzuk adapterrel a milliókat:
+toMillionsAdapter(BuenosAires)
+
+// mostmár hozzáadható
+citiesHabitantsInMillions.push(BuenosAires)
+~~~
+
+### Decorator Pattern
+The Decorator pattern lets you attach new behaviors to objects by placing them inside wrapper objects that contain the behaviors. If you're somewhat familiar with React and higher order components (HOC) this kind of approach probably rings a bell for you.
+
+### Facade Pattern (homlokzat, arculat)
+The Facade pattern provides a simplified interface to a library, a framework, or any other complex set of classes.
+
+Examples:
+*declarative programming, it's all about providing abstractions that hide away complexity from the eyes of the developer.
+
+*JavaScript's map, sort, reduce and filter functions, which all work like good 'ol for loops beneath the hood.
+
+*libraries used for UI (MUI)
+
+### Proxy Pattern
+The Proxy pattern provides a substitute or placeholder for another object. The idea is to control access to the original object, performing some kind of action before or after the request gets to the actual original object.
+
+Again, if you're familiar with ExpressJS this probably rings a bell for you. Express is a framework used to develop NodeJS APIs, and one of the features it has is the use of Middlewares. Middlewares are nothing more than pieces of code we can make execute before, in the middle, or after any request reaches our endpoints.
+
+## Behavioral Design Patterns
+Behavioral patterns control communication and the assignment of responsibilities between different objects.
+
+Chain of Responsibility Pattern
+The Chain of Responsibility passes requests along a chain of handlers. Each handler decides either to process the request or to pass it to the next handler in the chain.
+
+Think about any system in which you have certain information to process along many steps. At each step a different entity is in charge of performing an action, and the information only gets passed to another entity if a certain condition is met.
+
+A typical front-end app that consumes an API could work as an example:
+
+We have a function responsible for rendering a UI component.
+
+Once rendered, a another function makes a request to an API endpoint.
+
+If the endpoint response is as expected, the information is passed to another function that sorts the data in a given way and stores it in a variable.
+
+Once that variable stores the needed information, another function is responsible of rendering it in the UI.
+
+We can see how here we have many different entities that collaborate to execute a certain task. Each of them is responsible for a single "step" of that task, which helps with code modularity and separation of concerns.👌👌
+
+### Iterator Pattern
+The iterator is used to traverse elements of a collection. This might sound trivial in programming languages used nowadays, but this wasn't always the case.
+
+Anyway, any of the JavaScript built in functions we have at our disposal to iterate over data structures (for, forEach, for...of, for...in, map, reduce, filter, and so on) are examples of the iterator pattern.
+
+Same as any traversing algorithm we code to iterate through more complex data structures like trees or graphs.
+
+### Observer Pattern
+The observer pattern lets you define a subscription mechanism to notify multiple objects about any events that happen to the object they’re observing. Basically, it's like having an event listener on a given object, and when that object performs the action we're listening for, we do something.
+
+React's useEffect hook might be a good example here. What useEffect does is execute a given function at the moment we declare.
+
+The hook is divided in two main parts, the executable function and an array of dependencies. If the array is empty, like in the following example, the function gets executed each time the component is rendered.
+
+  useEffect(() => { console.log('The component has rendered') }, [])
+If we declare any variables within the dependency array, the function will execute only when those variables change.
+
+  useEffect(() => { console.log('var1 has changed') }, [var1])
+Even plain old JavaScript event listeners can be thought of as observers. Also, reactive programming and libraries like RxJS, which are used to handle asynchronous information and events along systems, are good examples of this pattern.
+
+Roundup
+If you'd like to know more about this topic, I recommend this great Fireship video and this awesome website where you can find very detailed explanations with illustrations to help you understand each pattern.
+
+As always, I hope you enjoyed the article and learned something new. If you want, you can also follow me on LinkedIn or Twitter.
+
+Cheers and see you in the next one! ✌️
+
+Image
+

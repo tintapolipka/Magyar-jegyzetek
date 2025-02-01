@@ -1,0 +1,12 @@
+JavaScript:
+- változók és láthatóságuk (global scope, function scope, block scope)
+- függvény paraméter átadás (érték szerinti átadás vagy referencia szerinti átadás)
+- függvény és arrow függvény közötti különbség
+- callback, promise, observer patternek közötti különbség
+- singleton pattern
+- kommunikáció a szerverrel REST, WEBSOCKET
+
+És persze az objektum orientált programozás. Az, hogy a komponensek intézik a saját dolgaikat.
+István
+Nyári István
+én első körben ezekről szoktam faggatni a jelentkezőket. Meg persze a saját munkáikat GITHUB nézem át

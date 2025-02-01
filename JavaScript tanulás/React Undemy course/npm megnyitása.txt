@@ -1,0 +1,82 @@
+Új react app létrehozása:
+A megfelelő mappában:
+npx create-react-app quiz-app
+
+Telepítés:
+_________________________
+Parancssor-t megynitni, beírni:
+cd\
+cd C:\Users\User\Desktop\JavaScript tanulás\React Undemy course\firstReactApp\react-complete-guide>
+npm start
+
+Váltsunk a böngészőre!
+Böngészőben elvileg automatikusan megnyílik a 
+http://localhost:3000
+Ha a vírusírtó, proxy, stb le nem tiltja...
+Ez lesz a React LiveServere.
+
+
+Ezt követően meg lehet nyitni VS Code-ban a 
+C:\Users\User\Desktop\JavaScript tanulás\React Undemy course\01-starting-setup
+mappát, amiben ennek a kurzusnak a projektjei lesznek.
+
+Parancssor bezárható most, mert ez a live server ekvivalens nem a 01-starting-setup -ot tölti be élőben, hanem az előzőt, így azt be kell zárni, és ezt megnyitni.
+Bezárás:
+Paracssorra váltok (ugyanazon az elérési úton kellene lennem, mint ahol volt eddig is)
+Megnyomom a Ctrl+C billenytyűkombinációt. Ekkor rákérdez, hogy tényleg bezárom? (y/n) -> Y, és ettől lekapcsol az eddigi localhost.
+
+REACTprojekt megnyitása npm-el:
+Odanavigálok az új projektemhez:
+A) Parancssorral:
+cd\
+cd C:\Users\User\Desktop\JavaScript tanulás\React Undemy course\01-starting-setup
+És beindítom újra a localhost-ot így:
+npm start
+
+VAGY
+VS Code-ban megnyitom az aktuális foldert, majd a menüből kiválasztom a 
+Terminal/New terminal-t és beírom oda:
+npm install
+Ekkor beindul a telepítő. Ez másolja  aszükséges file-okat az új projekt mappába, ezért nem kell minden alkalommal megtanni, csak először, utána már ott lesz
+
+_________________________________________________
+Hasznos kiegészítők (3rd party librarys)
+_________________________________________________
+A Styled components telepítése
+Letöltjük:
+https://styled-components.com/
+
+A VS Code-ban be kell zárni az npm-t, ha fut (Ctrl+C), ha nem fut, akkor meg a terminalba ezt kell írni:
+npm install --save styled-components
+
+Miután lefutott újra be lehet indítani a terminálban az npm localhostot, így:
+npm start
+
+_____________________________________________
+Letöltött project beindítása:
+
+npm install
+
+______________________________________________
+React router telepítése:
+
+npm install react-router-dom
+
+______________________________________________
+Tailwind CSS telepítése
+
+npm install -D tailwindcss
+majd:
+npx tailwindcss init
+Ez utóbbi létrehozza a főkönyvtárban a tailwind.config.js-t
+Ennek tartalma legyen:
+
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: ["./src/**/*.{js,jsx,ts.tsx}"],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}
+

@@ -1,0 +1,737 @@
+JEL / ADAT / INFORMÁCIÓ:
+A jel maga a fizikai vátozás ami egyik helyről a másikra vándorol (feszültségváltozás a vezetéken)
+Az adat a számítógépek között cserélt jelsorozat
+Az információ az emberi felhasználó számára az adatból kinyert tartalom
+
+Hálózati eszközök működése:
+------------------------------------------------------
+Hálózati topológiák:
+I.) A megosztott közegen nincs hálózati eszköz, minden gép bármikor küldhet adatot, így sok az ütközés, ráadásul mindenki hall mindenkit. (Apró otthoni hálózatoknál esetleg megfelelő lehet.) "Busz" topológiának hívják.
+
+II.) Csillag topológia esetén:
+A) HUB:
+Az interfészen beérkező adatokat minden interfészen kiküldi (kivéve ahol bejött).
+	- Passzív HUB: csak összeköt fizikailag (oszlik a jelerősség)
+	- Aktív HUB: fel is erősíti a továbbküldött jelet  
+B) Switch:
+	* MAC cím alapján azonosít (lásd később)
+	* Felismeri, hogy az üzenet melyik címzettnek szól a helyi hálózaton, és csak az ő MAC címére küldi ki
+
+C) Router:
+* IP cím alapján azonosít
+* Switch-el összekötött helyi hálózatokat köt össze általában
+* Felismeri, hogy az üzenet melyik címzettnek szól az egész világon, és csak az ő IP címére küldi ki
+ 	->Ha helyi a címzett, neki küldi,
+	->Ha nem ismert a címzett akkor kiküldi a világba (általában netszolgáltató felé)
+
+_______________________________________________
+MAC cím és IP cím:
+
+	a) MAC CÍM (Media Access Control) 
+		- más néven Fizikai cím
+		- a számítógépen minden interfészének van 1 saját
+		- a világon minden MAC címet csak egy hardver használ
+		- 12 hexadecimális (0-F) számjegy. 1-6-ig a gyártót azonosítja, az utolsó hat pedig az adott eszközt.
+
+	b) IP cím (Internet Protocol)
+		- logikai címnek is nevezik
+		- a számítógép minden interfészének van saját ebből is		
+		- a nyilvánosak egyediek, a helyiek ismétlődhetnek
+		- Felépítése: négy max 3 számjegyű (0-255, azaz 1 bájt) szám ponttal elválasztva pl.: 123.10.213.168
+
+_______________________________________________
+INTERNET
+Kiterjesztett csillag topológia (csillag topológiák hálózata)
+A Távoli számítógépeket IP címmel lehet elérni, de
+A DNS (Domain Name System) lefordítja az IP címet www.domain.ra
+
+Az internetezés távoli számítógépekkel (kiszolgálókkal) való információcsere. Szereplői:
+		Kliens: Az adatot kérő szgép
+		Szerver: Az adatot biztosító szgép
+A Domain-ek felépítése:
+valaminév pont végződés pl.: knowcamp.org 
+-régen jelentéssel bírtak a végződések- .com kereskedelmi; .net hálózati szolgáltató; .org civil szervezet volt, ma már nem ilyen szigorú a felosztás.
+
+Aldomain: aldomain.domain.com
+	- Az aldomain mutathat más IP címre
+A DNS katalógusok regionálisan vannak elosztva. Ezek a katalógusok DNS zónafájlokat tartalmaznak, amik részlezezik a IP címeket a különböző aldomainek között, és egyéb funkciók működését is. mint pl. a TTL érték. A TTL érték a Domainhez tartozó IP cím frissítésének időközeit, gyakoriságát tartalmazza, vagyis azt, hogy mikor évül el az adott IP cím potenciálisan, a leghamarabb mikor cserélhetik le a domainhez tartozó IP címet a hostnál.
+
+Léteznek DNS root szerverek, amiknél meg lehet kérni a domainekhez tartozó IP címeket.
+A Címkérés folyamata:
+	Új domain beszerzése:
+Cégen keresztül lehet megvenni a domain nevet, amihez statikus IP cím kell (soha meg nem változó IP cím). Mo.-on általában lakossági IP címek dinamikusak (időközönként változók), de cégek vehetnek statikusat.
+	Felhasználóként hogyan történik a domain név alapján IP cím azonosítás?
+	#1. A böngésző a saját DNS gyorsítótárában keresi a domainnek megfelelő IP címet. Ha nincs meg:
+	#2. Az otthoni Router-től kéri, mert az is elmenti a DNS gyorsítótárában a felkeresett IP-ket. Ha megvan visszaküldi a böngészőnek, ami gyorsítótárba menti. Ha nincs meg:
+	#3. Az internetszolgáltatónktól kéri be, ahol ha valaki már látogatta az oldalt (A TTL időn belül), akkor visszaküldi a Routernek. De ha nincs meg:
+	#4.A Root DNS szolgáltatókhoz fordul a netszolgáltató és, onnan kéri, majd magának is elmenti meg vissza is küldi a routernek.
+
+INTERNET VS WEB:
+----------------
+Az internet minden szgép kommunikációja.
+A WEB a (html) dokumentumok hálózata, amik egymásra mutató linkekkel csatlakoznak. Tehát a Skype beszélgetés az interneten történik, de nem a WEBen. Ugyanígy a netes alkalmazás is internetet, nem webet használ. A Web csak a honlapok hálózatát jelenti.
+
+A web három szabványa:
+A) URL (Uniform Resource Locator)
+*Az összetartozó dokumentumok egyedi címmel való ellátása 
+*Hierarchia szervezése a dokumentumokból (gyakorlatilag a könyvtárszerkezet - mappák és file-ok amik összetartoznak azonos URL-en vannak).
+B) HTML (Hyper Text Markup Language)
+*Séma a dokumentumok elkészítésére
+* Egységes, szabványos leírónyelv
+C) HTTP (Hyper Text Transfer Protocol)
+* A weboldalak tartalmának átvitelét biztosító protokoll
+* kérés-válasz alapú, mindig a kliens kezdeményez valamit, a szerver csak válaszol
+*Küldünk egy parancsot és paraméterket (adatok), kapunk egy választ (szintén adatok)
+
+HTTP kérés:
+-Dokumentum neve
+-Elvárt formátum
+-Előzőleg látogatott oldal
+-Elvárt nyelv
+HTTP válasz:
+-Dátum a küldéskor
+-Utolsó módosítása
+-Hossz /= méret (3kb)
+-Formátum (pl. HTML)
+-Maga a dokumentum
+
+HTTP utasítások:
+I.) GET
+GET /kovacs.andras/hello.html  HTTP/1.0
+-> GET parancs: A megadott dokumentum tartalmát küldje vissza a szever!
+-> Dokumentum neve: (itt:/kovacs.andras/hello.html) Felépítése: név és kiterjesztés
+->Verziószám: (itt:HTTP/1.0)
+A HTTP protokoll melyik verziójában értelmezendő
+
+II.) HEAD
+A GEThez hasonló, de csak a tulajdonságait, leírását küldi vissza, a dokumentum tartalmát nem
+
+III.) POST
+Adatok szerverre felküldésének kérő parancsa (pl. űrlapoknál)
+
+IV.) PUT
+Dokumentumok szerverre feltöltésének kérő parancsa
+
+V.) DELETE
+Dokumentumok törlése a szerverről (általában nem használatos)
+
+HTTP állapotmegőrzés
+* A dokumentum lekérések  között nincs kapcsolat a szerverrel
+* Tehát amikor böngészünk egy weboldalt, akkor minden  hivatkozás megnyitása egy-egy újabb kérés
+* Két kérés között a Cookie-k biztosítják a kapcsolatot
+Ezek munkamenet azonosítót tartalmaznak, hogy pl. ne kelljen bejelentkezni újra és újra a rendszerbe. Kijelentkezéskor a Cookie érvényét veszti, a szerver ez után már nem fogadja el érvényesnek.
+Ctrl+shift+L - a cookiek törlése kombináció. - Kijelentkeztet automatikusan.
+
+__________________________________________________
+Szerveroldali fejlesztés:
+__________________________________________________
+
+Publikálás eszközei: 
+WEBSZERVER SZOFTVER
+Webszerver szoftvereknek kell telepítve lenni és futni a kiszolgáló oldali a szgépen.
+
+Alap szolgáltatása	
+	Működésének fázisai:
+	1. HTTP kérést fogad
+	2. A kérésből megtudja, hogy a kliens melyik dokumentumot kéri
+	3. kikeresi a dokumentumot
+	4. visszaküldi azt HTTP válaszként
+	
+Egyéb szolgáltatásai:
+	* AAA (lásd később)
+	* Titkosítás
+	* IP címek tiltása
+	* Megosztási szabályok
+	* Egyéb programok futtatása
+
+Gyakori webszerver szoftverek:
+Apache; Apache Tomcat; NGinx; Lighttp; Microsoft IIS;
+
+Ha béreljük a domainhelyet, akkor nem kell ezzel foglalkozni, van valami telepítve.
+
+Szolgáltatásai:
+A) AAA(Authentication-Authorization-Accounting) 
+(Azonosítás-Jogosultságkezelés-Könyvelés) - Biztonságtechnikai architektúra
+	1. Authentication-Azonosítás:
+	 * Felhasználónévvel és jelszóval történő azonosítás (esetleg digitális aláírás, token)
+	 * Nem ugyanaz mint a login, ez általában felugró ablakkal megy
+
+	2. Authorization-Jogosultságkezelés
+	 * Mely felhasználó, mely erőforrásokhoz férhet hozzá
+
+	3. Accounting-Könyvelés
+	 * Ki, mikor, és milyen erőforrást használt az oldalon
+
+lásd még: https://hu.wikipedia.org/wiki/AAA_protokoll
+
+B) Titkosítás (HTTPS)
+Miért kell? Mert a HTTP forgalom szövegalapú és titkosítatlan, ezért könnyú lehallgatni. 
+-> HUB-on fizikailag megkapja más is az adatunkat.
+-> Switch lehallgatás (ARP poisoning):
+A kiterjesztett csillag topolgiában tipikusan minden szgép (kliens vagy szerver) hálózati switch-hez csatlakozik, ami az üzeneteket MAC cím alapján továbbítja a címzetthez, csak azon a porton keresztül ahol a címzett található. ARP poisoninggal a MAC címet mímeli a csaló, és hogy le ne bukjon, miután lemásolta küldi tovább a valódi címzettnek az adatot.
+
+A HTTPS alapvetően a http protokollt használja, de igénybe véve az SSL/TLS biztonsági alrendszert.
+Titkosítás működése:
+* A kliensnek és a szervernek egyaránt van nyilvános (publikus) és privát kulcsa (egy szám)
+* A publikus kulcsot megosztják egymással
+* A nyilvános és privát kulcs együtt kulcspárt alkot, amit a publikussal kódolunk, csak a privát tudja dekódolni
+ Így: A kliens a szerver publikus kulcsával kódolja az üzenetet -> A szerver a privát kulcsával dekódolja -> A szerver a publikus kulcsával kódolja az üzenetet->  A kliens a privát kulcsával dekódolja.
+A Privát kulcs próbálgatással kitalálható lenne, ezért hatalmas számot adnak meg kulcsnak
+
+C) IP címek blokkolása:
+Beállítható, hogy adott IP cím hozzáfér-e adott dokumentumhoz. Akár IP cím tartományok is megadhatók.
+ Két stratégia erre:
+Vagy csinálunk "IP whitelist"-et- akik hozzáférhetnek lista-(pl. egyetem gépről elérhető ScienceDirect), vagy "IP blacklist"-et -akik nem férhetnek hozzá lista - (pl. terheléses támadó letiltása)
+
+D) Megosztási szabályok:
+Ha olyan adatot küldünk az interneten, ami nem publikus (pl. felhőszolgáltatások-biztonsági mentések, elektronikus levelek, stb.)
+A szerver minden mappájára beállítható, hogy részt vegyen-e a megosztásban. (URL címen keresztül elérhető legyen-e?)
+
+E) Egyéb programok futtatása:
+Fájlok HTTP kérése esetén a webszerver szoftvernek két féle válasza lehet:
+	-> a fájl tartalmát HTTP válaszban egyszerűen visszaküldi (pl. HTML, telepítőfájl, videó, képek, tömörített állomány, office dokumentum, stb.)
+	-> a fájl tartalmát egy tőle független programnak adja át, ami feldolgozza azt, és a feldolgozott adatot küldi ki a kliensnek
+ => Így lehetséges webalkalmazásokat fejleszteni, dinamikus választ adni a felhasználóra szabva. 
+Az egyéb program tehát a szerver oldalon fut, és olyan választ állít össze, ami bizonyos paraméterek mentén módosulhat
+
+Története:
+Egyéb szerveroldali programok közül régen CGI programokat használtak (.exe alkalmazások, függetlenek a webszerver szoftvertől) Ezek sztenderd programozási inputot kaptak (általában a http kérést egészben) a webszerver szoftvertől és sztenderd programozási outputot küldték neki vissza, amit a HTTP válaszba kiküldött a webszerver szoftver. Ez nagyon erőforrás igényes volt, ezért meghaladták.
+Később:
+Programozási nyelv specifikus webkonténer: 
+A webszerver adott programozási nyelvén írt kódrészleteket (objektumokat) egy speciális futtató környezetben tart, és kérés esetén az adott kódrészlet lefut és valamilyen eredményt ad.
+
+Pl.: 
+Java: Java EE Servlet; 
+PHP - szinte az összes webszerver támogtja
+Microsoft C#: ASP.NET - csak Microsoft szerverek támogatják: Microsoft IIS 
+
+_________________________________________
+ADATOK KÜLDÉSE A SZERVERNEK
+_________________________________________
+
+Adatok küldése:
+HTML űrlapok segítségével:
+<form action="action_page.php">
+First Name:<br>
+<input type="text" name="firstname">
+Last Name:<br>
+<input type="text" name="lastname">
+</form>
+
+Itt a name attribútum alapján fogja azonosítani a kérésben a böngésző, és az action_page.php-nek küldi:
+I. Továbbítás HTTP GET-el:
+Az url címbe a dokumentum elérési útja mögé kerülnek az űrlap adatai.(paraméterezett URL)  A szerver innen olvassa ki és továbbítja a CGI program/konténer felé.
+Hátránya: 
+* Bárki láthatja a beküldött adatot, és még a böngésző előzményéből is kiolvasható!
+* Korlátozott hosszúságú lehet		
+pl: 
+GET /action_page.php?firstname=Zoli&lastname=Mate 
+
+II. Továbbítás HTTP POST-al:
+ * A kérés törzsében egy gyűjteményként továbbítódnak az űrlapelemek tartalmai, így nem láhatók az URL-ben, így biztonságosabb ráadásul korlátlan a hosszuk is.
+_________________________________________
+ADATOK FELDOLGOZÁSA A SZERVEROLDALON
+_________________________________________
+Átadásra kerülnek a CGI programnak/webkonténernek
+Az űrlapelemek értékei változóként lesznek elérhetőek.
+
+_________________________________________
+SZOFTVERFEJLESZTÉS
+_________________________________________
+Valamely hétköznapi probléma megoldása számítógéppel. A problémára találunk egy matematikailag helyes megoldást (algoritmust), majd ennek az implementációja (megvalósítás) a szoftverfejlesztés.
+Alap séma:
+
+BEMENŐ ADATOK=> [ALGORITMUS] --> kimeneti eredmény
+
+A fejlesztés nem más mint algoritmus alkotás, és ennek lekódolása programozási nyelven. Az algoritmusok megalkotása programtervező informatikusok, matematikusok feladata.
+Az implementálás a fejlesztők feladata. 
+
+Az algoritmizálás során az alábbiakat lehet használni:
+a) változók
+b) tömbök
+c) elágazások
+d) ciklusok
+
+a) változó:adott névvel elérhető adat
+Szerver oldali Php pédakód:
+
+<?php
+$a = 76;
+$b = $a + 100;
+echo $b;
+?>
+Itt: php programkód kezdete és vége: <?php és ?>
+Változó létrehozása és inicializálása:
+$a = 76; - itt a egyenlő 76-al.
+echo a visszatérési értéket kódolja (=Js return).
+
+b) tömbök: Összetartozó változók, az egyes cellákat számokkal érjük el (indexelés) 
+php példakód:
+<?php
+$tomb = array();
+$tomb[0]=6;
+$tomb[1]=8;
+$tomb[2]=2;
+echo $tomb[1] + $tomb[2];
+?>
+Itt: 
+$tomb = array(); - létrehozunk egy üres tömböt.
+$tomb[0]=6; $tomb[1]=8; $tomb[2]=2; - itt az első három elemet feltöltjük adattal.
+Tömböt az array('első elem','második elem'); funkcióval lehet létrehozni.
+
+c) elágazások:
+Valamilyen feltételt kiértékelünk, és ennek függvényében A vagy B művelet zajlik le, ezután a program folytatja a szekvenciális futását.
+<?php
+$eletkor = 56;
+$kedvezmeny = 0;
+if($eletkor < 50)
+  $kedvezmeny = 0.2;
+else
+  $kedvezmeny = 0.3;
+$ar = 100;
+$vegosszeg = $ar * (1- $kedvezmeny);	
+?>
+
+d) ciklusok:
+Valamilyen programrészlet folyamatos ismétlése, amíg a feltétel meg nem dől
+<?php
+$honnan = 3;
+$hova = 10;
+$pillanatnyi = $honnan;
+while ($pillanatnyi <=$hova)
+{
+	echo $pillanatnyi;
+	$pillanatnyi = $pillanatnyi + 1;
+}
+?>
+
+-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
+Algoritmizálás
+-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
+
+Böhm–Jacopini tétel (1966):
+Minden algoritmus megvalósítható a 3 programozási szerkezet, 1. szekvencia (utasítások egymásutánisága), 2. szelekció (elágazások) és 3. iteráció (ciklusok) segítségével.
+
+Ha az adott probléma matematikailag megoldható, akkor le is programozható!
+
+________________________________________
+PROGRAMOZÁSI NYELVEK KATEGORIZÁLÁSA:
+________________________________________
+A) Fordított nyelvek:
+Miután megírtuk a programot egy fordítóprogram (complier) futtatható kóddá alakítja: 
+	a) önmagában a processzoron futtatható (natív alkalmazás) pl. C és C++
+	b) köztes réteg futtatja a processzoron 	
+		*virtuális gépen (mint a Java)
+		* .NET keretrendszer: pl. C#
+Ezek a kódok le sem fordítódnak, amíg nem teljesen hibamentesek
+
+B) Értelmezett nyelvek:
+Egy interpreter értelmezi soronként a kódot, és meghívja a szükséges alkalmazást, rendszer szolgáltatást, stb.
+ pl. PHP, Windows Powershell script
+Ha nem teljesen helyes a kód, addig a sorig még lefut a program, amiben a hiba van.
+
+PHP példaprogram:
+
+Az index.html-ben csinálunk egy form-ot, aminek a küldési metódusát get-re állítjuk:
+
+index.html...
+<form method="get" action="welcome.php">
+
+Ekkor a welcome.php-nek küldjük a form adatait, ami értelmezni fogja.
+welcome.php...
+<?php
+$nev = $_GET['nev'];
+$eletkor = $_GET['eletkor'];
+$szin = 'yellow';
+if($eletkor >50){
+	  $szin = 'orange';
+	}
+echo '<body style="background-color: ' . $szin . ' "></body>';
+
+echo '<h1>Welcome, '. $nev . '!</h1>';
+
+for($i=0; $i<$eletkor; i++){
+echo '<img src="candle.webp">'
+}
+
+?>
+
+itt: $nev = $_GET['nev']; - a beérkező GET kérésből kiveszem a 'nev' változót, és elmentem a $nev változóba.
+
+Ugyanígy $nevPostbol = $_POST['nev']; - a beérkező POST kérésből is hasonlóan ki lehet nyerni a 'nev' változót, csak ekkor a html <form method="post">-nak kell lennie.
+
+itt: 
+echo '<body style="background-color: ' . $szin . ' "></body>';
+- a visszatérési érték egy 3 elemből összeálló string lesz, ami módosítja a <body>-t. Php-ben a concatenate a . (pont) operátorral történik.
+
+
+XAMPP - program
+* Képes lenne webszervert csinálni a gépünkből, ha az IP címünk elérhető kívülről (a Router is úgy van beállítva)
+* Futtatja a PHP-t
+
+Telepítés után el kell indítani a XAMPP Control Panelt, és az Apache-al egy egyszerű webszervert indíthatunk. A MySQL az adatbázis ami kellhet emellé.
+A Xampp telepítési mappájának htdocs nevű mappája lesz aminek a tartalmát a szerver a külvilág felé ki fogja szolgálni. Alapból ebben vannak file-ok, ezért érdemes átnevezni az eredeti ./xampp/htdocs mappát, és újat csinálni abba mehet a saját backendünk tartalma.
+Amkor a control panelen elindítom az Apache-ot a [start] gombbal, akkor ki is írja, hogy a 80-as és 443-as porton "figyel".
+A saját gépünk IP címe (amennyiben nem kívülről akarjuk elérni) a böngészőnkben mindig a 127.0.0.1-en található. Ezen az Apache futtatásakor a ./xampp/htdocs mappa tartalmát "host"-olja. (Ha nem írtuk még az eredetit felül, akkor a http://127.0.0.1/dashboard/-ra irányít el.)
+
+A PHP tartalmazhat HTML-t és fordítva. 
+Lehet index.php az index.html helyett, és abban lehet html és php kódolás is vegyesen.
+
+
+PHP beépített funkciók:
+
+phpinfo(); - ez az aktuális PHP verzió adatait írja ki egy táblázatba.
+
+echo "string"; - karaktersorozatot visszaküldő funkció az echo.
+
+print_r($valtozoneve); kíírja a változó tartalmát
+
+array('elso elem', 'masodik elem'); - tömböt így hozok létre php-ben.
+
+count($tombValtozo); - ez gyakorlatilag kírja a tömb hosszát (gyakorlatilag a .length JS-ben, de tömb specifikus)
+
+array_push($eredetitomb, 'végére megy ez az elem'); - ugyanaz mint a JS push, csak bele kell tenni az eredeti tömböt, és utána a push-olandó értéket.
+
+array_pop($eredetitomb); - az utolsó elemét törli és visszaadja. (ugyanaz mint JS)
+
+array_filter($tombNeve, "callbackFn"); -olyan mint a JS .filter-e, kell bele egy callbackFn, ami  true-t ad vissza, ha kell a szűrt tömbbe az adott elem. Itt a callbackFn-t idézőjelbe kell tenni.
+
+array_values($tombNeve) -Return all the values of an array (not the keys):
+
+rand(min,max); - véletlenszerű szám generálása php-ben, ahol a minimum érték az első, a maximum érték a msodik paraméter (ezek közötti számot ad vissza).
+
+isset($valtozoNev); - ez true-t ad vissza, ha egy $valtozoNev nevű változó létezik és van érték hozzárendelve, ami nem NULL.
+
+is_numeric($valtozo) - ez true-t ad vissza, ha egy $valtozo nevű változó szám típusú.
+
+time(); - a mostani időpont az 1970 január 1. 00 óra 00 perc eltelt másodpercekben kifejezve.
+
+Elágazások:
+if-else és if-else if - tök ugyanaz mint a JS-ben.
+Kikommentelés: ugyanúgy mint JS-ben (// egy sor; /*több sor*/)
+
+Ciklusok:
+
+for ciklus: ugyanaz mint a JS-nél, csak a változót nem kell let-el létrehozni és a szokásos $ kell elé így:
+for($i=0; $i<$eletkor; i++){
+echo '<img src="candle.webp">'
+}
+
+while ciklus:
+Szintén ugyanaz mint JS.
+
+$i=0; //- itt definiálom $i változót
+while($i <10){
+   echo "<p>.$i.</p>";
+   $i++; //-itt növelem $i-t miután lefutott az ismétlendő parancs
+   } 
+Mindaddig folyik ez amíg a ($i<10) feltétel meg nem dől. Itt a {}-közötti részt "ciklusmag"-nak hívják.
+
+do-while ciklus: 
+Szintén ugyanaz mint JS.
+Ez abban más, hogy előbb végrehajt egy parancsot, és csak utána ellenőrzi, hogy a feltétel megfelel-e? (azaz az utolsó lefutás akkor is megtörténik, ha a feltétel már előzőleg beteljesült.)
+$i =0;
+do{
+echo $i
+} while ($i<10);
+___________________________________
+VALIDÁLÁS
+___________________________________
+
+Ahhoz, hogy a backEnden PHP jól fel tudja dolgozni a frontEnd-ről érkező adatot a frontEndről megfelelő típusú adatnak kell befutnia. Ezt a következőkkel biztosíthajuk:
+FrontEnd felől:
+1. Az input mezőket megfelelő adattípus fogadására kell állítani, pl, ha számot akarunk feldolgozni a szerveren akkor számra, stb. így:
+<input type="number"> 
+2. Az input mezőket kötelező (required) címkével kell ellátni, hogy nehogy üres stringet kapjnk csak vissza. így:
+<input type="number" required> 
+backEnd felől:
+1. egy if-check-re van szükség, hogy vannak-e a bekért változók, és ha igen azoknak van-e értékük. Csak akkor futtatjuk le a kapcsolódó php kódot, ha megvannak ezek. Így:
+<?php 
+if(isset($bekertValtozo)){ /*lefuttatandó kód*/ };
+?>
+2. if-check-el ellenőrizzük, hogy a bekért (létező) adatok a megfelelő típusba tartoznak-e?
+pl. Szám típusú-e?
+<?php 
+if(isset($eletkor) && is_numeric($eletkor)){ /*lefuttatandó kód*/ };
+?>
+
+_______________________________________
+Funkció (függvény )létrehozás PhP-vel:
+---------------------------------------
+function funkcioNeve($bemenetiErtek){
+/*műveletek*/;
+return $visszatérésiErtek;
+};
+
+Kb. ugyanaz mint Js-ben, csak a paraméterket is változóként dollárjellel (itt: $bemenetiErtek) kell megadni.
+
+Ha egy már létező változó értékét akarom használni egy custom funkcióban, akkor ahhoz a funkció definíciójában meg kell adni a use(&$ez_kell_kintrol). Ezzel teszem hozzáférhetővé. így:
+
+function($actual) use(&$item){
+            return $actual != $item;
+        } //-itt az $actual egy belső változónév, bármi lehet, amit beküldünk a funkcióba, de &$item egy már a funkció definíciün kívül létező értékkel bíró változó neve.
+
+&$ - jelentése:
+A php alapból mindig csak másolatokat használ a változókból, azokat nem mutálja. Ahhoz, hogy a bevitt változót egy funkció meg is módosítsa fel kell szólítani, hogy ne másolattal, hanem eredetivel dolgozzon. Ezt egy end jelnek a  paraméternek megadott változó elé tételével lehet így:
+
+function mutal(&$valtozo){$valtozo++;}; //az eredeti paraméternek megadott változó is módosul;
+Vs.
+function nem_mutal($valtozo){$valtozo++;}; //az eredeti paraméternek megadott változó nem módosul;
+
+---------------------------------------
+Függvények külső állományba szervezése:
+_____________________
+
+Lehet importálni függvényeket külső file-okból így:
+<?php
+require "fuggvenyek.php";
+?>
+Ez menjen a php file elejére (mielőtt az importált funkciót használnánk). Ekkor minden "fuggvenyek.php"-ben lévő function-t beimportál.
+
+----------------------------------------------
+Cookie telepítése a felhasználó számítógépére:
+______________________________________________
+
+A következő php beépített funkció segítségével lehet két http request között tárolni a felhasználói számítógépen adatot:
+
+setcookie($cookie_neve, $cookie_erteke, time() + 86400*30 , "/") // itt a paraméterek rendre a következők: cookie neve (string), cookie értéke (szintén csak string), elévülési/érvényességi idő (amíg használható az adat). Az érvényességi időre az aktuális időpotot /*time() -függvény adja vissza */ + 30 nap másodperben kifejezve a bevett szokás. Az utolsó paraméter a cookie kiterjedése az oldal tekintetében. A "/" azt jelenti, hogy a teljes oldalra (úgy mint a DOS-nál). 
+Ez kb. ugyanaz mint a localStorage Js-ben.
+
+A Cookie-ba mentett érték a $_COOKIE változóban tárolódik.
+
+Ha nem eleve string volt a $cookie_erteke, akkor a JSON-ná lehet alakítani így:
+json_encode($cookie_erteke) - funkcióval lehet átalakítani (Mint a JS-ben.)
+Ismét visszaalakítani JSON-ból eredeti típusra: json_decode($_COOKIE["cookie_erteke"]) módon lehet.
+
+Cookie törlése:
+Az adott cookie névvel újra beállítjuk a cookie értékét üres string-re így:
+setcookie('torolendo_cookie','',time()-100,"/");
+
+A harmadik paraméter-re múltbéli időpontot adunk meg (itt: time()-100)!
+---------------------------------------------
+Átirányítás PhP-ben:
+header( "Location: http//ahova.atiranyit.com");
+exit();
+
+//Itt lényegében megadjuk az átirányítás címét a header() függvényben (aminek sok más funkciója is van még, amúgy egy nyers HTTP kérés header-t küld.) , majd az exit("búcsú üzenet");- beépített függvénnyel lezárjuk a kódot.
+_____________________________________________
+
+--------------------------------------------
+ADATBÁZIS KEZELÉSE:
+____________________________________________
+A szerver oldalon nem a php nyelvű webkonténer kezeli az adatot, hanem kiszervezi ezt egy külső programnak. Esetünkben ez a MySQL, amit szintén a XAMMP Control Panel-en lehet elindítani a második sor [start] gombjával. Ez fut a háttérben, és elmenti file-olkba azokat az adatokat amiket a php-vel küldünk neki, illetve kiszolgálja a php-t, ha bekérjük az adott infót.
+
+A MySQL-en keresztül is el lehet érni a mentett adatokat, ha a XAMMP Control Panel-en az [Admin] gombjára kattintunk a MySQL sorában.
+Az Adatbázisok fülre kattintva megnyílik a felület, ahol az összes eddig létező adatbázisunk van. 
+Új adatbázist lehet felvenni, és dedikáltan abba feltenni egyes adatokat itt az adatbázis létrehozása ablakban, ahol nevet adok meg, és az alapértelmezett beállítást (utf8_mb4_general_ci) használhatjuk.
+Miután az adatbázis kész, kellene hozzá egy adattábla is, amit ekkor tudunk létrehozni. Itt is kell egy belső név az adattáblának is, és hogy hány oszlop lesz benne (összeratozó adattípusok száma). 
+Az adattáblákban oszlopokban a tulajdonságok (field), a sorokban az egyedi esetek (rekordok) vannak.
+Miután van adattábla, meg kell adni az egyes oszlopokba kerülő információk jellemzőit. A legfontosabb a típus(alapból INT-azaz integer, de jó még a VARCHAR aminek a hossza 250-en ideális) és, hogy legyen egy egyedi azonosításra alkalmas oszlop. Az egyediség biztosítható sorszámmal, ahol fontos, hogy be legyen pipálva az AI ami auto-incrementet jelent. Ennek típust is kell választani, ami az egyiknél PRIMARY legyen (az lesz az elsődleges kulcs). Az elsődleges kulcs oszlopban minden érték csak egyszer szerepelhet (ez az azonosító kb...).  Használhatunk más módszert is az ID-ra (lehet string is, amit nem lehet AI-zni), de akkor vigyázni kell rá, hogy csak egyszer szerepeljen. 
+Kattintani kell a [Mentés] gombra.
+
+Beállítandó még a Szerkezet menünél a primary key (az id)-ra, hogy uniqe-azaz egyszeri. Ezt úgy lehet, hogy kiválasztjuk a primary key sorát, a sor végi "Több"-re kattintunk, ahol van uniqe opció, erre katt!
+
+ADATTÁBLÁK ÖSSZEKAPCSOLÁSA:
+-*-*-*-*-*-*--*-*-*-*-*-*--*-*-*-*-*-*-
+
+Ehhez beállítandó a Szerkezet menünél az idegen kulcs (FOREIGN KEY).
+A másodlagos vagy idegen kulcs egy (vagy összetett kulcs esetén több) olyan oszlop, amely kapcsolatot biztosít két tábla adatai között. egy olyan azonosító, amellyel egy másik tábla elsődleges kulcsára hivatkozhatunk. Leegyszerűsítve azt mondhatjuk, hogy az idegen kulcs egy másik tábla elsődleges kulcsa. 
+Létrehozása így:
+CREATE TABLE tábla (
+    mezőadattípus,
+    FOREIGN KEY (mező) REFERENCES másikTábla(elsődlegesKulcs)
+);
+
+Forrás:
+https://webiskola.hu/sql-ismeretek/elsodleges-idegen-kulcs/
+
+Idegen kulcs (INNODB) megszorítás:
+_________________________
+Lehetséges másik adattáblában tárolt adatokat is hozzákapcsolni az adattáblánkhoz. Ehhez az kell, hogy azonos adatbázisban legyenek, és legyen mindkét adattáblában olyan adatoszlop ami alapján azonosítani lehet az összetartozást. (Azt hiszem az egyiknek egyedinek kell lennie. Az KnowCamp apróhírdetős oldal példájában a hírdetéseket (amikből több is lehet) a feladó id-vel kapcsoltuk össze.) Az eredeti tábla egy egyedire (uniqe) beállított adatai és az eredeti táblához idegen kulcsként beállított adatoszlop alapján lehet összefésülni őket.  
+Így: A "Szerkezet" fül "kapcsolati nézet" alfülre kattintunk. Itt beállítjuk a megszorításokat:
+Kitöltjük: Megkötés neve - beírok vmit.
+ON DELETE - RESTRICT
+ON UPDATE - RESTRICT
+Oszlop - amelyik itteni oszlopot tesszük idegen kulccsá (a példában a hírdetést feladó személy id-je)
+
+Ez után rá lehet keresni a két kapcsolódó tábla összetartozó adataira így:
+
+KÜLÖNBÖZŐ TÁBLÁK ÖSSZEKAPCSOLÁSA AZONOS ADATOK ALAPJÁN:
+---
+SELECT fotabla.oszlopnev1, kapcsoltTabla.oszlopnev1 FROM `fotabla` INNER JOIN kapcsoltTabla ON fotabla.primaryOszlopnev=kapcsoltTabla.egyediOszlop;
+
+Ennek felépítése: Válaszd ki (SELECT) a főtábla adott oszlopba tartozó értékét (fotabla.oszlopnev1) és a kapcsolttábla (kapcsoltTabla.oszlopnev1) adott oszlopba eső értékét a főtáblából (FROM `fotabla`), de kapcsold hozzá (INNER JOIN) a kapcsoltTabla-t úgy (ON), hogy a főtábla azonosító oszlopának értéke egyezzen meg a kapcsolttábla szintén egyedi értékével (fotabla.primaryOszlopnev=kapcsoltTabla.egyediOszlop).
+
+Példánkban:
+SELECT ads.id, ads.name,ads.description, ads.price, ads.category, users.email, users.firstname, users.lastname FROM `ads` INNER JOIN users ON ads.owner_id=users.id;
+
+Lehet tisztítani a kódot azzal, hogy a lekérésen belüli nevet adunk az összekapcsolandó tábláknak így:
+SELECT a.oszlopnev1, b.oszlopnev1 FROM `fotabla` a INNER JOIN kapcsoltTabla b ON a.primaryOszlopnev=b.egyediOszlop;
+Itt "a" címkét kapott a fotabla és "b"-t a kapcsolttábla
+
+Ugyanez a példánkkal:
+SELECT a.id, a.name, a.description, a.price, a.category, u.email, u.firstname, u.lastname FROM `ads` a INNER JOIN users u ON a.owner_id=u.id;
+
+ADAT FELVITELE KÖZVETLENÜL A MySQL felületén:
+_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+Itt kézzel is vihetünk be adatokat így:
+katt: [Szerkesztés helyben] és amegnyíló texarea-ba:
+INSERT INTO vizallasok (nap,allas) VALUES (1,8000);
+Ahol a vizallasok az adattábla neve, a (nap,allas) a két oszlop neve, aminek az értékeit rendre megadjuk 1 lesz a "nap", 8000 az "allas". 
+Rányomok végül az (Indítás) gombra a parancs lefuttatásához.
+
+Ha nem adok meg a PRIMARY tulajdonságú (itt:"nap") oszlopnak éréket, akkor új értéket ad hozzá a végére eggyel magasabb elsődleges kulcs értékkel (mivel be lett jelölve az auto increment). ÍGy:
+INSERT INTO vizallasok (allas) VALUES (8600);
+
+ADAT LEKÉRDEZÉSE KÖZVETLENÜL A MySQL FELÜLETÉN:
+_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+[Szerkesztés helyben] gomb, és parancs:
+SELECT * FROM `adattablaNeve`;
+
+ahol: * a minden oszlop jele, és az `adattablaNeve` ahonnan ki akarom listáztatni.
+
+SELECT allas FROM `adattablaNeve`; 
+Itt már csak az allas oszlop értékei szerepelnek. Ez akkor érdekes, ha rengeteg oszlop van, és nekem csak 1-2 releváns.
+Lehet szűkíteni feltétel szerint a keresést a WHERE paraccsal így:
+SELECT * FROM `adattablaNeve` WHERE allas > 7000;
+Intervallumot keresni így:
+SELECT * FROM `adattablaNeve` WHERE allas BETWEEN 1000 AND 2000;
+
+Lehet keresni szövegre is:
+	Teljes szöveg azonosságra két módon:
+SELECT * FROM adattablaNeve WHERE stringOszlop = 'pontos szöveg';
+SELECT * FROM adattablaNeve WHERE stringOszlop LIKE 'pontos szöveg';
+	Kezdő szöveg részletre % végződéssel:
+SELECT * FROM adattablaNeve WHERE stringOszlop LIKE 'szöveg Eleje%';
+	Befejező szöveg részletre % kezdéssel:
+SELECT * FROM adattablaNeve WHERE stringOszlop LIKE '%szöveg vége';
+	Középen lévő szöveg részletre % kezdéssel és befejezéssel:
+SELECT * FROM adattablaNeve WHERE stringOszlop LIKE '%szöveg közepe valahol%';
+	Kezdő és befejező szöveg részletre egyszerre:
+SELECT * FROM adattablaNeve WHERE stringOszlop LIKE 'kezd%végződik';
+
+Wildcard karakter az underscore (_):
+SELECT * FROM adattablaNeve WHERE stringOszlop LIKE 'm_g';
+A szöveg a stringOszlop-ban lehet meg,mag,míg,még, stb. 
+
+null értékre keresés:
+SELECT * FROM adattablaNeve WHERE oszlop IS NULL;
+null értéket kizáró keresés:
+SELECT * FROM adattablaNeve WHERE oszlop IS NOT NULL;
+
+NEM ISMÉTLŐDŐ ADAT LEKÉRDEZÉSE A MySQL FELÜLETÉN:
+_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+SELECT DISTINCT: csak a különböző, azaz egyedi, eltérő értékeket ad vissza, kiszűri az ismétlődő adatokat. Tehát ha pl. kategóriába karjuk rendezni az adatokat, (pl. hisztogramot akarok csinálni), akkor ezzel tudom a létező értékeket egyszer szerepeltetni.
+
+Szintaxis:
+SELECT DISTINCT oszlop(ok) FROM adattábla;
+
+Ha több mezőt vagy oszlopot adunk meg, akkor csak abban az esetben fog két rekordot azonosnak tekinteni, ha az összes kiválasztott oszlop értéke megegyezik. 
+Eredménye: Kilistázza a különböző kategóriák értékeit.
+
+ADATOK RENDEZETT LEKÉRÉSE MySQL FELÜLETÉN:
+_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+
+SELECT * FROM `adattablaNeve` ORDER BY oszlopNeve DESC;
+Itt: Minden adatot megjelenít (*) a megnyitott adatbázis `adattablaNeve` nevű adattáblájából, mégpedig azoszlopNeve oszlop adatai szerint rendezve csökkenő (DESC) sorrendben.
+
+SELECT * FROM `adattablaNeve` ORDER BY oszlopNeve ASC; - ugyanaz mint az előző, csak emelkedő sorrendben. 
+
+Ha nincs ASC vagy DESC beírva, akkor is alapértelmezetten növekvő.
+
+STATISZTIKA LEKÉRÉSE MySQL FELÜLETÉN:
+_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+
+Maximális érték meghatározása:
+
+SELECT keresettAdadtOszlopa FROM adattablaNeve ORDER BY keresettAdadtOszlopa DESC LIMIT 1;
+
+Ennek jelentése: Keresd ki és rendezd az adattablaNeve oszlop adatai szerint az adatokat csökkenő sorrendbe, és csak az első (rendezés után a legmagasabb) sor értékét add meg. Ha nem az érték, hanem az elsődleges kulcs érték (kb. az index) érdekel minket, akkor:
+SELECT elsodlegesKulcsErtek FROM adattablaNeve ORDER BY keresettAdadtOszlopa DESC LIMIT 1;
+
+Minimális érték meghatározása: 
+Mint az előző, csak ASC van a DESC helyett, mert növekvő sorrendbe rendezve az első elem a legalacsonyabb lesz.
+SELECT elsodlegesKulcsErtek FROM adattablaNeve ORDER BY keresettAdadtOszlopa ASC LIMIT 1;
+
+Átlagos érték meghatározása:
+SELECT AVG(keresettAdadtOszlopa) FROM adattablaNeve;
+Itt az AVG() funkciót hajtjuk végre az adattáblán, és egyetlen értéket ad vissza ( AVG(keresettAdadtOszlopa) ).
+
+ADAT MÓDOSÍTÁSA A MYSQL FELÜLETÉN:
+-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
+
+Egyes már létező adatok módosítása a következő módon lehetséges:
+UPDATE adatabla_neve
+SET column1 = value1, column2 = value2
+WHERE /*feltétel */;
+Itt: Jelezzük, hogy módosítunk (UPDATE), majd megadjuk, hogy melyik oszlopot milyen értékre állítjuk át (SET), legvégül egy feltételt kell megadni, hogy melyik rekordra vonatkozzon a változtatás a (WHERE feltétel.)
+Például: 
+
+ADATBÁZIS INICIALIZÁLÁSA:
+_______________________________________
+
+A következőben le van írva egy MySQl szerverhez kapcsolódó funkció sablonja:
+
+function db_init(){
+    $servername = "localhost";
+    $username = "username";
+    $password = "password";
+    $dbname = "database_name";
+
+    //Create connection
+    $conn = new mysqli($servername,$username,$password,$dbname);
+
+    //Check connection
+
+    if($conn->connect_error){
+        die("Connection failed: ".$conn->connect_error);
+    }
+    echo "Connected successfully";
+}
+
+
+Itt: a custom funkció lelke a mysqli($servername,$username,$password); parancs, ami new paranccsal létrehozható egyedi példány. 
+A szerver neve, amit a $servername változóban tárolunk lehetne domain, vagy IP cím is. Itt "localhost", mert csak mímeljük a szervert. A $username a  felhasználó neve, amivel jogosultak vagyunk belépni, ugyanehhez tartozik a $password is. Ebben az esetben "root" lehet a $username, és nem kell jelszó ("" üres string). A legutolsó paraméter itt a database neve ($dbname), ami jelen esetben "data_base_name".
+Ha a csatlakozás nem sikerül ($conn->connect_error), akkor a die() beépített funkciót hívjuk meg ("The die() function prints a message and exits the current script").   
+forrás: 
+
+https://www.w3schools.com/php/php_mysql_connect.asp
+
+ADAT BETÖLTÉSE MySQL-ből PHP segítségével:
+https://www.w3schools.com/php/php_mysql_select.asp
+
+A lekérdezés menete: 
+Előszőr létrehozzuk a kapcsolatot, majd ennek küldjük a kérdést így:
+$conn->query("SELECT adatAmiKell FROM adattablaNEve");
+Itt a $conn egy tetszőleges nevű kifejezés a kapcsolat létesítésére. Ezt  el kell menteni egy változóba így:
+$eredmeny = $conn->query("Lekérdezés szövege");
+Az $eredmeny egy mysqli query objektum lesz, ami így néz ki ( print_r()-el kiíratva ):
+mysqli_result Object ( [current_field] => 0 [field_count] => 1 [lengths] => [num_rows] => 1 [type] => 0 ) 1
+Legvégül le kell zárni a kapcsolatot:
+$conn->close(); -ez a parancs lezárja a kapcsolatot a sql szerverrel.
+
+
+The fetch_assoc() / mysqli_fetch_assoc() function fetches a result row as an associative array. Note: Fieldnames returned from this function are case-sensitive. - Úgy tűnik soronként küldi meg az adatokat a MySQL. Ezért lehetséges soronként kiíratni őket így:
+
+ while($row = $result->fetch_assoc()) {
+    echo "<td>".$row["nap"] .". nap</td>";
+    echo "<td>".$row["allas"]." mm </td>";       
+    }  // - itt mindaddig fut a while ciklus amíg küldi az adatot a MySQL, ha nem így lenne akkor végteleln ciklus lenne szerintem legalább is. 
+
+
+ADAT MENTÉSE MySQL-be PHP segítségével:
+https://onelinerhub.com/php-mysql/how-to-insert-data-into-a-mysql-database-using-php
+
+-----------------------------------------------------
+ID generálása:
+Ha ID-t akarunk csinálni,  akkor érdemes Globally Unique Identifier-t (GUID) használni, ami egy 128 bit-es szám. Ezt legenerálják nekünk pl. a guidgenerator.com/-on.
+------------------------------------------------------
+Jelszó kódolása:
+SQL adatbázisban soha nem szabad jelszót nyers szövegként tárolni (valamiért), hanem át kell kódolni, titkosítani azt.
+Ehhez ajánlott az:
+sha256 Hash Generator Online program, ami ingyenes.
+Ezzel egyirányú titkosítást lehet csinálni, azaz nem derül ki a jelszó szövge belőle, de ugyanabból a jelszóból ugyanez a kód lesz akárhányszor alakítjuk is át.
+
+Ugyanehhez van php funkció is:
+$tiskotitott_jelszo = hash('sha256',$password);
+Ez a funkció titkosítja nekünk a jelszót mikor bekérjük a frontenden, amit küldhetünk az adatbázisba így már.

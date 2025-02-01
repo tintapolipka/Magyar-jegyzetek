@@ -1,0 +1,275 @@
+Forrás:
+https://www.youtube.com/watch?v=5fb2aPlgoys
+
+DOM- Document Object Model -  
+
+->D mint Document - mert a teljes HTML-t, mint egy dokumentumot veszi célba. 
+
+->O mint Object - mert egy JS-be beépített objektum, ami eszközöket (funkciókat) tartalmaz a (HTML és CSS) tartalom, stílus, működés manipulálásához. 
+
+->M mint Model - mert egy szerkezetet, vázat használ, ami az egymásba ágyazott és egymás után következő HTML Tag-ekből épül fel.
+
+Node - (azaz magyarul csomópont, csúcs) - gyakorlatilag minden HTML Tag-ra vonatkozik, amire hivatkozhatunk, amit meg tudunk ragadni, így csomópont lehet a teljes dokumentum is. 
+Alesetek:
+text node: a szöveg a HTML-be ágyazva - Akár a kód intendation is lehet az!
+attribute node: a HTML-ek attribútumai
+comment node: a kikommentelt elemek a dokumentumban
+
+Node-fa: Hierarchikus felépítésű
+Lehet parent-child viszony (minden ami a parent TAG-ba van ágyazva az child)  A first child -tól a last child-ig, fentről lefeleé olvasva  a dokumentumot.
+
+Lehet sibling viszony: azonos TAG-ba vannak ágyazva mindketten. Itt fentről-lefelé olvasva previousSibling (előző), vagy nextSibling (következő).
+
+Típusok: 
+window - az a tab, amiben a dokumentum meg volt nyitva
+document - a teljes html file.
+<HTML>: root node - hierarchia csúcsán áll
+child-jai: 	<HEAD> -first child
+		<BODY> -second child
+
+
+Node-ok beazonosítása JS-el:
+	document.getElementById('idNeve') - ID alapján
+	document.getElementsByClassName('classNeve')[0] - itt egy tömbhöz hasonló collection lesz az eredmény, aminek 0-val kezdődik a sorszámozása.	  	document.getElementsByTagName('div') - szintén collection az összes <div>-ről.
+	document.querySelector('#adottID .adottClass a') - Itt az első olyan TAG-et célozza be, amire igazak a felsorolt CSS azonosítók.
+
+document.querySelectorALL('.valamiClass li') Ekkor collectionbe rakja az összes valamiClass-ú listaelemet.
+
+Keresés data-akarmi alapján:
+HTML kódba bármilyen data-valami="" saját kitalálású tulajdonság beírható. A lényeg, hogy data- -lel kezdődjön. Azt követően, hogy az adott HTML TAG-et változóba raktuk a fenti módszerek bármelyikével, hivatkozni lehet rá így: 
+valtozobaRakottHtmlTag.dataset.valami - itt a data-valami="" TAG attribútum tartalmát kérdezem le. 
+________________________________
+Navigálás (traversal) a HTML-ben
+A következő elemeket lehet JS-el beazonosítani:
+A)parentNode
+	document.querySelector('ul').parentNode; - az eggyel feletti node-ot írja ki.
+Akkor is képes erre, ha a parent node-nak már nincs TAG-ja, mert pl. a <html> parentje a document element.
+	document.querySelector('ul').parentElement; - az eggyel magasabb TAG-et írja ki, de ha már nincs magasabb, akkor null-t ad vissza.
+
+`closest()`: Returns the closest ancestor element that matches the specified selector.
+
+   	
+B)childNodes[nodenumber]
+Minden az adott node-ba ágyazott node-ot visszaad egy collectionban. Fontos, hogy itt minden típusú node (szöveg, attribútum, komment, stb.) ki lesz listázva, nem csak a TAG-ek. Adott nodera a sorszámával pl. [0] lehet hivatkozni. 
+Ha csak a TAG-eket akarom, akkor lehet használni: .children -t. Így:
+document.querySelector('ul').children; -ekkor egy nodeListet kapok, amiben csak a TAG-ek vannak.
+
+C)firstChild
+Az első child node-ot adja vissza.
+D)lastChild
+Az utolsó child node-ot adja vissza.
+E)nextSibling
+Az azonos parenntel rendelkező (típustól független!) következő egy node-ot adja be.
+.nextElementSibling beadja csak a TAG-et.
+
+F)previousSibling
+Az azonos parenntel rendelkező (típustól független!) előző egy node-ot adja be.
+.previousElementSibling beadja csak a TAG-et.
+
+Ezek a parancsok halmozhatók, így akár két szintet is lehet egy sorban ugrani, pl:
+document.querySelector('ul').parentNode.parentNode; - itt már a "grandparent node"-ot adja be.
+_______________________________- 
+
+
+Elemek formázása:
+Inline styling:
+Egyszerre egy node-ot lehet vele formázni. Így:
+document.getElementById('formazandoID').style.color = 'red';
+- Az alap formula az, hogy kijelölöm a node-ot, majd a .style-al megadom, hogy CSS-t módosítok, végül jöhet a CSS parancs (itt: .color) és egyenlő az értékével, ami string, tehát ''-közé kell tenni. Ez ugyanaz, mint CSS-ben:
+#formazandoID{color:red};
+Ha kötőjeles a CSS parancs akkor teveBetűzéssel írjuk, kötőjel nélkül így:
+.style.backgroundColor = 'red'; 
+
+Ha többet is formázni szeretnénk, végigiterálhatok rajtuk for loop-pal.
+
+____________________________
+Új elem hozzáadása:
+
+Új elemek beillesztése .append()-el
+1. lépés: Új elem létrehozása document.createElement()-el:
+document.createElement('tagNeve') - ez csak akkor használható, ha változóba tesszük, (vagy esetleg rögtön hozzáfűzzük egy részhez).Így:
+let newDiv = document.createElement('div');
+2. lépés: Új elem csatolása:
+nodeAhovaTeszem.append(amitCsatolok);
+pl:
+document.getElementsByTagName('body')[0].append(newDiv);
+Egyszerre több elem is appendelhető, ha vesszővel válaszjuk el így:
+nodeAhovaTeszem.append(eztIsCsatolom, emeztIsCsatolom);
+______________________________
+Elem beszúrása másik fölé:
+`insertBefore()`: Inserts a new child node before an existing child node.
+______________________________
+Elem törlése:
+.remove()-al lehet így:
+document.getElementById('torlendo').remove();
+_____________________
+Elem kicserélése:
+`replaceChild()`: Replaces an existing child node with a new one.
+
+_______________________________
+Elem/node klónozása:
+ `cloneNode()`: Clones a node.
+______________________________
+Szöveg/Html megváltoztatása:
+
+document.getElementById("id").innerText ='szöveg, amit beleteszek'; - itt lecseréli a korábbit.
+
+document.getElementById("id").textContent = ''; - a különbség, hogy a CSS nélküli HTML-ben meglévő sortörést is megtartja, ha kíratom.
+
+document.getElementById("id").innerHTML = "<p>Szöveg amire változtatom</p>"; -így lehet html kódot is beletenni!
+A parancs eleje az adott HTML rész beazonosítása történik az id="" segítségével, utána jön a HTML-be nyúlás, ami itt a szöveggel egyenlővé tételt jelenti. Ekkor teljesen lecseréli az adott ID-jű HTML TAG tartalmát. Ha csak hozzáfűzni szeretnénk, akkor:
+document.getElementById("id").innerHTML += "<p>Szöveg amit hozzáadok a végére</p>";
+(Gyakorlatilag az .appendChild(...) kiváltható lenne vele, de biztonsági kockázatot is jelent valamiért, ráadásul lassú, ezért nem használjuk.)
+
+______________________________________ 
+Attribútumok, osztályok módosítása:
+A HTML attribútumok (minden ami a <Tag attributum="tartalma">  mintát követi) módosításáról van szó.
+Ha csak meg akarom célozni/kiíratni:
+htmlTagEleresiUtja.getAttribute();
+
+Ha el akarom távolítani:
+htmlTagEleresiUtja.removeAttribute('törlendő attribútum neve, pl: class')
+
+Ha módosítani/ létre hozni akarom:
+
+htmlTagEleresiUtja.setAttribute('attribútum neve','beállítandó értéke');
+
+pl.: tagAmitModositok.setAttribute('id','container');
+
+CSAK A CLASS MEGVÁLTOZTATÁSA
+_________________________________________
+Class hozzáadása:
+document.getElementById("myDIV").classList.add("mystyle");
+- Több class is megadható így, míg a .setAttribute-al csak egy.
+
+Class törlése:
+document.getElementById("myDIV").classList.remove("mystyle");
+
+Class létezésének ellenőrzése:
+document.getElementById("myDIV").classList.contains("mystyle");
+Eredménye: true/false
+
+
+
+Toggle -ki-bekacsoló függvény:
+A javaScript nyelvben .toggle az aktuális állapot ellentétébe fordítást jelenti, így alkalmas arra, hogy ugyanazzal a paracssorral két különböző dolgot is csináljunk a "kapcsoló" állásától függően.
+
+valtozobaRakottHTML.classList.toggle('ki-be kapcsolando class neve')
+
+_______________________________________
+Esemény - vagy Event:
+Az események olyan akciók, amiket a felhasználó vezérel, mi pedig valahogy válaszolni szeretnénk rájuk.
+
+Két mód van ezek beillesztésére:
+1. HTML-ben : 
+onclick='jsFunkció()'
+2. JS-ben :
+nodeAmireRateszem.addEventListener("click",funkcioNeve,boolean);
+Ahol az első argumentum az esemény típusa, amire reagálni kell, a második a callback function. A funkció neve kell csak, nem kell ()-el meg is hívni. Valamiért csak a régi function funkcioNeve(){} szintaxissal megírt funkciók jók neki. BEmeneti értéket nem adhatok meg előre, mert azt majd az eventlistener küldheti. Ami bevált a az event listener helyének meghatározására a callback funkción belül: this.id - így a lehallgatott elem ID-ja alapján azonosítja be önmagát pl. A végén lévő boolean hasznát lásd a propagation résznél.  
+
+
+
+Eseménykezelő készítése:
+Eseményfigyelők azaz eventlistener-hez érdemes változóba rakni egy HTML célelemet (element), (pl.: document.getElementByID('azonosito')-val), bár nem kötelező utána:
+
+element.addEventListener('eseménytípus', futtatandóFunkció(bemenet){végrehejtandó});
+
+Esemény típusok:
+'click' - kattintás
+'keydown' - gombnyomás
+'resize' - böngészőablak átméretezése
+'mouseover' - fölévisszük a kurzort
+
+Futtatandó funkció:
+Bemenetként ilyenkor egy egész sor információt kap az eventListenertől, amiket részletesen úgy lehet lekérdezni, hogy a végrehajtandó parancsban kiíratom a consolra így:
+változóbaRakottElemcím.addEventListener('click', function(event){
+        console.log(event); - ez lehetővé teszi, hogy kiválogassuk amit használni  akarunk.
+
+____________________________________________
+Event propagation (terjesztés)
+
+Analógia:
+Mint ahogy az elektromosság végigfut a vezetéken, úgy halad az infó is. A legmagasabb szinttől az eventlistenerig, vagy onnan a legmagasabb szintig. 
+Akkor érdekes, ha target valamelyik parent/grandparent elemén is van eventlistener, hiszen akkor a target triggerelése egyben a magasabb szintű, befogadó elem triggerelését is jelenti. Ekkor a kérdés, hogy milyen sorrendben hajtsa végre a két (vagy több) eventet?  
+
+Event capturing phase;
+A legmagasabb szinttől végigmegy a DOM-on a parentek eventlistenerei végrehajtássával a triggerelt eventlistenerig, ami a target. (document->html->...->target element)
+
+Target;
+Mutatja az eventlistenerrel megjelölt elemet. Elérhető bármelyik befogadó elem eseményében is az .addEventListener("click",function(akarmi)){akarmi.target;} módon. Ekkor viszaadja azt a legmélyebben beágyazott node-ot, ahol az esemény történt.
+
+Event Bubbling phase;
+(target element->...->html->document)
+Azért hívják bubbling-nak, mert úgy halad a parancsvégrehajtás a DOM hierarchiában felfelé, mint a buborék a vízben.
+
+Ha fentről lefelé akarjuk működtetni az a capturing, akkor az addEventListener() 3. argumentumát true-ra kell állítani. Ha nem írjuk be, akkor alapból false, azaz bubbleing van. Lehet olyat is beírni a 3. argumentumnak, hogy {once: true} - ebben az esetben az eseményfigyelő csak az első alkalommal fut le, utána törlődik.  
+
+Ki is lehet hagyni a terjedésből egy-egy adott elemet, mégpedig úgy, hogy a kihagyandó elem eventlistener-jéhez beírjuk a .stopPropagation() parancsot. Így lehet alkalmazni:
+elemCímAholMegálljon.addEventListener('click', function(event){
+event.stopPropagation()}
+
+Az eventlistener miatt szükség lehet arra, hogy az alapértelmezett funkcióját kikapcsoljuk valami HTML elemnek. Pl. egy <a> TAG ne navigáljon át máshová, vagy frissítse be az oldalt, vagy egy Submit gomb ne küldje be az adatot. Így lehet:
+AholLegátoljukAzEredetiMűködést.addEventListener('click', function(event){
+  event.preventDefault()}
+
+________________________________
+Event delegation (küldés)
+
+Eljárás, amivel egy parent TAG minden elemére tehetek event listenert és ez érvényes lesz a jövőben létrehozott elemekre is!
+Kulcsmozzanata az event.target, ahol az event az event listener funkció argumentuma, a target pedig az a node, ahol megtörtént a figyelt eseményt.
+
+*/ Mellékinfó 
+1.:
+Element.matches()
+The matches() method of the Element interface tests whether the element would be selected by the specified CSS selector. Tehát megmondja, hogy van-e olyan CSS szelektor rajta. Így be lehet azonosítani TAG-ot, classt, id-t, és ezek CSS-el elérhető összes változatát.
+2.:
+Element.getAttribute()
+The getAttribute('HTML attribútum neve') method of the Element interface returns the value of a specified attribute on the element. (pl. 'id', 'class').
+Ez alkalmas arra, hogy az ID-t, data-akármit, mint információ forrást használjunk, pl. kíírassuk .Innertext-el, vagy console.log()-al.  
+
+/*
+
+
+
+Így lehet alkalmazni:
+parentElemAmiDelegál.addEventListener('click', function(event){
+if(event.target.matches('CSS szelektor kifejezés')){ Amit le akarok futtatni kattintás esetén az adott CSS szelektornak megfelelő elemen, vagy elemeken.}
+} 
+
+Ez sok erőforrást megspórol, mert nem kell több aktív event listenert működtetni, és egyszerűsíti a kódot is.
+
+FELHASZNÁLÁSOK:
+_____________________
+1.) Modal: A modal (also called a modal window or lightbox) is a web page element that displays in front of and deactivates all other page content. To return to the main content, the user must engage with the modal by completing an action or by closing it. Modals are often used to direct users’ attention to an important action or piece of information on a website or application.
+
+______________________
+2.) Accordion: An accordion is a menu composed of vertically stacked headers that reveal more details when triggered (often by a mouse click). Since this web design pattern highlights only the most critical information of a section but makes the rest easily accessible, it’s a common element in responsive design. 
+
+Eseményfigyelő eltávolítása:
+
+e.target.FventListener("click", funkcioNeve);- Itt a kattintott elemről eltávolítja az eseményfigyelőt ami megfelel a "click" eseménynek és a funkcioNeve callbackFn-ek.
+Azért fontos ezt megtenni, mert a simán eltávolított(.remove()) DOM elemek addig nem törlődnek a memóriából, amíg van hozzájuk kötött eseményfigyelő.
+
+DOM elem lecserélése:
+Nem kell mindig törölni és új elemet berakni ugyanoda, ha ki akarjuk cserélni az adott Node-ot, használhatjuk a replaceWith() parancsot így:
+eredetiElement.replaceWith(ValtozobeatettUjElement)
+/*The Element.replaceWith() method replaces this Element in the children list of its parent with a set of Node or string objects. String objects are inserted as equivalent Text nodes.*/
+
+Komplett DOM Node másolása:
+A változóba tett Node-ot lehet klónozni így:
+let masolat = eredetiNode.cloneNode(true); -itt a childokat is klónozzuk azt jelzi a true a zárójelek között. Ha false volna, akkor csak az eredetiNode volna, child nélkül.
+
+DOM element méreteinek és pozíciójának meghatározása (a látható képernyőrészhez viszonyítva):
+Minden DOM elementnek, mint Objektumnak van olyan methódusa, hogy:
+.getBoundingClientRect()
+Ez visszaadja a pillanatnyi top, bottom, left, right pixel távolságát a látható képernyőrész széleitől, és az aktuális height-ot és width-et is. Minden scrollozással változnak ezek!
+
+Ha arra vagyunk kíváncsiak, hogy egy Node leszármazottja-e (child-ja, grandchild-ja, stb.-je) -azaz a HTML kódban bele van-e ágyazva- egy másik node, akkor a .contains()-t lehet használni, ami booleant ad vissza. Például:
+<div id="parentNode">parent<div id="childNode">child</div></div> esetén:
+document.getElementById('parentNode').contains(document.getElementById('childNode'))
+ eredménye: true;
+De akkor is true, ha önmagára kérdezünk rá. Ez akkor érdekes, ha el van mentve változóba egy node, és azt akarjuk megtudni, hogy az önmaga/ child-ja-e? Itt:
+const valtozobaTettNode = document.getElementById('parentNode'); esetén:
+document.getElementById('parentNode').contains(valtozobaTettNode); // true lesz!
+
+

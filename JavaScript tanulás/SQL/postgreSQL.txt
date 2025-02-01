@@ -1,0 +1,566 @@
+# Mi az SQL?
+
+Structured Query Language struktúrált lekérdező nyelv. A relational database típusú adatbázisok sztenderd lekérdezésére való nyelv. 
+
+## Relational database:
+Ezek az Excell típusú adatbáziskezelők (Relational Database Management System) adatbázisai, amelyek sorokba és oszlopokba rendezett információkat tartalmaznak adattáblákba gyűjtve. Ehhez képest a key-value típusú adatbázisok, a JSON, az xml, stb. a non-relational database típust alkotják. A Relational Database Management System-ekkel (RDBMS) való kommunikációra fejlesztették ki az SQL-t.
+
+## Mire képes az SQL?
+* C.R.U.D. műveletek, továbbá egyéb adminisztratív feladatok végrehajtása
+* táblázatok és szerkezetek létrehozása
+* a legtöbb különböző platformon kissé eltérő SQL változatokat használnak, nem teljesen kompatibilisek ezért sajnos
+
+## Relational Database felépítése:
+Az adatbázisban vannak az adattáblák. Az adattáblákban vannak oszlopok (fields) és sorok (records). 
+
+### Primary key
+Minden adattáblának van egy elsődleges kulcs (primary key) oszlopa  amelynek egyedi (unique) értékeket kell tartalmaznia, hiszen ez alapján azonosítható be pontosan a sor (az Excell-ben ez a sor sorszáma, amit automatikusan generál a program, de az SQL típusú adatbázisoknál ez bármelyik oszlop lehet). 
+Egy primary key lehet:
+* surrogate key: értelemtlen, csak erre a funkcióra létrehozott (angolul pótlékot jelent)
+* natural key: olyan elsődleges kulcs, ami egyedi, de valódi jelentése van. Ilyenek pl. a regisztrációnál az email címek. 
+
+### Foreign key
+Olyan mezők (oszlopok), amik összeköttetést biztosítanak a saját és egy másik adattábla között az adatbázison belül. Rövidebben: Olyan adatok, amik szerepelnek egy másik adattáblában is, és ementén a kettő összefésülhető. Ehhez persze ezeknek is egyedieknek kell lenniük. Követelmény továbbá (az SQL-é?), hogy legalább az egyik adattáblának a primary key-e legyen a kapcsolódó táblának a foreign key-e. 
+
+Lehetséges azonban, hogy a foreign key-ek egy rövidebb adattáblára utalnak, mert például kategóriák neveit tartalmazzák. Ebben az esetben a fő táblában ismétlődnek a foreign key-ek, de a másodlagos, rövidebb táblában azok az egyedi primary key-ek.
+
+További változat, ha a foreign key ugyanazon táblázat egy másik rekordjára mutat. Például egy személy házastársa egy másik személy, akkor a "házastárs" oszlopban a ugyanannak a táblázatnak egy másik rekordjának az ID-ja (primary key érték) szerepelne.
+
+### Composite key
+Ebben az esetben kettő (vagy több) oszlop együttes értéke vesz csak fel egyedi (unique) értéket, így csak együtt tesznek ki egy pontos azonosításra képes egységet.
+Például a vezetéknév és az utónév együtt azonosít csak pontosan egy személyt. 
+Hasznos aleset, ha két foreign key alkot egy composite key-t. 
+
+### Legfontosabb Változó típusok SQL-ben:
+* 1. Szöveg típusok
+Ezeket általában szöveges vagy karakterlánc-adatok tárolására használják.
+VARCHAR(n): Változó hosszúságú szöveg, ahol n a maximális karakterek száma.
+TEXT: Nagy mennyiségű szöveg tárolására szolgál.
+
+* 2. Szám típusok
+Számok tárolására használják, egész vagy lebegőpontos formában.
+INT: Egész számok különböző méretekben.
+DECIMAL(p, s) vagy NUMERIC(p, s): Fixpontos számok, ahol p a teljes számjegyek száma, s pedig a tizedesjegyek száma.
+
+* 3. Dátum és idő típusok
+Időbeli adatok tárolására használják.
+DATE: Csak dátum (év, hónap, nap).
+TIME: Csak idő (óra, perc, másodperc).
+TIMESTAMP: Dátum és idő kombinációja.
+
+* 4. Logikai típusok
+Igaz/hamis értékek tárolására.
+BOOLEAN vagy BIT: Logikai értékek (1 vagy 0, igaz vagy hamis).
+
+* 5. Bináris típusok
+Bináris adatok, például fájlok, képek vagy egyéb nyers adatok tárolására.
+BLOB: (Binary Large OBject) Nagy bináris adatok tárolására.
+
+* 6. Egyéb típusok
+Ezek az adott adatbázis-kezelő specifikus típusai lehetnek.
+JSON: Strukturált JSON-adatok tárolására.
+XML: XML formátumú adatok tárolása.
+
+## Style guides
+Az SQL-ben nincsenek formázási megkötések. Kis és nagybetűk egyenértékűek, sortörések és behúzások nem számítanak, sőt még a pontosvessző sem mindenhol. Annak érdekében, hogy mégis olvasható legyen emberi szemnek a kód, léteznek konvenciók.
+Hollywell's style guide:
+https://www.sqlstyle.guide/
+
+### Kommentelés az SQL-ben:
+
+~~~SQL
+-- Ez a sor ki van kommentelve
+/*Itt több sor
+is ki van kommentelve*/
+~~~
+
+forrás: 
+https://campus.datacamp.com/courses/intermediate-sql/selecting-data?ex=1
+
+
+
+## AZ SQL 4 különböző típusú nyelv egyben
+
+* 1. Adat definiáló nyelv (Data Definition Language)\
+Adatbázis sémák meghatározására alkalmas
+* Adat lekérdező nyelv (Data Query Language)
+* Adat kontrolláló rendszer (Data Control Language)\
+irányítja az adatokhoz való hozzáférést a felhasználók számára
+* Adat manipuláló nyelv (Data Manipulation Language)\
+CRUD
+
+## 1. Adatbázis sémák meghatározása
+---
+### Új adatbázis létrehozása SQL-ben: CREATE DATABASE
+~~~sql
+CREATE DATABASE Webshop
+CHARACTER SET utf8mb4
+COLLATE utf8mb4_hungarian_ci;
+~~~
+
+* CREATE DATABASE adatbazis_neve: Hozzunk létre egy Webshop nevű adatbázist:
+* CHARACTER SET utf8mb4: Unicode karakterkódolás támogatása (a legtöbb modern alkalmazáshoz ajánlott).
+* COLLATE utf8mb4_hungarian_ci: Magyar nyelvhez igazított rendezési szabályok. (to collate jelentése magyarul: egyeztet)
+
+Ha szeretnéd elkerülni a hibát, ha már létezik az adott nevű adatbázis, használhatod az IF NOT EXISTS feltételt:
+
+~~~sql
+CREATE DATABASE IF NOT EXISTS Webshop;
+~~~
+### Új adattábla létrehozása:
+Az adatBÁZIS adatTÁBLÁKBÓL áll (Mint az excell aloldalai), ezek létrehozásakor meg kell adni a következőket:
+~~~sql
+CREATE TABLE student (
+	student_id INT PRIMARY KEY,
+	name VARCHAR(50),
+	major VARCHAR(20)
+);
+~~~
+* CREATE TABLE adattabla_neve () - adattábla neve
+* elsodleges_kulcs INT PRIMARY KEY, -az adattábla neve mögötti zárójelbe jönnek a mezők (oszlopok), amelyek között kell lennie egy elsődleges kulcsnak. Az elsődleges kulcs alapértelmezeten nem lehet null és egyedinek kell lennie. A mezőnevek után vesszők jönnek, kivéve az utolsó sort!
+
+Elsődleges kulcs választható máshogyan is: PRIMARY KEY(valtozo_neve)
+~~~sql
+CREATE TABLE adattabla (
+	adat_id INT,
+	adat_ertek VARCHAR(10),
+	PRIMARY KEY(adat_id)
+);
+~~~
+AUTO_INCREMENT az elsődleges kulcshoz:
+Ha az elsődleges kulcs szám, akkor kaphat "automatikus emelkedés" megszorítást is, aminek következtében a legújabb rekord mindig eggyel magasabb számot kap amikor bekerül. A számolás 1-től kezdődik. ÍGY:
+~~~sql
+CREATE TABLE adattabla (
+	adat_id INT AUTO_INCREMENT,
+	adat_ertek VARCHAR(10),
+	PRIMARY KEY(adat_id)
+);
+~~~
+#### Másodlagos vagy külső kulcs (Secondary key) beállítása:
+Ha létezik majd az adatbázisban legalább kettő összeilleszthető adattábla, akkor lehet beállítani az egyik adattábla primary key értékeit a másik adattábla secondary key mezőjében. 
+
+~~~sql
+CREATE TABLE uj_adattabla (
+egyes_tabla_id INT PRIMARY KEY,
+kettes_tabla_id INT,
+egyes_tabla_adat VARCHAR(10),
+FOREIGN KEY (kettes_tabla_id) REFERENCES kettes_adattabla(kettes_tabla_sajat_id) ON DELETE SET NULL
+);
+~~~
+
+* FOREIGN KEY (kettes_tabla_id) REFERENCES kettes_adattabla(kettes_tabla_sajat_id)
+ 
+A FOREIGN KEY kulcs azt jelenti, hogy a kettes_tabla_id oszlop értékei a kettes_adattabla táblában lévő kettes_tabla_sajat_id oszlop értékeire hivatkoznak.
+Ez biztosítja, hogy a kettes_tabla_id oszlopban csak olyan értékek szerepelhetnek, amelyek már léteznek a kettes_adattabla táblában a kettes_tabla_sajat_id oszlopban.
+* ON DELETE SET NULL 
+Ez a szabály azt határozza meg, hogy mi történjen, ha egy olyan sor kerül törlésre a kettes_adattabla táblában, amelyre a kettes_tabla_id hivatkozik.
+Az ON DELETE SET NULL azt mondja, hogy ha egy rekordot törölnek a kettes_adattabla táblából, akkor az uj_adattabla táblában a hozzá kapcsolódó kettes_tabla_id oszlop értéke NULL lesz (a kapcsolat megszakad, de a sor megmarad).
+* ON DELETE CASCADE
+Ez is szerepelhet az ON DELETE SET NULL helyett. Működése: Ha egy rekordot törölnek az elsődleges táblából (ahol az adott rekord az elsődleges kulcsot tartalmazza), akkor a hozzá kapcsolódó összes rekord automatikusan törlődik a másik táblából is (ahol a külső kulcs hivatkozik az elsődleges kulcsra). 
+
+#### Mező Megszorítások:
+A mezőknek lehet speciális tulajdonságai, mint pl., hogy nem lehet null, vagy neki alapértelmezett érték, stb... 
+NOT NULL mező:\ Megadható olyan mező, amelybe nem kerülhet NULL (adathiány) a NOT NULL megszorítással (angolul constraint), különben visszautasítja a sort az SQL. így:
+~~~sql
+CREATE TABLE adattabla (
+	adat_id INT NOT NULL,
+	adat_ertek VARCHAR(10),
+	PRIMARY KEY(adat_id)
+);
+~~~
+DEFAULT értékű mező:\ A megadható olyan érték, ami adathiány esetén kitölti az adott sorban a mező értékét, így NULL helyett ezt kapja. Így:
+~~~sql
+CREATE TABLE adattabla (
+	adat_id INT,
+	adat_ertek VARCHAR(10) DEFAULT 'alapértelmezett',
+	PRIMARY KEY(adat_id)
+);
+~~~
+A DEFAULT a mező definiáló sorába kerül, és utána azonal írjuk az erre szánt értéket. HA sztring szimpla idézőjelbe.
+
+UNIQUE mező:\
+Megadható olyan mező, amelyben minden érték csak egyszer szerepelhet, különben visszautasítja a sort az SQL.
+~~~sql
+CREATE TABLE adattabla (
+	adat_id INT UNIQUE,
+	adat_ertek VARCHAR(10),
+	PRIMARY KEY(adat_id)
+);
+~~~
+
+### Létező Adattábla megtekintése
+~~~sql
+DESCRIBE Suppliers;
+~~~
+
+### Adattábla törlése:
+~~~sql
+DROP TABLE adattabla_neve;
+~~~
+
+### Adattábla Módosítása:
+A változtatás az "ALTER" kulcsszó és egy további kulcsszó útján lehetséges:
+#### Új Mező hozzáadása:
+~~~sql
+ALTER TABLE adattabla_neve ADD uj_oszlop VARCHAR(10);
+~~~
+* ADD uj_oszlop VARCHAR(10); - az add parancs után jön az új oszlop neve, majd az adat típusa. 
+#### Mező törlése:
+~~~sql
+ALTER TABLE adattabla_neve DROP COLUMN torlendo_oszlop;
+~~~
+
+# ADATKEZELÉS SQL-ben
+---
+
+## CRUD operációk az adatokon
+---
+### Adatok beillesztése (CREATE):
+
+#### Teljes adatsor feltöltése:
+~~~sql
+INSERT INTO adattabla VALUES (1,'kaja');
+~~~
+* Itt: Az adott adattáblába egy sorát kell hiánytalanul beadni abban a sorrendben amiben a definiáláskor megadtuk a mezők nevét.
+
+Lehet több sort is beilleszteni egy paranccsal, ekkor csak a VALUES utáni zárójeles kifejezéseket kell halmozni vesszővel elválasztva:
+~~~sql
+INSERT INTO adattabla VALUES (1,'kaja'),(2,'pia'),(3,'nők');
+~~~
+
+#### Adatsor részleges feltöltése:
+~~~sql
+INSERT INTO adattabla(adat_id) VALUES(2);
+~~~
+* Itt: Kiválasztottam, hogy az adattabla mezői közül csak az adat_id kerüljön feltöltésre '2' értékkel. A többi definiált mező értéke NULL lesz.   
+
+
+### Adatok módosítása: (UPDATE):
+Az adatsorok tartalmának módosítására való az UPDATE parancs. Mindig meg kell adni azt, hogy melyik adattáblában teszem ezt. Valahogy jelezni kell, hogy melyik sorban mit vagy milyen értéket és mire változtatok. Ha nem adok meg WHERE záradékot, akkor a módosítást MINDEN sorban végrehajtja!
+
+#### konkrét érték kicserélése:
+~~~sql
+UPDATE student SET major = 'Bio' WHERE major = 'Biology';
+~~~
+
+* UPDATE student: Ez azt jelenti, hogy a student nevű táblát fogjuk frissíteni (módosítani).
+* SET major = 'Bio': A major oszlop értékét fogjuk módosítani, mégpedig úgy, hogy azoknál a rekordoknál, amelyek megfelelnek a feltételeknek, az értéket 'Bio'-ra állítjuk.
+* WHERE major = 'Biology': Ez a feltétel határozza meg, hogy mely rekordokat érintse a frissítés. Csak azokat a sorokat módosítja, ahol a major oszlop értéke pontosan 'Biology'. HA ez a záradék kimarad, akkor minden sorban végrehajtja a módosítást.
+
+#### Feltételek halmozása:
+A áltoztatás helyét több feltétel is szabályozhatja így:
+~~~sql
+UPDATE student 
+SET major = 'Biochemistry' 
+WHERE major = 'Biology' OR 'Chemistry';
+~~~
+* itt a VAGY logikai operátorral választunk ki mindenkit aki vagy 'Biology' vagy 'Chemistry' major-on van.
+
+##### Logikai operátorok SQL-ben:
+~~~ 
+AND, OR, NOT
+~~~
+### Adatok törlése (DELETE):
+Az adatsorok tartalmának törlésére való az DELETE parancs. Mindig meg kell adni azt, hogy melyik adattáblában teszem ezt. Valahogy jelezni kell, hogy melyik sort vagy a sorban milyen értéket törlök ki.
+
+#### rekord (sor) törlése:
+~~~sql
+DELETE FROM student 
+WHERE major = 'Biology';
+~~~
+* DELETE FROM student: Törlünk minden sort a student adattáblából
+* WHERE major = 'Biology': ahol a major mező értéke 'Biology',
+
+### Adatok lekérése - Database queries
+ (READ):
+(Angolul a query lekérdezést jelent)
+
+Az adatlekérdezés a SELECT és a FROM kulcsszavakra épül.
+* Minden adat lekérése egy adattáblából:
+~~~sql
+SELECT * FROM adattabla;
+~~~
+Itt: Válassz ki (SELECT) mindent (*) a következőből: (FROM) adattabla;
+* Mezők (oszlopok) részleges kiválasztása:\
+ Meg lehet adni azokat a mezőket, amelyeket le karok kérezni. Ehhez a SELECT után vesszővel felsorolva kell őket felsorolni:
+~~~sql
+SELECT egyik_mezo, masik_mezo FROM Suppliers;
+~~~
+
+* Sorrendezett adatlekérdezés 
+~~~sql
+SELECT * FROM adattabla ORDER BY oszlopNeve DESC;
+~~~
+Itt: Minden adatot megjelenít (*) a megnyitott adatbázis `adattabla` nevű adattáblájából, mégpedig azoszlopNeve oszlop adatai szerint rendezve csökkenő (DESC) sorrendben.
+~~~sql
+SELECT * FROM `adattabla` ORDER BY oszlopNeve ASC;
+~~~ 
+Ugyanaz mint az előző, csak emelkedő sorrendben. 
+
+Ha nincs ASC vagy DESC beírva, akkor is alapértelmezetten növekvő  ábécé- vagy érték- sorrendbe rakja az adatokat.
+
+Rendezni több mező alapján is lehet, ekkor a megadott mezők sorrendjében rendezi az adatokat:
+~~~sql
+SELECT * FROM adattabla ORDER BY egyik_mezo, masik_mezo;
+~~~
+
+* Korlátozott számú rekord lekérdezése:
+**Adott számú találat megjelenítése
+1. LIMIT
+A LIMIT parancs segítségével megadható, hogy hány sor kerüljön vissza az eredményhalmazból.
+
+~~~sql
+SELECT * 
+FROM employees
+LIMIT 10;
+~~~
+Ez a lekérdezés az első 10 sort adja vissza az employees táblából.
+
+2. FETCH FIRST
+Ez a szintaxis az SQL szabvány része, és PostgreSQL-ben is támogatott. Funkcionálisan ugyanaz, mint a LIMIT.
+
+~~~sql
+SELECT * 
+FROM employees
+FETCH FIRST 10 ROWS ONLY;
+~~~
+- Itt csak azt a 10 rekordot adja vissza, ami az első a megadott feltételek szerint. 
+
+* Megszorítások alkalmazása WHERE kulcszóval:
+~~~sql
+SELECT * FROM Suppliers WHERE SupplierID > 20;
+~~~
+Itt is használhatók a logikai (AND, OR, NOT) és a matematikai (<,>,=,=<,>=, és <>, azaz nem egyenlő) operátorok. 
+Van még a BETWEEN, ami két számszerű érték közti értékekkel bíró rekordokra utal. Ugyanakkor, ha karaktersorok közé tesszük, akkor ábécésorrend alapján választja ki az 'intervallum' elemeit.
+~~~sql
+SELECT * FROM Products
+WHERE Price 
+BETWEEN 10 AND 20;
+~~~
+A két érték elé jön a BETWEEN, közé pedig AND-et kell rakni.
+
+A NOT olyan feltételt aszab meg, aminek a fennállása esetén kizáródik az adott rekord a találatok közül.
+~~~sql
+SELECT * FROM adattabla WHERE NOT adattabla.kizaro_ertek = 'ez ne legyen';
+~~~
+Külön tesztelendő, hogy a az érték NULL-e? Ez a IS NULL és IS NOT NULL kifejezéssel lehetséges így:
+~~~sql
+SELECT column_name
+FROM table_name
+WHERE column_name IS NULL;
+-- Itt a akkor választjuk ki, ha null a column_name értéke
+~~~ 
+~~~sql
+SELECT column_name
+FROM table_name
+WHERE column_name IS NOT NULL;
+-- Itt a akkor választjuk ki, ha NEM null a column_name értéke
+~~~
+
+A megszorítások halmozhatók is. Ekkor az azonos szintre tartozó összetett feltételeket (zárójel)-be kell tenni így:
+~~~sql
+SELECT * FROM Customers
+WHERE Country = 'Spain' AND (CustomerName LIKE 'G%' OR CustomerName LIKE 'R%');
+~~~
+
+
+* Megszorítások halmazának megadása IN()-el:
+~~~sql
+SELECT * 
+FROM Suppliers 
+WHERE Country IN('Finland','Denmark');
+~~~
+Kiválasztj azaokat a rekordokat, ahol a WHERE utáni mezőben az IN utáni zárójelben felsoroltakkal egyenlő érték található.
+
+#### Futási sorrend
+Az SQL nyelvben az egyes parancsoknak megvan a futási sorrendje, azaz nem sorról-sorra fut le a kód, hanem az egyes parancsok prioritásának sorrendjében. Az adat kiválasztás során (azaz a query-kenél) a FROM-ot futtatja először, hiszen onnan tudható, hogy melyik adattábláról van szó, utána jön a SELECT és ez után jönnek a kiválasztás finomítását célzó parancsok, pl. a LIMIT és így tovább...
+Ezt különösen akkor fontos észben tartani, ha alias-okkal  dolgozunk, mert azok deklarálása után lehet csak őket használni. 
+Debuggoláskor is fontos ez a sorrend.
+
+# SQL Aggregate funkciók:
+Olyan funkciókat hívjuk így, ami adatok egy tömbjéből egyetlen adatot csinál.
+
+## COUNT()
+A COUNT() funkció azoknak a rekordoknak (soroknak) a darabszámát adja vissza, amelyek rendelkeznek a paraméterként beküldött oszlopban (field) valós értékkel (nem üres/null). 
+~~~SQL
+SELECT COUNT(birthdate) FROM people; 
+~~~
+Lehet 'alias'-t használni ahhoz, hogy olvashatóbb legyen a kód így:
+~~~SQL
+SELECT COUNT(birthdate) AS "count birthdates" FROM people; 
+~~~
+
+Ha nincs érték az adott oszlopban, akkor azt nem számítja bele a COUNT(), ezért ha az összes rekord számára vagyok kíváncs, akkor lehet *-ot használni, mint az "összes" rövidítését így:
+
+~~~SQL
+SELECT COUNT(*) AS all_records FROM people;
+~~~
+A kijelölések halmozhatók is vesszővel elválasztva így:
+~~~SQL
+SELECT COUNT(name) AS count_names, COUNT(birthdate) AS count_birthdates FROM people;
+~~~
+Ekkor két oszlopot listáz ki a létező nevek és a születési évek darabszámával;
+
+### DISTINCT
+(Angolul határozott, jól megkülönböztethető a jelentése)
+
+Az ismétlődő (duplicate) értékek kizárására lehet használni a DISTINCT kifejezést.
+~~~SQL
+SELECT DISTINCT language FROM films;
+~~~
+ - Itt a különböző nyelveket fogja kilistázni a films adattáblából.
+
+DISTINCT és COUNT() ötvözése: 
+
+~~~SQL
+SELECT COUNT(DISTINCT birthdate) AS count_distinct_birthdates FROM peolple;
+~~~
+
+## AVG()
+Az átlag kiszámítására való SQL funkció
+~~~sql
+SELECT AVG(numerikus_adat) FROM adattabla; 
+~~~
+Jelentése: Jelenítsd meg a 'numerikus_adat' átlagát az adattabla táblából!
+
+## SUM()
+Az összeg kiszámítására való SQL funkció
+~~~sql
+SELECT SUM(numerikus_adat) FROM adattabla; 
+~~~
+Jelentése: Jelenítsd meg a 'numerikus_adat' mező értékeinek összegét az adattabla táblából!
+
+## MIN() és MAX()
+Számszerű mezők legkisebb vagy legnagyobb értékét adják vissza:
+~~~sql
+SELECT MIN(Price)
+FROM Products;
+~~~
+
+### GROUP BY megszorítás - Aggregált adatok számítása:
+Arra szolgál, hogy az adatok csoportosítását végezze egy vagy több oszlop értékei alapján. Az azonos értékek egy csoportba kerülnek, és az aggregáló függvények (pl. COUNT, SUM, AVG, MAX, MIN) ezeken a csoportokon belül hajtódnak végre.
+
+Felhasználás főbb lépései:
+Adatok csoportosítása: Meghatározza, hogy mely oszlop(ok) alapján történjen a csoportosítás.
+
+~~~sql
+SELECT osztaly, AVG(fizetes) AS atlag_fizetes
+FROM dolgozok
+GROUP BY osztaly;
+~~~
+Itt: Kiválasztjuk az 'osztaly' mezőt a 'dolgozok' adattablabol, illetve az átlagos fizetést [AVG(fizetes) AS atlag_fizetes], és a két kiválasztott mező közül csoportosítjuk az átlag fizetéseket az 'osztaly' mező kategoriái mentén. 
+
+### Szövegrészlet keresése:
+Az úgynevezett wildcard karakterek segítségével kereshetünk rá rekordok értékeire, amiket nem ismerünk pontosan. Ezek sgítségével felépíthetünk egy mintázatot, amit keresni fog az SQL.
+WildCard karakterek: 
+* '%' ismeretlen számú bármilyen karakter helyettesítésére való
+* '_' egy darab ismeretlen karakter helyettesítésére való
+~~~sql
+SELECT * 
+FROM Employees 
+WHERE FirstName LIKE '%nc_';
+~~~
+
+Wildcardot lehet használni VARCHAR-al, de DATE-el is így:
+~~~sql
+-- Itt a dátum 5/4/2018 formátumban van, és áprilisi ordert keresünk
+SELECT * FROM Orders WHERE OrderDate LIKE '%/4/____';
+-- Itt YYYY-MM-DD formátum mellett keressük ugyanazt
+SELECT * FROM Orders WHERE OrderDate LIKE '____-4%';
+~~~
+
+## UNION kiválasztás:
+Az SQL UNION parancsot arra használjuk, hogy két vagy több SELECT lekérdezés eredményét egyesítsük egyetlen eredményhalmazba. Az UNION biztosítja, hogy az egyesített eredményhalmazban ne legyenek duplikált sorok. (Ha meg szeretnéd tartani a duplikált sorokat, akkor az UNION ALL parancsot kell használnod.)
+
+Szabályok:
+* Az oszlopszámnak egyeznie kell: Az összesített lekérdezéseknek ugyanannyi oszlopot kell tartalmazniuk.
+* Az oszlopok típusának kompatibilisnek kell lennie: Az oszlopok adatainak típusa illeszkedjen (pl. ne próbáljunk egy VARCHAR és egy INTEGER oszlopot egyesíteni).
+* Az oszlopok sorrendje: A lekérdezések eredményhalmazának oszlopai ugyanabban a sorrendben legyenek.
+
+~~~sql
+SELECT nev, kor
+FROM diakok
+UNION
+SELECT nev, kor
+FROM tanarok;
+~~~
+Itt az iskola összes diákja, majd tanára szerepel a táblázatban névvel és korral.
+
+## JOIN ... ON table:
+
+Az SQL JOIN parancs arra szolgál, hogy több táblából származó adatokat kapcsoljunk össze közös feltételek alapján. Általában két tábla közös oszlopait használjuk a kapcsolódáshoz, például elsődleges és idegen kulcsokat. Az eredmény egy olyan tábla, amely tartalmazza a kiválasztott oszlopokat a csatlakoztatott táblákból.
+
+~~~sql
+SELECT customers.name, orders.order_id  
+FROM customers  
+JOIN orders  
+ON customers.customer_id = orders.customer_id;
+~~~
+* FROM : Ez jelzi a 'bal oldali' táblát, 
+* JOIN : Ez jelzi a kapcsolt 'jobb oldali' táblát. 
+* ON : Az összefésülés alapját jelöli ki, általában az  egyik.primary_key = masik.foreign_key. 
+Alap esetben csak azok a rekordok jelennek meg, amelyeknek mindkét táblában nem null az értéke a megjelölt kapcsolódó mezőkben (itt: customers.customer_id és orders.customer_id);
+
+### LEFT, RIGHT, és FULL JOIN:
+A LEFT JOIN minden rekordot visszaad a bal oldali táblából (az első tábla), akkor is, ha nincs hozzá megfelelő pár a jobb oldali táblában. Ha nincs megfelelő rekord, a jobb oldali tábla oszlopainak értéke NULL lesz. A RIGHT ugyanez a 'bal oldali', második táblával.
+~~~sql
+SELECT customers.name, orders.order_id  
+FROM customers  
+RIGHT JOIN orders  
+ON customers.customer_id = orders.customer_id;
+~~~
+
+A FULL JOIN esetén a 'jobb oldali' és a 'bal oldali' tábla minden sora belekerül, ahol pedig nincs metszet, ott NULL értékek lesznek. FULL JOIN nincs minden SQL alapú programban, de a postgreSQL-ben van.
+~~~sql
+SELECT customers.name, orders.order_id  
+FROM customers  
+FULL JOIN orders  
+ON customers.customer_id = orders.customer_id;
+~~~
+
+### Öncsatolás (Self-Join):
+Az öncsatolás azt jelenti, hogy a táblázat egy mezője alapján párosítunk több különböző rekordot. Például azonos városban élő különböző személyeket lehet párosítani. 
+Ehhez nincs külön kulcsszó, (nem használ JOIN-t sem,) hanem egy eljárás van, amiben két különböző alias-t használva duplán vesszük ugyanazt a táblát, és azokat JOIN-oljuk. 
+~~~sql
+SELECT A.CustomerName AS CustomerName1, B.CustomerName AS CustomerName2, A.City
+FROM Customers A, Customers B
+WHERE A.CustomerID <> B.CustomerID
+AND A.City = B.City;
+~~~  
+Hátránya, hogy minden találat kétszer szerepel, egyszer amikor az egyik, másszor amikor a másik táblában is megtalalja ugyanazt a párt.
+El lehet kerülni a redundáns párosításokat az A.CustomerID < B.CustomerID feltétellel. Ez itt azt jelenti, hogy ha van egy 1-es és egy 2-es CustomerID-jű rekord, akkor csak akkor kerülhet bele a gyűjtésbe amikor a kisebbet (1) hasonlítjuk a nagyobbhoz (2), de amikor fordítva, akkor nem. 
+
+## nested queries - beágyazott lekérdezés:
+Ez az SQL-lekérdezés egy beágyazott lekérdezés (subquery) segítségével választja ki azoknak az alkalmazottaknak a kereszt- és vezetéknevét az employee táblából, akik több mint 50 000 egységnyi eladást értek el a works_with táblában. 
+~~~sql
+SELECT employee.first_name, employee.last_name
+FROM employee
+WHERE employee.emp_id IN (SELECT works_with.emp_id
+                          FROM works_with
+                          WHERE works_with.total_sales > 50000);
+~~~
+Az IN operátor ellenőrzi, hogy az employee.emp_id értékei közül melyek szerepelnek a beágyazott lekérdezés eredményeiben (azaz az 50 000 feletti eladást végző alkalmazottak azonosítói között).
+Itt is megszorítások egy halmazát adjuk meg IN()-el, csak itt a megszorítások egy másik query eredményei.
+
+---
+#### ALIAS-ok:
+Lehet 'alias'-t használni ahhoz, hogy olvashatóbb legyen a kód így:
+~~~sql
+SELECT ProductName AS "My Great Products"
+FROM Products;
+~~~
+Az alias nevében ha különleges karakter (akár csak szóköz) van, akkor dupla (!) idézőjelbe ("") kell tenni.
+
+
+### Mezők tartalmának összefűzése 
+A || jellel összefűzhetők a rekordok értékei (ami a JavaScript-ben + itt ||) egyetlen stringgé. 
+
+~~~sql
+SELECT CustomerName, 
+       Address || ', ' || PostalCode || ', ' || City || ', ' || Country AS Address
+FROM Customers;
+~~~
+Probléma lehet, ha az egyik mező értéke NULL, akkor a teljes összefűzött érték NULL lesz. Ezt COALESCE(argumentum1, argumentum2, ...argumentumn) függvény használatával lehet orvosolni.
+A COALESCE függvény az első nem-null értéket adja vissza a megadott argumentumok közül. Ha mind NULL, akkor NULL-t ad vissza.
+
+

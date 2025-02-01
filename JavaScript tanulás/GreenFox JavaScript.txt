@@ -1,0 +1,1178 @@
+Változó típusok a JS-ben:
+
+primitive:
+szám (120), boolean(true), string('szöveg'), null, undefined;
+Ezek másolásakor a memóriacímre átmásolja az értéket.
+
+reference:
+tömb ([1,2,3]), objektum({name:'Pista'});
+Ezek másolásakor egy hivatkozást hoz létre az eredeti memóriacímére, így ha a másolatot változtatom, az eredetit is változtatom!  
+
+Kiugrás (escape) a stringekből:
+Ha egy stringbe be akarok szúrni olyan karaktert, ami műveletet jelezne, akkor elé backslash-t (visszaper) kell tenni. IlyeneK:
+\' \" - idézőjel, így nem a a string széleit jelzi.
+\\ - magát a backslash-t is így kell beleírni
+ÉS a tördeléshez is így kell a jelöléseket beszúrni:
+\n - új sor; \f - új oldal;
+\cr - az adott sor elejére ugrik (?)
+\t - tabulátor
+\b - word boundary = szóhatárra ugrik.
+
+HTML-be emelés:
+Érdemes ezt legutoljára beültettetni a géppel a memóriába, ezért hagyományosan a </body> elé írják be a Javascript parancsokat így:
+<script> let valtozo = 3; </script> VAGY
+vagy a linkjét így:
+<script src="./scripts.js"></script> - a forrása a szkriptnek hagyományosan scripts.js fájl lesz.
+
+Ha modulokat is akarok használni, akkor a type-ot module-ra kell állítani amikor beillesztem a JS file-t az oldalba.
+<script type="module" src="filename.js"></script>
+
+BÖNGÉSZŐ KONZOL HASZNÁLATA:
+A weboldal inspect/vizsgálat paranccsal meg lehet nyitni a vizsgáló eszközt, aminek van egy "Console" füle. Oda lehet parancsokat begépelni.
+Ha szeretnék valamit a konzolba beírni azért, hogy az azt megnéző (általában fejlesztő szakember) olvassa, akkor az így kell:
+
+console.log(ideÍromBeAmitAkarokKiíratni);
+ 
+
+KOMMENTEK:
+Olyan sorok a kódban, amik nem futnak le, mert arra valók, hogy a fejlesztőknek üzenetet hegyjunk bennük.
+Egysoros komment:
+// Minden sor ami így kezdődik, nem lesz lefuttatva. 
+Többsoros komment:
+/* Minden ami ezek közé kerül szintén semmis a gépnek */
+
+VÁLTOZÓK:
+Általános változó létrehozása:
+let valtozoNeve;
+Változó inicializálása egyszerre:
+let valtozoNeve = 99; -legyen egyenlő a valtozónk értéke 99-cel
+Tartalma lehet: 
+Meghatározatlan, ha még nem adtunk neki értéket, ez mindig undefined
+VAGY üres azaz Null
+VAGY szám (number) 
+VAGY szöveg (string) így: "szöveg" 
+VAGY tömb azaz array így (részletesen később): 
+var valtozoNeve = [11,33,55,77,99]; 
+VAGY boolean (true VAGY false értékekkel)
+
+VÁLTOZÓ /ÉRTÉK TÍPUSÁNAK LEKÉRDEZÉSE:
+typeof(változóNeve);
+typeof("Ez string lesz"); eredménye: "string"
+typeof 456; eredménye: "number"
+typeof undefined; eredménye: 'undefined'
+typeof([3,7,9,7,]); eredménye: 'object'
+typeof({name:'one'}) eredménye: 'object'
+
+Ahhoz, hogy megkülömböztessük az objektumot a tömbtől jó módszer:
+Array.isArray([2,4,5,6,4,244,23])- itt a tömb true-t ad, az objektum false-t.
+
+Helyi (block scope) változó létrehozása:
+let valtozoNeve;
+Változó inicializálása:
+let valtozoNeve = 99; -legyen a valtozoNeve értéke 99
+let valtozoNeve = "szöveg"; Ha szöveget lehet " " VAGY ' ' közé is rakni.
+
+Konstans "változó" megadása:
+const konstansVáltozóm; konstansVáltozóm=666;
+Miután értéket adtam neki, az is marad majd. FELTÉVE, hogy nem tömb, objektum, vagy funkció, mert azok megmásíthatók (mutable).
+ 
+Tömb vagy Objektum elemének változtathatatlanná tétele:
+Objekt.freeze(TombObjektumNeve[sorszamVagycimke]);
+
+Változó beágyazása szövegbe:
+Az idézőjelezett szövegbe így tehetjük bele: `random valaki kora ${valtozoNeve} év` - ITT NAGYON FONTOS, HOGY ``-között kell idézni a körbevevő szöveget, ami az AltGr+7 lenyomásával hívható elő! A többi idézőjellel ez nem működik!
+____________________________________________________
+KARAKTEREK KÓDOLÁSA:
+____________________________________________________
+
+Jelenleg az UTF-16 karaktertábla van használatban. Ebben minden lehetséges karakternek megvan a saját számkódja (decimális).
+
+Betűvé lehet alakítani az UTF-16 kódot így:
+String.fromCharCode(65) - itt a 65-ös ('A') lesz az output.
+
+UTF-16 kóddá lehet alakítani string karakterét így:
+'string'.charCodeAt(hányadikKaraktertAkarom);
+'012345'.charCodeAt(0); - itt 48-at kapunk, ami a 0 UTF-16 kódja.
+
+____________________________________________________
+VÁLASZTÁSOK:
+____________________________________________________
+HA azaz IF:
+if(igazVagyHamisFeltétel){Mi történjen, ha igaz lett}
+
+Trükkös a JavaScriptben, hogy minden lehet igaz állítás, ami létező tartalom, de pl. egy üres vagy egy nem létező változó az false értéket ad.
+if (5) {parancsok} - itt az 5 létezik, ezért true/igaz lesz.
+if (nemLetezoValtozoNev) {parancsok} - ez false, nem fut le. 
+
+A feltétel többszörös is lehet, akkor a && -el lehet összefűzni.
+if(EgyikFeltétel && MásikFeltétel){következmény, ha igaz.} - csak akkor lesz igaz, ha mindkettő igaz.
+
+Összehasonlításhoz két egyenlőség jelet használunk ==, mert az egy = az megadja az új értéket a változónak.
+
+=== ekkor azt is összehasonlítja, hogy a változó értéke és típusa is azonos-e? Mert számára az x==1 (x egy szám) nem egyenlő az x=="1"-el, utóbbi esetben string lett a számból. De a == -nél úgy értelmezi, hogy az x=1-ből is stringgé változtatja az 1-et (azaz x="1"-nek veszi) ÁLTALÁBAN a === -ot használják feltételben!
+_____________________________________________________
+else {Ha nem volt igaz az IF feltétele, akkor ez fusson le}
+____________________________________________________
+
+Lehet halmozni az IF-eket így
+else if(Új feltétel){Ez fusson le, ha nem igaz még ez se}
+
+TERNÁLIS OPERÁTOR:
+Beágyazható IF-ELSE függvény röviden is így: 
+parancs(feltétel ? teddHaIgen : teddHaNem);
+pl.:
+console.log((number>100 ? "wow, de nagy EZ a szám":"ez csak egy vacak közönséges szám"))
+
+VAGY:
+IF- ELSE IF- ELSE függvény így:
+(a === b) ? "a and b are equal" 
+    : (a > b) ? "a is greater" 
+    : "b is greater";
+
+switch (kulcs){
+case kulcsLehetségesÉrtéke:
+parancsok;
+break;
+default:
+parancsok;
+break;
+}
+_________________________________________________
+VÁLTOZÓ FAJTÁK:
+_________________________________________________
+A) BOOLEAN:
+Értéke igaz azaz true (1-es a bitben) VAGY hamis azaz false (0-a bitben).
+Operandusok:
+ÉS &&:
+Ha több feltétel együttes vizsgálatát akarom előírni, akkor azt így:
+egyikFeltétel && másikFeltétel - ha mind igaz, csak akkor true
+VAGY ||:
+egyikFeltétel || másikFeltétel - ha bármelyik igaz, akkor true (Att Gr+W a | jel)
+NEGÁLÁS (!):
+Az ellenkezőjébe fordít: !true az false, stb.
+EGYENLŐ ===: lásd fentebb. 
+
+NEM EGYENLŐ !==:
+Akkor ad true értéket, ha tényleg nem egyenlő két elem.
+
+A JS-ben minden érték vagy truthy (igazas?) vagy falsey (hamisas?), azaz, ha feltétel részbe illesztjük, akkor igaz, vagy hamis értéket ad bármi elenőrzés nélkül is. Csak 6 falsey érték van a JavaScript-ben: undefined, null, NaN, 0, "" (üres string), és false. Minden más érték alapból igaz. (A tömbök és objektumok furcsán viselkednek.)
+
+B) SZÁMOK:
+A műveleti jelek ugyanazok, mint általában (+ összead, - kivon, / eloszt, * szoroz, és még egy ami fura: az osztás maradékát adja ki a % jel. Pl.
+7/2= 3.5 , DE 7%2 = 1 (MERT 2*3=6 a mardék pedig az 1)
+
+C) STRING: 
+Karaktersorként értelmezett adat (általában szöveg). Idézőjelbe kell tenni, így:
+"shift+2" VAGY 'shift+1' VAGY `alt gr+7` - Van olyan funkció, ami csak egy adott idézőjellel működik, de általában mindegy (lásd a ``-ről fentebb).
+Műveletek string típusú változókkal:
+
+-Összefűzés azaz Konkatenáció (+) jellel "Buda" + 'Pest' = BudaPest
+
+-Hossz (.length) - megszámolja a karaktereket.
+"Megszentségteleníthetetlekedéseitekért".length = 38
+- Szakaszmásolás (lásd a tömböknél a slice metódust)
+
+- Nagybetűssé alakítás:
+'szöveg'.toUpperCase()
+
+-kisbetűssé alakírás:
+'szöveg'.toLowerCase()
+
+-szöveg ("string") tömbbé alakítása:
+String.prototype.split() - 
+A split() metódus egy stringrészletet, vagy regexet fogad, és ahol azt megtalálja, ott széttarabolja a stringet, majd a darabjait egy ÚJ tömbbe teszi. 
+'String-amit-szétszedünk'.split('-') - Itt a - kötőjel lesz az a karakter ami a szétszedés helyét mutatja. Eredmény: ['String','amit','szétszedünk'] Nem kerül bele a  darabolás jele.
+- stringet lehet karaktereket tartalmazó tömbbé alakítani így is: [...valtozobaTettStringNeve]
+
+D) TÖMB:
+Tömb azaz array így: 
+var tombNeve = [11,true,55,"WC tartály",99];
+A tömböket 0-tól indexeljük, így az első elem sorszáma 0.
+Minden elemnek van sorszáma, amire így lehet hivatkozni:
+tomb[0] -azaz a tömb első eleme, mert nulláról kezdi a számolást. 
+
+Egy utolsó eleme hozzáadása:
+tombNeve.push('Julia');
+
+Első elem hozzáadása:
+tombNeve.unshift('Romeo');
+
+Az utolsó elem törlése (kiemelése a helyéről): 
+tombNeve.pop() - Amikor használom ezt a funkciót, akkor az utolsó elem törlődik, de egyben vissza is adja a parancs - ezzel elmenthető másik változóba
+
+Az első elem törlése (és kiemelése a helyéről):
+tombNeve.shift() - Szintén elmenthető az elem.
+
+Tömb belsejébe ágyazás/törlés onnan/csere (splice=fonás):
+tombNeve.splice(21,2,'hozzadni1','hozzadni2')
+Az argumentumai: 
+Első:(pl.: 21)- az az index amitől kezdjük a műveletet. Ha negatív szám, akkor a tömb végéről számol vissza.  
+Második: (pl.:2) - ha nem 0, akkor annyi elemet töröl a kezdő indextől fogva, amennyi a szám.
+Harmadik- n.-ik: azok az elemek, amiket a kezdőponttól beszúrunk. Az EREDETI TÖMBÖT VÁLTOZTATJA! Egyszerre lehet kitörölni elemeket ( a második indexszel) és beszúrni a helyére elemeket. Ha változóba teszem az eredmévyét, akkor a változtatott elemet adja vissza, nem az eredeti tömböt!
+
+Tömb másolatának megfordítása: Ez a 2023-ban bevezetett beépített funkció ugyanúgy működik mint a régi Array.splice, csak nem az eredeti tömböt mutálja, hanem egy újat hoz létre a megadott módon változtatva:
+let modositottTomb = regiTomb.toSpliced(21,2, 'hozzadni1', 'hozzadni2') - itt a modositottTomb egy új tömb. Előnye: csak egyszer kell a gépnek átpörgetnie a teljes array-t ha újat akarunk csinálni, így erőforrás-takarékos.
+
+
+Tömb / string szakaszának kimásolása:
+tombNeve.slice(3,14) - Az első a kezdőindex a második argumentum pedig az utolsó kimásolandó elem UTÁNi index. Ha csak egy argumentumot adok meg, akkor azt a kezdőindexnek veszi, és onnan végig kimásol mindent. 
+Ha stringre alkalmazom, akkor az index a karakter sorszámát jelenti. Az eredeti tömböt NEM változtatja!
+
+Két tömb összefűzése:
+tombEgyesitve = tomb1.concat(tomb2); - nem törli a két eredetit, csak létrehoz egy újat. Annak az elemeivel kezdi az új tömböt, amelyikre rakjuk a .concat-ot, és az argumentumnak megadott lesz a végén.
+
+Tömb használata argumentum listaként:
+A "spread operator"-ral, ami nem más, mint a tömb neve elé illesztett három pont így: 
+MyFunction(...tombNeve); - ekkor a tombNeve tömbben tárolt infókat illeszti sorban az elvárt argumentumokként be. (HA JÓL ÉRTEM EGYÁLTALÁN.) Ami biztos: Ha a funkció definiálásánál az argumentumlistát így function myFunction(...argumentumLista) adom be, akkor a funkción belül tudok azon a néven (itt: argumentumLista) klasszikus tömbként hivatkozni rá, dolgozni vele. Ugyanehhez lehet használni a klasszikus (nem arrow típusú) funkcióknál az arguments paracsot is.
+
+Tömb klónozása (másolat készítése) "spread operator"-al:
+klonTomb = [...eredetiTomb];
+
+Elemek keresése a tömbben vagy stringben:
+Ha szeretnénk tudni,  hogy hanyadik helyen van az adott tartalmú elem (először) a tömbben, akkor lehet használni az indexOf() parancsot így:
+tombNeve.indexOf('keresett érték');
+Ha nincs benne a keresett string, akkor -1-et ad vissza. 
+
+Elem indexének meghatározása Tömbben:
+Array.prototype.findIndex() <- ebbe megy bele a következő:
+a) Egy callback funkció, aminek truthy-t kell visszaadnia, ha megtaláltuk az első megfelelő elemet. Ennek küldi a findIndex() sorban a következőket:
+	a1) element: aktuálisan vizsgált tömbelem
+	a2) index: aktuálisan vizsgált tömbelem indexe
+	a3) array: a teljes tömböt, amin futtattuk a findIndex()-et
+b) thisArg - opcionális. Az a belső név, ami this-ként működik majd ha meghívjuk a callback-et. így: 
+vizsglatTomb.findIndex(callbackFn(element,index,array), thisArg).
+pl.: vizsglatTomb.findIndex(function(element,index,array){element === 'Ezaz!'}) 
+Itt visszaadja annak az elemnek az indexét, aminek az értéke: 'Ezaz!'
+
+Elemek ábécé sorrendbe rendezése:
+Stringek a tömb elemei:
+tombNeve.sort() - ez a formátum elegendő, de lehet több argumaentumot megadni, lásd szám sorrendezése lejjebb.
+tombNeve.reverse() - itt fordított ábécé sorrendbe rakja
+
+Ha számok a tömb elemei:
+tombNeve.sort(function(a, b){return a - b}); - Ez azért szükséges, mivel a számokat is stringnek kezeli, és ezért a [1,5,10] -tömböt pl így rakná sorba: [1,10,5]! Működése: A tömb elemeit stringgé alakítja és az UTF-16 kódolás alapján vett sorszámát a karakternek veszi figyelembe a sorrendezésnél. 
+
+Tömb másolatának sorba rendezése: Ez a 2023-ban bevezetett beépített funkció nem az ereseti tömböt adja mutálja, hanem egy újat hoz létre, de ábécé sorrendbe rakva:
+let rendezettTomb = regiTomb.toSorted() - itt a rendezettTomb egy új tömb. Előnye: csak egyszer kell a gépnek átpörgetnie a teljes array-t, így erőforrás-takarékos.
+
+Tömb másolatának megfordítása: Ez a 2023-ban bevezetett beépített funkció nem az ereseti tömböt adja mutálja, hanem egy újat hoz létre, fordított sorrendbe rakva:
+let forditottTomb = regiTomb.toReversed() - itt a forditottTomb egy új tömb. Előnye: csak egyszer kell a gépnek átpörgetnie a teljes array-t, így erőforrás-takarékos.
+
+
+Tömb másolatának egy elemét megváltoztatni: Ez a 2023-ban bevezetett beépített funkció nem az eredeti tömböt mutálja, hanem egy újat hoz létre, de egy elemét változtatva:
+ujValtoztatottTomb = regiTomb.widh(54,'ötvennégy');
+Itt az ujValtoztatottTomb 54. eleme 'ötvennégy' lesz.
+
+
+Tömb elemeinek stringgé alakítása, összefűzése:
+tombNeve.join('-'); - A tömb elemeit '-' -el fűzi össze. Ekkor a [a,b,c].join('-'); eredménye: 'a-b-c'. Alapértelmezett a vessző lenne: [a,b,c].join(); eredménye 'a,b,c' 
+
+Tömb minden elemének megváltoztatása ugyanazzal a funkcióval: 
+Array.prototype.map() - egy új tömböt ad vissza, nem változtatva az eredetit.
+Több módon használható:
+Az első az, hogy argumentumként megadunk egy funkciót, amit minden elemén végrehajtok a tömbnek. Ekkor második argumentumnak adható még egy belső név, ami this-ként működik (mindig az aktuálisan feldolgozott elemre utal), és a beadott funkcióban használható fel. Ez utóbbi nem kötelező. 
+tombNeve.map(callbackFunction, belsoHivatkozoNev)
+A második:  
+tombNeve.map()
+
+Tömb tartalmaz-e egy bizonos elemet?
+Array.prototype.includes() - megvizsgálja, hogy egy elem benne van-e a tömbben, true/false-t ad vissza.
+tombNeve.includes(elemAmiBenneVanE);
+
+Tömb minden elemének letesztelése egyszerre:
+Array.prototype.every()-funkcióval. Sorra teszteli a tömb minden elemét és Booleant ad vissza. True, ha mindre igaz, false, ha akár csak egyre is hamis.
+const callbackFunkio = (currentValue) => currentValue < 40;
+const array1 = [1, 30, 39, 29, 10, 13];
+console.log(array1.every(callbackFunkio));
+-Itt beleteszünk az .every()-be azt a funkciót, ami true-t ad vissza, 40-nél kisebb a tesztelt elemeknél. Az eredmény minden számnál true, ezért a teljes függvény is true-t ad vissza. 
+
+Tömb "kilapítása", azaz a 2D-s array 1D-s array-á alakítása:
+Array.prototype.flat(mélységAmitKilapítson) - alapértelmezésben egy szintet csökkent.
+A tömbbe ágyazzott tömbök értékeit egy szintre hozza, és azt adja vissza így:
+[0, 1, 2, [3, 4]].flat(); - itt minden elem egy szintre kerül, eredménye: [0, 1, 2, 3, 4] -lesz.
+Ha pl. 3 szint mélységbe vannak beágyazva tömbbe az eredeti tömb elemei, akkor a tombAmitLapitok.flat(3);
+AZ ereDETI TÖMBÖT változtatja!
+
+Elemek kimásolása tömbből változókba destructuring technikával:
+Az ES6-tól kezdve lehet úgy egyedi változót csinálni egy tömbben tárolt értékekből, hogy egy tömböt képzünk a változók nevéből, és azt tesszük egyenlővé a tömb azonos helyén lévő elemmel. Így:
+const [a, b,,, c] = [1, 2, 3, 4, 5, 6]; - itt az eredmény az, hogy a=1; (mert mindkettő a 0. helyen van) b=2; és c=5; (mert a 2. és a 3. hely üres maradt, csak a vesszők vannak meg, amik elválasztanák őket.)
+Lehet használni spread operatort is így: [a,b,...c] = tombNeve - itt az első két elem rendre a és b lesz, de minden maradék c-hez fog tartozni.
+
+
+
+E)OBJEKTUM:
+Olyan tömb, aminek fel vannak címkézve a dobozai. Ugyanúgy csináljuk, mint a tömböket, csak kapcsos zárójellel {}, és az elemek mindig a cimke:tartalom (azaz property:value, vagy key:value) módon épülnek fel vesszővel elválasztva így:
+let objektumNeve ={name:"Zoli", age:37, awsome:true}
+
+Az ES6 óta lehet így is konstruktort csinálni:
+const xEsYMegadasa = (x, y) => ({ x, y }); - Itt az eredmény {x:x, y:y} objektum lesz. A lényeg, hogy azonos nevei legyenek a beadott argumentumoknak, mint a {}-n belüli belső nevek.
+
+Hivatkozni lehet egy elemre így:
+console.log(objektumNeve['name']); - kiírja: Zoli 
+Ez a változat jó akkor is, ha egy változóból, képletből jön az objektum tartalma.
+Vagy így:
+console.log(objektumNeve.age); - ekkor kiírja: 37 
+
+objektum címke törlése:
+delete objektumNeve.cimkeNeve
+Hozzá lehet adni elemet így:
+objektumNeve.ujCimkeNeve = "tartalom" 
+Vagy:
+objektumNeve['ujCimkeNeve'] = "tartalom"
+VAGY így:
+objektumNeve[valtozoAmibenTarolomAzUjCimkeNevet] = false;
+
+Törölni lehet elemet így:
+delete objektumNeve.torlendoCimkeNeve
+
+Ellenőrizni lehet, hogy létezik-e az adott címke az objektumban így:
+objektumNeve.hasOwnProperty('cimkeNeve'); - eredménye: true/false
+VAGY így:
+'cimkeneve' in objektumNeve; - eredménye: true/false
+
+Metódusok (method): Olyan objektum elemek, amik valójában funkciók. 
+Létrehozhatók így:
+let objektumNeve = {metodusom:function(){return parancs}}
+Meghívható így:
+objektumNeve.metodusom()
+Ha a metódusban a tartalmazó objektumra akarok hivatkozni, akkor használhatom az objektum neve helyett a this kifejezést így:
+let objektumNeve ={egyCimke: 20, metodusom:function(){return this.egyCimke;}}
+
+Elemek kimásolása objektumból változókba destructuring technikával:
+Az ES6-tól kezdve lehet úgy egyedi változót csinálni egy objektumban tárolt értékekből, hogy a cimke lesz a változó neve, a cimke értéke pedig az új változók értéke. Így:
+const user = { name: 'John Doe', age: 34 };
+const {name,age} = user;
+Ennek eredménye: name = 'John Doe'; és 
+age = 34;
+De lehet új változónevet is adni, nem csak a cimke nevét, így:
+const { name: ujValtozoNev, age: ujValtozokor } = user; 
+Ha be van ágyazva mélyebben a kinyerendő cimke, akkor le kell írni a mélységéig az elérési utat. Ekkor az a szintet teszi változóba amit a legalsó szintként megnevezünk. pl: 
+let objektum1 = {halmaz:{reszHalmaz1:'nagyobb', reszhalmaz2:'kisebb'}};
+const {halmaz:{reszHalmaz1,reszhalmaz2:r2}} = objektum1;
+Eredménye: reszHalmaz1= 'nagyobb'; r2='kisebb';
+
+Objektum klónozása spread operátorral így:
+const ujObjektum ={...regiObjektum};
+Hozzá is lehet adni ugyanígy:
+const ujObjektumPlus = {...regiObjektum,pluszCimke:'tartalom'}
+Ha itt olyan cimkét adok hozzá új tartalommal, ami már létezett a régiben is, akkor lecserli az új objektum azonos cimke:tartalom párját!
+
+ÁLVÁLTOZÓK:
+
+Gyűjtemények, azaz Collection -ök.
+
+HTMLCollection:
+pl. a document.getElementsby... kezdetű parancsok több elemet gyűjtenek össze, és ezeket a HTML kódban való sorrendjüknek megfelelően rendezik egy adatsorba. Nagyon hasonlóak a tömbökhöz, de ideiglenesek és korlátozottan használhatók rajtuk a tömbökre kitalált funkciók. 
+
+____________________________________________________
+FUNKCIÓK MEGADÁSA
+____________________________________________________
+function funkcioNeve(bemenetiérték1,be2,stb){mi fusson le a bemeneti értékkel}; -ha nincs bemeneti érték (vagy másnéven paraméter vagy argumentum), akkor is kell üres zárójel!  Ha azt akarjuk, hogy ne csak lefusson hanem visszadjon egy értéket, akkor kell a return parancs bele.
+function osszeSzorzo(szorzo, szorzando){
+return szorzo*szorzando }; - itt a két argumentumot összeszorozza, és visszadja a szorzatukat.
+
+
+VAGY
+
+const függvényNév = (bemenetiÉrték1, bemenetÉrték2)=>{művelet bemenetiÉrték1-el 2-vel}; - ebben az esetben a változó neve a funkciónk neve.
+Amikor megadjuk elnevezzük valahogy a bemeneti értéket, amire a funkció leírásán belül fogunk hivatkozni, de miután lefutott, nem tárolódik. Ezt néha hívják "fat arrow function"-nak az => rész alapján.
+
+Ha csak egysoros a függvény tartalma, akkor nem kell {}, sőt a return is elhagyható, így külön létrehozás vagy elnevezés nélkül beilleszthető kódba. Ráadásul, ha csak egy argumentum (bemenetiérték) van, még a zárójel se kell! Így: 
+num => num * num - itt a num bármelyik szám lesz, amit beleteszünk, és négyzetre emeli. Ezt a formát pl. argumentumként lehet megadni egy másik funkció meghívásakor. 
+
+Az arrow function akkor jó, ha a this kulcsszót használjuk, mert ez mindig a közvetlen kontextusra fog vonatkozni, míg sima function() meghívásnál nem.
+
+Azok a változók amiket egy függvényben hozunk létre, miután lefutott a függvény, megszűnik, nem lehet rá később hivatkozni. Ezek a local scope változók (szemben a global változókkal, amiket kívül hoztunk létre.)
+
+Closure a JavaScriptben:
+Lexical: Ha egy funkcióba ágyazunk egy másik funkciót, akkor a belső (child) mindig hozzáfér a külső (parent) változóihoz, még akkor is, ha a külső funkció már lefutott. Megőrződnek a változók valahogy? Ez akkor lehet, ha a parent funkció egy másik funkciót ad vissza (return childFunction;).
+IIFE: (Inmediately Invoked Function Expression) Azonnal meghívott funkció kifejezés:
+const privatFunkcioNeve = (()=>{ let belsoValtozo=0; return childFunction; })(); - Itt egy constansba egy olyan fatarrow funkciót teszek, ami zárójelbe van téve, és rögtön annak záródása után a mögé tett zárójellel meg is hívom. A visszatérési érték itt is egy funkció. Valójában a parent funkció csak az első meghíváskor fut le (ami a rögtön utána tett () -el történik), utána már csak visszaadja a visszatérési érték-funkciót (childFunction), és csak az fut le. Így a belülre tett változó (belsoValtozo) csak a visszatérési érték-funkcióval elérhető változtatásra.
+https://www.youtube.com/watch?v=1S8SBDhA7HA
+IIFE-be lehet beletenni argumentumot is, ha azzal adok meg változó értéket, akkor lehet pl. belső számlálót készíteni így:
+const visszaSzamlalo = ((szam)=>{let belsoValtozo = szam; return ()=> {belsoValtozo -= 1;} })(szamAmivelMeghivom); - Az elsőt követően bármikor meghívom visszaSzamlalo()-t (már argumentum nélkül), akkor a belsoValtozo-t csökkenti 1-el. Mindegy, hogy teszek-e bele új meghíváskor argumentumot, azt már nem használja fel.
+
+Dekonstruált objektum, mint bemeneti érték:
+Dekonstruálással lehetséges már a funkció beneti értékét úgy megadni, hogy a fogadott objektumban tárolt adatokat használja argumentumnak így:
+profileData ={ name:'Valaki', age:29, nationality:'amcsi', location:'USA' } - ezt az objektumot tesszük be a következő funkcióba:
+const profileUpdate = ({ name, age, nationality, location }) => {A parancsok, amik lefutnak használják az adatokat;}
+ 
+
+___________________________________________________
+FUNKCIONÁLIS PROBRAMOZÁS (FUNCTIONAL PROGRAMMING)
+
+Lényege, hogy kisebb function-okra osztjuk a feladatot, amelyek:
+
+Izoláltak (Isolated functions): Nem használ fel a funkción kívül deklarált változót (global scope). Csak azzal az adattal dolgozik, amit argumentumként megadunk, de azt sem változtatja meg, amit visszaad az legfeljebb az eredeti másolata (a funkció céljának megfelelően módosítva).
+
+Tiszták (Pure functions): - Ugyanaz a bemenet (argumentumok) mindig ugyanazt a kimenetet (return) fogja adni. Így fel lehet használni a funkciót az argumentumokkal újra, helyett, hogy új global scope változót csinálnánk.
+
+Mellékhatás mentes(limited side effects): Nem okozhat bugokat (külső változó mutációt) a felhasználása során, hiszen nem is módosítja őket (az izoláltság értelmében).
+
+Callback: olyan funkció, amit egy másik funkció argumentumaként adunk meg. 
+First class function: Olyan funkció, ami változóba tehető, vagy megadható argumentumként first class function-nek hívjuk. A Javascriptben minden funkció first class alapból.
+Higher order function: Olyan funkció, ami másik funkciót fogad argumentumként, vagy ad vissza visszatérési értékként (pl. setTimeout(funkcioNeve,1000)). 
+
+Lambda funkció: Azokat a funkciókat hívják így, amiket más funkcióknak passzolunk argumentumként, vagy más funkciók adják vissza visszatérési értékként.
+___________________________________________________
+KONSTRUKTOROK:
+___________________________________________________
+
+Az Objektum Orientált Programozás (OOP) eszközei. A konstruktorok (constructor) olyan funkciók, amikkel új objektumokat lehet létrehozni. 
+Így néz ki:
+function ObjektumNeve() {this.name = "Albert"; this.color = "blue"; this.numberOfLegs = 2;}
+A konstruktorok nevét nagybetűvel szokás kezdeni, a cimkék (properties) létrehozásához a this.cimke formulát kell használni. Itt a this már a létrehozandó objektumra vonatkozik. A konstruktorok  cimkéket (properties) és viselkedést határoznak meg, és nem adnak vissza értékeket mint a klasszikus funkciók.
+
+Új objektum létrehozása konstruktorral:
+let ujObjektum = new ObjektumNeve(); -Itt lesz egy új objektumom (ujObjektum), ami az 
+ObjektumNeve cimke:érték listájával lesz feltöltve. 
+Kötelező használni a "new" parancsot a konstruktor előtt. A konstruktor tehát egy sablon okbjektumok készítésére.
+Ajánlott a megfelelő öröklés miatt (lásd később) inkább új objektumot így konstruálni:
+let ujObjektum = Object.create(Konstruktor.prototype);
+
+
+Lehet már a létrehozáskor eltérni a sablontól így:
+function ObjektumNeve(nev, szin) {this.name = nev; this.color = szin; this.numberOfLegs = 2;} - itt a nev és a szin argumentummal lesz feltöltve az új objektum megfelelő címkeje. 
+
+Js-ben alapvetően minden prtottípusokon keresztül épül fel. Az objektumok minegyike a beépített Object.prototype -on alapszik, még az is amit a {}-el magunk gépelünk be, és az is, amit konstuktorral készítünk. Ez létrehoz egy hierarchikus felépítést, ahol a tetején az Object.prototype van. 
+Object.prototype -> Constructor.prototype -> objektum 
+Felülről lefelé lehet örökölni a property-ket. Két szint viszonyában a magasabb szinten lévőt hívjuk supertype-nak az alacsonyabb szintűt subtype-nak.
+
+Konstruktorok hierarchiájának (öröklési sorrendjének) lekódolása: 
+SubtypeKonstruktor.prototype = Object.create(SupertypeKonstruktor.prototype); - itt azt mondom, hogy az alacsonyabb szintűnek szánt konstruktor prototípusa legyen egyenlő a magasabbnak szánt konstruktor prototípusával. 
+Ekkor egy új objektumot hozok létre a pillanatnyi prototípus változattal, amire a további szuper.prototype változások már nem hatnak. HA JÓL ÉRTEM!
+
+Másik, nem annyira ajánlott mód:
+Object.setPrototypeOf(SubtypeKonstruktor,SupertypeKonstruktor)
+Gyakorlatilag ugyanaz, de ha válozik a SupertypeKonstruktor.prototype-ja futás közben akkor változik a SubtypeKonstruktor is. HA JÓL ÉRTEM!
+
+instanceof - Ha egy új objektumot konstrukrorral hozunk létre, akkor annak nyoma marad az objektumban. Az, hogy egy objektum egy adott konstruktorral készült-e az instanceof paranccsal ellenőrizhető így:
+objetumNeve instanceof KonstruktorNeve; - ez true vagy false értéket ad vissza.
+(Egyébként a Console-ban in ellenőrizhető.)
+Ugyanezt meg lehet tenni a constructor paranccsal is így:
+objektumNeve.constructor === KonstruktorNeve - ez a kifejezés is true/false értéket ad vissza. 
+
+Az öröklés útvonalát az isPrototypeOf  paranccsal lehet ellenőrizni, a prototípus azonosságán keresztül: 
+KonstruktorNeve.prototype.isPrototypeOf(objektumNeve); - itt azt nézzük, hogy a prototípusát honnan örökölte. Szintén true/false eredményt ad. (Nem világos miben más mint az előzőek a gyakorlatban).
+
+Általában az instanceof-ot használjuk, ha tudjuk, hogy melyik hozta létre.
+
+prototype - Ha a létrehozó konstruktorhoz hozzáadunk valamit, akkor azt megörökli az összes létrehozott objektum is. Ha a prototípust változtatom, minden azon a prototípuson alapuló objektum változik. Ezzel sok erőforrást meg lehet spórolni, mert nem kell minden egyes objektumnál külön tárolni az azonos tartalmat.
+KonstruktorNeve.prototype.cimke = ertek;
+
+De lehet egyszerre többet is hozzáadni a prototípushoz így:
+KonstruktorNeve.prototype = {cimke1: érték, metodus1: function(){parancs}, cimke2: érték2}
+Ha megváltoztatom a prototype -ot, akkor törlődik az eredeti konstruktorra vonatkozó információ az objektum beső leírásából. Ezt pótolni kell a következő módon:
+KonstruktorNeve.prototype = {
+  constructor: KonstruktorNeve,
+  tovabbiCimke : ertek}
+VAGY
+KonstruktorNeve.prototype.constructor = KonstruktorNeve;
+
+Két féle cimke (property) létezik a fentiek alapján: A saját (own property), és a prototípustól örökölt (prototype property) megkülönböztethető tulajdonság így:
+objektumNeve.hasOwnProperty(cimkeNeve); - Ennek parancs lefuttatásával, ami true/false értéket ad vissza. Ha ez true, akkor az egy egyedileg megadott tulajdonság, ha false, akkor prototipustol megörökölt.
+
+MIXIN - Ha nem akarjuk örökléssel átadni az objektumokban tárolt metódusokat, akkor lehet [(kölcsönözni)] is így:
+let mixin = function(objektumAminekKikölcsönzök) {
+  objektumAminekKikölcsönzök.metodusom = function() {parancsok};} }; - itt létrehozunk egy mixin-t, egy funkciót, ami ráaggatja az argumentumként megadott objektumra az én előre megadott metódusomat. [(Azért lehet mix in, mert keverjük (összemossuk) a különböző prototípusokból származó objektumokat azzal, hogy azonos metódusokat kapnak.)] Ekkor nem öröklöttek ezek a tulajdonságok, de újra felasznált a kód.   
+
+nyilvános (public) és privát (private) tulajdonságok:
+A nyilvános címkék tartalmát bármilyen funkció megváltoztathatja, de a privátokét nem. Priváttá lehet tenni a property-t, ha eleve a konstruktorba írjuk bele. Ekkor csak a konstruktorba szintén beépített metódusok tudják módosítani.
+
+Don't Repeat Yourself (DRY) - Ne ismételd magad elv: 
+Ha lehet csak egyszer programozzunk le amit csak lehet, mert kevesebb munka, és kevesebb lehetőség a hibázásra, illetve kevesebb helyen kell változtatást (vagy bugjavítást) eszközölni. (Egyébiránt egy szójáték is a dry code, száraz kód kifejezés eredője.)
+
+_________________________________________________
+OSZTÁLYOK CLASS -ok
+__________________________________________________
+
+A classok egyféle tervrajzok, amik objektumok felépítésére vonatkoznak. Hasonlítanak a konstruktorokhoz, de ez az ES6 változat. Itt van egy constructor() parancs, ami csak a példányosítás során fut le, és ezen belülre kerülhetnek az argumentumok az egyénire szabáshoz. 
+class SpaceShuttle {
+  constructor(targetPlanet) {
+    this.targetPlanet = targetPlanet;
+  }
+  takeOff() {
+    console.log("To " + this.targetPlanet + "!");
+  }
+}
+
+Tartalmazhatnak property-ket (this.propertyNeve = 'értéke') vagy method-okat (funkcioNeve(){...}). A propertyket a constructor() parancsban kell létrehozni, a methodokat azon kívül. (A metódus nem ad vissza semmit csak lefut side effect-el max).
+
+Class felhasználása így:
+let egyediObjektum = new SpaceShuttle('Argumentum'); - itt létrehoztunk egy új instance-ot (kb. felhasználásra kész objektumot), aminek meghívhatjuk az értékeit, funkcióit.
+
+Getter funkció: Az objektum belső -máshogyan el nem érhető, azaz privát- változóinak kiolvasására írt alkalmazások az objektumon belül.
+get funkciom(){return 'amit vissza akarok küldetni'} - itt az objektum.funkciom -ra lefutó funkciót lehet beállítani.
+
+Setter funkció: Az objektum belső -máshogyan el nem érhető, azaz privát- változóinak módosítására írt alkalmazások az objektumon belül.
+set writer(updatedAuthor) {
+    this._author = updatedAuthor;
+
+Statikus funkciók:
+Olyan class-on belüli funkciók, amik akkor is meghívhatók, ha nem hoztunk létre egy új példányt (new ClassNeve parancs nékül) közvetlenül a Classtól 
+Ebből:
+class myClass{
+static myFunction() {return 'visszatérési érték!'}  
+}
+Így is meghívható: 
+myClass.myFunction() - és visszadja: 'visszatérési érték!'
+
+Kiterjesztett funkciók (extends):
+Olyan class-okat lehet létrehozni vele, amik a child-jai egy másik classnak, azaz örökölnek tőle minden property-t és function-t. Ezzel ki lehet egészíteni egy létező class-t egyedi property-kkel és function-ökkel. Lehet a parent classéval azonos névvel is hozzáadni property-t vagy function-t, de akkor átírjuk az eredetit. Használata így:
+class ChildObj extends ParentObj{
+constructor(orokoltenElvartErtek){
+	super(orokoltenElvartErtek);
+	this.property = 'érték';
+    }
+  }
+extends parancs esetén a child class constructor()-át azzal kell kezdeni, hogy beemeljük a parent constructor tartalmát a super(); paranccsal. ENÉLKÜL HIBÁS! Ha a parent constuktora vár paraméterket, akkor azokat a super()-nek passzoljuk le.
+
+/*Ekkor a child-on belül hasonlóan a this-hez (ami a jelen objektum elemeire utal), a super kulcsszóval tudunk utalni a parent object elemeire,  így:
+super.name - itt az extend-elt 'parent' ojektum név eleme.*/
+
+ES7 óta lehet a property-t így is megadni construktor parancs néllkül:
+myProperty = 'value';
+A metódust pedig arrow funkcióként is
+így:
+myMethod = ()=>{...}
+
+__________________________________________________
+CIKLUSOK
+___________________________________________________
+
+Feladatuk az iterálás, azaz minden elemen sorban végighaladás.
+
+a) iterálás tömbökön
+
+FOR ciklus (tömbökön):
+
+for(számolóVáltozó; feltétel; utánaNöveldMeg){ismétlendő utasítás}
+pl.:for(i=0;i<10;i++){console.log(i)} - az "i" 0. elemétől kezdve, addig ismételje ameddig "i" kisebb mint 10, és miután megcsinálta az {utasítást} növelje meg "i"-t eggyel -ezzel a következő ciklusba lépve.
+ 
+Gyakran számoltatják addig a ciklust, amíg a kezelendő tömb tart, ezért a tömb hosszát vesszük figyelembe, ez a tömb.length formában adható meg.
+
+
+VAGY mondhatjuk, hogy minden elemre csináljon valamit így:
+tömb.forEach() 
+Funkciót (callback function) kell beleágyazunk így:
+tömb.forEach((tömbAktuálisEleme) => { console.log(tömbAktuálisEleme);} );
+- A forEach utáni zárójelbe első argumentumként bármit írhatok, az mindig a tömb éppen soron következő elemét jelzi, de a funkcióban így tudsz rá hivatkozni majd. 
+tömb.forEach((ErrőlVanSzó) =>{ErrőlVanSzó + 1} ); - tömb minden eleméhez sorban adunk egyet itt pl.
+
+Ha a forEach-nél eggyel több változót szuszakolunk a funkcióba (második, opcionális argumentum), mint amit elvár, akkor az a plusz a soron következő elem sorszámát (index) adja vissza (0-val kezdődik), ami remek lehetőség az indexelésre, ha új dolgokat hozunk létre a tömb minden egyes elemére. 
+A harmadik argumentum hivatkozás a forrás tömbre.
+forEachbeBeletettfunkcióm(tömbAktuálisEleme,sorszám, egészTömbFelsorolva)
+
+b) iterálás objektumokon:
+
+1. Object.keys()
+A címke (azaz angolul key) és a tartalom elválasztása után lehet tömbként használni, ezért találták ki az Object.keys() függvényt. Argumentuma (beviteli értéke) az objektum maga, és a visszatérési értéke egy tömb, ami tartalmazza sorban a címkéket.
+const cimkek = Object.keys(objektumNeve); - ahol létrehozunk egy konstanst amibe beletesszük az objektumunk összes címkéjét. Ez után lehet rajta forEach-et csinálni pl így:
+cimkek.forEach((cimke, index) => {
+    console.log(`${cimke}: ${objektumNeve[cimke]}`);
+- itt pl. kíírattuk az összes elem címkéjét : tartalmát.
+
+2. for ...in ciklus:
+Egy local scope változót csinálunk itt (ezért kötelező a 'let'), amibe beletesszük az aktuális címkét, majd végigmegyünk az összes elemen. A cimkeValtozo bármi lehet, az csak egy belső név, hogy tudjunk a cikluson belül hivatkozni rá (mint a function argumentumai).
+
+for (let cimkeValtozo in objetumAminAtmegyunk) {
+    console.log(`${cimkeValtozo}: ${objetumAminAtmegyunk[cimkeValtozo]}`);
+
+c) while ciklus:
+Addig ismétli az utasítás végrehajtását, amíg igaz a feltétel. Ez takarékos megoldás, ezért előnyben lehet részesíteni egyes esetekben.
+while(igazFeltétel){
+Utasítás;}
+
+d) do ...while ciklus:
+Előbb megcsinál egy utasításort a do után, és csak azután ellenőriz egy feltételt a while után. Ha igaz a feltétel, jöhet a do utáni utasítás ismét. így:
+do {utasítások}
+while(feltétel); - nincs a do (}) kapcsoszárójele után (;) pontosvessző!
+do 
+
+e) rekurzív (szerkezetismétlő) ciklus (recursive cycle):
+Az az eset, amikor egy funkciót írunk, ami önmagán belül  meghívja önmagát. Azért, hogy ne legyen végtelen ciklus, kell bele egy elágazás egy feltétellel (base case), ami ha teljesül, nem hívja meg önmagát megint. A lefutást úgy kell elképzelni, mint egy láncmesét, ahol újabb és újabb alfeladatot kap a főhős, és mikor az utolsóhoz ér (base case) akkor kezdheti visszafelé felgönygölíteni a feladatokat.
+Példa:
+program to count down numbers to 1
+function countDown(number) {
+    // display the number
+    console.log(number);
+
+    // decrease the number value
+    const newNumber = number - 1;
+
+    // base case
+    if (newNumber > 0) {
+        countDown(newNumber);
+    }
+}
+countDown(4);
+___________________________________________________
+ADAT KINYERÉSE INPUT MEZŐBŐL:
+.value  -Szöveges anyag kinyerése szöveges input mezőzőből (textbox/password/textarea)- Kell hozzá valamilyen azonosító, annál fogva azonosítja be a forrást a böngésző. 
+Ha az az azonosító az id="textbox_id" akkor így:
+document.getElementById('textbox_id').value
+
+Ha pl. class="azonosító"-val találom meg, akkor egy tömböt kapok vissza (mert az osztályon belül lehet több visszatérő érték is). Ebben az esetben a class alá tartozó <input>-ok sorrendjében kell keresni egy bizonyos értéket (a felsorolás [0]-val kezdődik természetesen).
+document.getElementsByClassName('osztály_neve')[egész_szám].value;  
+
+document.getElementsByClassName("osztályNeve")[0].value; - az első elemet így jeleníti meg.
+
+Beépített HTML eseményfigyelők INPUT elemekre:
+<input type="text" onchange="valtoztatasKezelo()" >- itt az inputmező tartalmának változásakor lefuttatja a valtoztatasKezelo JS funkciót.
+
+<input type="text" onblur="fokuszbolKiekrulesKezelo()" > - itt akkor futtatja le a fokuszbolKiekrulesKezelo funkciót, ha bele volt kattintva az input mezőbe, de kikattint belőle a felhasználó.
+
+____________________________________________
+GOMBOK HASZNÁLATA:
+____________________________________________
+VAGY Már a HTML-be be kell illeszteni a javascript funkció nevét. Az onclick="" attribútummal egészítem ki  button TAG-et, majd megnevezem a function-t a javascriptből.
+<button onclick="myFunction()">Gomb szöveg</button>
+
+VAGY akciófigyelőt adsz hozzá (lásd lentebb) 
+____________________________________________
+GOMBOK DEAKTIVÁLÁSA:
+____________________________________________
+document.querySelector('#deAktivalando').disabled = true; 
+
+____________________________________________
+SZÖVEG/HTML MEGVÁLTOZTATÁSA:
+____________________________________________
+
+document.getElementById("id").innerHTML = "<p>Szöveg amire változtatom</p>"; -így lehet html kódot is beletenni!
+A parancs eleje az adott HTML rész beazonosítása történik az id="" segítségével, utána jön a HTML-be nyúlás, ami itt a szöveggel egyenlővé tételt jelenti. Ekkor teljesen lecseréli az adott ID-jű HTML TAG tartalmát. Ha csak hozzáfűzni szeretnénk, akkor:
+document.getElementById("id").innerHTML += "<p>Szöveg amit hozzáadok a végére</p>";
+(Gyakorlatilag az .appendChild(...) váltható ki vele)
+
+A += jelentése:
+x += y ugyanaz mint x = x + y 
+Ha jól értem itt: add hozzá y-t x-hez, és ezzel tedd egyenlővé x-et. (Hasonló rövidítés, mint az i++; vagy i--;)
+Ugyanerre a mintára létezik: -= és *= és /= is, de ezeket csak számokon értelmezi a JS.
+
+_____________________________________________
+ELEMEK MEGTALÁLÁSA A HTML DOKUMENTUMBAN
+_____________________________________________
+Erre számos parancs van, eddig is fel lettek sorolva néhányan:
+
+document.getElementById('egyeniID') - egy adott HTML TAG-ra hivatkozik az id="egyéniAzonosító" HTML azonosító alapján. 
+
+document.getElementsByClassName('osztályNeve')
+Ha class="azonosító"-val találom meg, akkor egy tömböt kapok vissza (mert az osztályon belül lehet több visszatérő érték is). Ebben az esetben a class alá tartozó TAG-ek sorrendjében kell keresni egy bizonyos értéket (a felsorolás [0]-val kezdődik természetesen). Így:
+document.getElementsByClassName('osztály_neve')[egész_szám]  
+
+document.querySelector('#adottID .adottClass a') - Itt az első olyan TAG-et célozza be, amire igazak a felsorolt CSS azonosítók.
+
+document.querySelectorALL('.valamiClass li') Ekkor tömbbe rakja az összes valamiClass-ú listaelemet.
+
+Keresés data-akarmi alapján:
+HTML kódba bármilyen data-valami="" saját kitalálású tulajdonság beírható. A lényeg, hogy data- -lel kezdődjön. Azt követően, hogy az adott HTML TAG-et (node) változóba raktuk a fenti módszerek bármelyikével, hivatkozni lehet rá így: 
+valtozobaRakottHtmlTag.dataset.valami - itt a data-valami="" TAG attribútum tartalmát kérdezem le. 
+_____________________________________________
+HTML RÉSZ HOZZÁFŰZÉSE:
+_____________________________________________
+Kiváló forrás:
+https://fundamentals.generalassemb.ly/11_unit/dom-cheatsheet.html
+
+Három lépcsőből áll (listaelem beszúrása pl):
+1.Először létre kell hozni a befoglaló HTML TAG-et.
+var ujListItem = document.createElement('li');
+
+2. Utána lehet a szöveget megadni a listaelemnek.
+ujListItem.textContent = 'valami';
+
+3. Végül hozzáfűzhetjük egy már létező rendezetlen listához így:
+document.querySelector('ul').appendChild(ujListItem);
+
+_____________________________________________
+AKCIÓFIGYELŐ HOZZÁADÁSA
+_____________________________________________
+
+Eseménykezelő készítése:
+Eseményfigyelők azaz event listener-hez változóba kell rakni egy HTML célelemet (element), (pl.: document.getElementByID('azonosito')-val) utána:
+
+element.addEventListener('eseménytípus', futtatandóFunkció(bemenet){végrehejtandó});
+
+Esemény típusok:
+'click' - kattintás
+'keydown' - gombnyomás
+'resize' - böngészőablak átméretezése
+
+A 'keydown' window-hoz köthető, tehát ott az eventListenert arra kell rárakni így:
+window.addEventListener('keydown',(e)=>{
+console.log(e.key);
+}) ITT az esemény objektum .key értékét íratjuk ki a konzolra.
+
+Futtatandó funkció:
+Bemenetként ilyenkor egy egész sor információt kap az eventListenertől, amiket részletesen úgy lehet lekérdezni, hogy a végrehajtandó parancsban kiíratom a consolra így:
+változóbaRakottElemcím.addEventListener('click', function(event){
+        console.log(event); - ez lehetővé teszi, hogy kiválogassuk amit használni  akarunk.
+
+ID BEAZONOSÍTÁSA EVENTLISTENERREL 
+változóbaRakottElemcím.addEventListener('click', function(event){
+        console.log(event.target.id); - például így lehet kinyerni a kattintott HTML ID-jét. A .target után több minden is elérhető ami a HTML TAG-ben fel van sorolva. Pl: .target.href - a kattintható link osztályt adja vissza.
+
+This
+###this A term used in event handling functions to refer to the specific object with which the user interacted.
+
+
+_________________________________________
+CSAK A CLASS MEGVÁLTOZTATÁSA
+_________________________________________
+Class hozzáadása:
+document.getElementById("myDIV").classList.add("mystyle");
+- Több class is megadható így, míg a .setAttribute-al csak egy.
+
+
+Toggle -ki-bekacsoló függvény:
+A javaScript nyelvben .toggle az aktuális állapot ellentétébe fordítást jelenti, így alkalmas arra, hogy ugyanazzal a paracssorral két különböző dolgot is csináljunk a "kapcsoló" állásától függően.
+
+valtozobaRakottHTML.classList.toggle('ki-be kapcsolando class neve')
+
+
+KERESÉS TÖMBBEN:
+
+find() 
+A find() metódus Csak az első elemt adja vissza, ami megfelel a feltételnek, amit egy function-al tesztelünk. Ha nincs a tömbben egy se, akkor az értéke: undefined
+const elsoTalalat = tomb1.find(keresetteElem => keresetteElem > 10); - az összes többi 10-nél nagyobb elemet nem írja ki.
+
+____________________________
+MATEMATIKAI FÜGGVÉNYEK
+____________________________
+
+Random szám generátor:
+
+Math.random() - egy 0 és 1 közötti törtet ad vissza véletlenszerűen.
+
+Kerekítő függvények:
+Math.round() - a matematika szabályai szeint kerekít egész számra
+
+Math.floor() - lefelé kerekít a legközelebbi egész számra.
+
+Math.trunc() - levágja a tizedestört részt a számról, és csak az egész szám marad
+________________________________________________
+Műveletek Szöveg (string) típusú változókkal:
+________________________________________________
+
+'Regular expressions' vagy "regex" - string típusú adatok összehasonlítására való kifejezésmódok, a szövegkezelő funkciókban. Ezekben nem idézőjel, hanem sima per jellek közé kell tenni az adott szövegrészletet így:
+/regex/
+Általában változóba szoktuk tenni, hogy funkciókat használjunk rajta, de anélkül is lehet.
+Lehet egyetlen regexen belül a logikai operátorokkal nem csak egymás után következő szövegrészleteket is azonosítani. Vagy operátorral:
+/egyik|másik/ 
+
+Ha azt akarom, hogy a nagy és kisbetűt is azonosnak vegye a regexen belül, akkor használhatok "case Insensitive flag"-et, ami így néz ki: /regex/i - A záró perjel után van egy 'i'-betű /.
+
+Ha nem csak az első, hanem minden regexet akarok mejelölni, akkor így lehet: /regex/g - ekkor egyes funkciók tömböt adnak vissza eredményként.
+
+Ha több flag-et is akarunk egyszerre használni, akkor csak sorra oda kell őket egybe írni pl.: /regex/ig - minden regexet kikeres betűmérettől függetlenül.
+
+wildcard character - bármit behelyettesítő karakter (ami a JS-ben a pont (.) A regexbe illesztve rugalmasabbá tehető a használata pl.: /R.ge./ -lehet regex, de roger is pl.
+
+character classes - a regexben bizonyos karakterek közül bármelyiket elfogadja. A lehetséges karaktereket []-be kell tenni a regexen belül. pl.: /re[mg][ie]x/ - itt harmadik karakternek elfogad m-et, vagy g-t, a negyedik pedig i-t, vagy e-t.
+
+character sets - lehet karakterek sorozatát is megjelölni a regex-en belül a [kezdőkarakter-befejezőkarakter] pl.: 
+/regex[1-9]/ - itt 1 és 9 között az összes szám karaktert elfogadja majd találatnak, de lehetne [a-z] -ekkor a kisbetűk számítanak a regexbe.
+Egyben is lehet több karaktersorozatot kezelni így: 
+[a-z0-9] -itt az összes kisbetű és szám mind találatot ad.
+[A-Za-z0-9_] - ez a bevett jele a nagy- és kisbetű és számjegyeknek plusz az alulvonás (valamiért), ugyanez rövidítve is van (shorthand) a visszaper kis duplavé (\w) Ehhez is lehet csatolni mindent amit egyébként a regexben (pl.: /\w+/ - minden nagy, kisbetű és szám közül adja vissza az első karaktersort)
+[0-9] - minden számjegy kijelölése regexben, erre shorthand a visszaper kis d, azaz: \d 
+
+Ha csak egész szavakat (tehát fehér részekkel határoltakat) akarok megtalálni, használhatjuk a \b shorthandet. Ekkor pl. \bA -csak akkor találja meg az "A"-t, ha egy szó végén van.
+
+negated character sets - karakterek sorozatát adhatjuk meg, amiket NEM akarunk fogadni így: /[^abc]/ - ekkor ezeken kívül minden mást belevesz a stringből, még a szóközt is, írásjeleket is, stb.
+Lehet minden kis-, nagybetű és számjegyre (plusz az alsóvonásra is valamiért) egyszerre kivételt képezni kétféleképpen: így:
+[^A-Za-z0-9_]  - (=longhand), és így:
+\W - (=shorthand) Itt nagy W van, nem kicsi! 
+Csak számok kivételként:
+[^0-9] - (=longhand)
+\D - (=shorthand)
+
+
+ismételt karakterek a regexben (+):
+/a+/ - megtalálja az első a-t, vagy több egymás utáni a-t (pl.: aaaa) 
+
+tartalmat mindig visszaadó regex-jel:
+/ab*/ - mindegy, hogy talál-e csillag előtti karaktert. Ha nem, akkor csak a többi regex-részt adja vissza. Ha több *-al megjelölt azonos karakter is van, mindet visszaadja sorban. Itt pl. 'abbbbb'-t is visszaadna, de 'a'-t is, ha nincs utána b.  
+Ha csak csillaggal jelölt karakter van a regexbe (pl.: /c*/), de a stringen nincs egy se, akkor üres stringet ad vissza ('').  
+
+Meghatározott számú egyező karaktersort visszaadó regex kód:
+Meg lehet adni a legkevesebb és legtöbb egyezés számát is kapcsos zárójelek között, vesszővel elválasztva a keresendő karakter után írva így:
+/a{3,5}/ - itt minimum 3, maximum 5 "a" betűs sort azonosít be.
+Ha pontos értéket akarok megadni, csak egy értéket teszek a kapcsos zárójelbe /b{4}/ -pontosan 4 "b"-t talál meg.
+Ha csak minimumot, vagy maximumot adok meg, akkor csak azt veszi figyelembe, a másik érték lehet akármennyi:
+/c{5,}/ - itt minimum 5 "c" esetén azonosítja be a szakaszt.
+
+Leghosszabb (greedy match), vagy legrövidebb (lazy match) megegyező szakasz közötti váltás: 
+Alapból minél hoszabb regexnek megfelelő részletet akar találni a JS. Ahhoz, hogy a legrövidebbet válassza, kérdőjel (?) karakterrel kell zárni a speciális regex kifejezést. pl.: 
+/[a-z]*/ - a lehető leghosszabb kisbetűs szakaszt keresi ki (greedy)  
+/[a-z]*?/ - az első kisbetűt fogja visszaadni, mert az a legrövidebb (lazy) regexnek megfelelő szakasz
+
+Opcionális karakter megadása regexben:
+Ha nem tudom, hogy van-e benne egy adott karakter, akkor írhatom opcionálisra kérdőjelet írva utána így:
+/rea?gex/ - itt az 'a'-betű vagy van, vagy nincs, de mindkettő találatot ad.
+
+String elejének vizsgálata regexszel: 
+Csak akkor van találat, ha a ^ után lévő regex a string kezdő karaktersorának megfelel így:
+/^Kezdet/ - itt is caret character-t használunk mint a kivételnél, de itt nincs szögletes zárójelben!
+
+String végének vizsgálata regexszel: 
+Csak akkor van találat, ha a $ (Alt Gr + É) előtt lévő regex a string befejező karaktersorának megfelel így:
+/Végzet$/
+
+"Fehér rész" (whiteSpace) kijelölő regex kód:
+\s - ebbe beletartozik a tabulátor (\t), sortörés (\r), és egyéb fehér rész is. Úgy is kódolható lenne: [ \r\t\f\n\v]
+Ugyanez kivételként [^ \r\t\f\n\v] - longhand.
+\R -shorthand.
+
+Lookaround regex:
+Ha csak akkor akarunk megtalálni egy karaktert, ha utána  / előtte egy bizonyos másik karakter van akkor használjuk. 
+Lookahead: X(?=Y) - keresd meg X-et, de csak ha Y követi. Halmazható is: /X(?=Y)(?=Z)/ - Akkor van találat, ha XYZ követi egymást.  
+Negtive lookahead: X(?!Y) - csak akkor van találat, ha X után nem Y van.
+
+Lookbehind: Akkor választja ki X-et, ha egy bizonyos szöveg (Y) van előtte 
+(?<=Y)X	
+Negative Lookbehind: Akkor NEM választja ki X-et, ha egy bizonyos szöveg (Y) van előtte
+(?<!Y)X - FONTOS!: itt elé tesszük a megtalálni szánt karaktereknek azt, ami nem lehet előtte!		
+
+Választható részletek:
+A regexen belül lehet rakni választható szövegrészeket így:
+/P(engu|umpk)in/g - itt pingvin vagy tök is lehet a regex találata. Regexen belüli ()-es kifejezés neve: capture group.
+
+Ismétlődő részletek kijelölése regexszel:
+Capture groupot () lehet használni, majd annak ismétlését a regexben nem kell megint kiíírni, csak visszaper és a capture group sorszáma pl:
+/(\w+)\1\1/ - itt 3x egymás után írt azonos szöveget azonosít a regex.
+Másutt azt írják a capture group sorszáma megadható dollárjellel így: /(capture group) $1/
+
+ADOTT SZÖVEGRÉSZ VAN-E a szövegben TESZT?
+valtozobaTettRegex.test('string, amiben van-e a regex?') - itt a változóba előzetesen betett regexet egy konkrét szövegben keresi. Ha van true, ha nincs false.
+/regex ami van/.test(valtozobaTettString) -itt a regex nincs, csak a vizsgált szöveg van változóba téve.
+
+ADOTT SZÖVEGRÉSZT VISSZAADÓ funkció:
+"Szöveg, amit vizsgálunk".match(/regex/); - a regex szövegét adja vissza, de számolja azt is, hogy hányadik karakter után kezdődik az adott regex. Ha nincs benne Null értéket ad.
+
+ADOTT SZÖVEGRÉSZT LECSERÉLŐ metódus:
+The replace() method returns a new string with one, some, or all matches of a pattern replaced by a replacement. The pattern can be a string or a RegExp, and the replacement can be a string or a function called for each match. If pattern is a string, only the first occurrence will be replaced. The original string is left unchanged.
+'string amit változtatok'.replace('mit?', 'mire?'); - itt a 'mit?' lehetne regex is.
+Ha mindent ki akarunk cserélni, lehet így:
+"BUDA FUCKING PEST".replace(/[AEIOU]/gi, ''); //'BD FCKNG PST'
+
+_________________________
+string átalakítása számmá:
+parseInt("01011", 2) - A függvény első argumentuma a string, a második (opcionális) a számrendszer, amiben értelmezendő. Egész számot ad vissza. Ha az első karakter nem számjegy, akkor Not a Number (NaN) üzenetet kap.   
+
+Number("3.14") - a stringet, ha amúgy szabályos a formátuma számmá alakítja (itt Number("3.14") => 3.14 Ha viszont nem jó a formátum, akkor Not a Number (NaN)-t ad vissza pl.: Number("3,14") => NaN
+
+unary + operator - (unary jelentése: egyértékű, nem fokozható):
+Ha egy "+" jelet írunk a változó elé (összeadás második tagjaként "+ +"  azaz plusz szóköz plusz), akkor ugyanúgy működik mint a Number().  
+
+_____________________________________________________
+MAGASABB SZINTŰ (high order) FUNKCIÓK:
+_____________________________________________________
+Olyan funkciók, amik az iterálás kiváltására vannak kitalálva:
+a) Array.prototype.forEach()  (lásd korábban). - ez az eredeti tömböt változtatja!
+b) Array.prototype.filter() 
+	A tömb minden elemén végigiterál, és a callback funkciónak megfelelő elemeket tartalmazó új tömböt ad vissza. Így:
+tombNeve.filter(function(tombAktialiseleme){if(tombAktialiseleme>100){return true;})
+Ebben az esetben egy if-el döntenek, és ami nagyobb mint 100, azt adja vissza. Ami fontos: Amelyik elemnél return true; - van az kerül a kimeneti tömbbe.
+Lehet egyszerűűben arrow function-al:
+tombNeve.filter(tombAktialiseleme => tombAktialiseleme>100); - ekkor nem kell bele se külön funkcióhívás, se return true;, egyszerűen visszadja az elemeket, ha a => utáni feltétel eredménye true.
+
+c) Array.prototype.map() hasonlóan az előzőhöz a bemenet minden elem sorban a tömbben, és mindegyikre alkalmazza callback functiont amit beleteszünk. Egy új tömböt ad vissza a módosított elemekkel. Itt is a második argumentum az index, a harmadik a tömb, amire alkalmaztuk.
+https://www.youtube.com/watch?v=rRgD1yVwIvE   
+
+d) Array.prototype.reduce() - összegez egy tömböt valamilyen eljárással.
+reduce((accumulator, currentValue, currentIndex, array) => { a művelet amit végrehajtok}, initialValue); - Alapból fogad egy callback functiont, és egy eredeti értéket (initialValue). A callback function-nek 4 argumentumot tud küldeni: Az első (accumulator) az eddigi tömbelemek összegzése. Ha ez az első (0. helyen lévő) elem még, akkor az initialValue-t használja accumulatorként. (Ha meg nem is adtunk meg initialValue-t, akkor a második /1.helyen levő/ elemmel kezdi.) A második callback functionnak küldött argumentum a tömb aktuális, soron következő eleme (currentValue). A harmadik a jelenlegi elem indexe, a negyedik a teljes tömb. Ha előre megírt funkciót adunk callback-nek, akkor csak a nevét kell beírni, ()-nem kell bele. 
+
+e) Array.prototype.every() - leellenőrzi egy feltételellenőrző callback function segítségével a tömb összes elemét, ha a mindre igaz volt a feltétel, akkor true-t ad vissza, ha nem akkor false-t. Amit a callback function visszaküld annak truthy-nak kell lennie (lásd fenttebb.)
+
+f) Array.prototype.some() - leellenőrzi egy feltételellenőrző callback function segítségével a tömb összes elemét, és ha csak egyre is igaz a feltétel, akkor true-t ad vissza. Amit a callback function visszaküld annak truthy-nak kell lennie (lásd fenttebb.)
+
+________________________________________________
+FUNKCIÓ TÍPUSOK
+________________________________________________
+
+A Currying az a folyamat, amikor egy több argumentumos funkciót több, egy argumentumos funkció sorozatává alakítunk.
+const curried = x => y => x + y; - fatarrow definiálás
+curried(1)(2); Eredmény: 3 - így kell meghívni.
+
+Meg lehet csinálni, hogy beletesszük egy változóba az első argumentumos változatot.
+const elsoSzint = curried(1); - ekkor még nem fut le végig.
+esloSzint(2); - ekkor már végig lefut, mert az összes argumentum megvolt a láncból.
+
+function add(x){return function(y){return function(z){return(x+y+z);}}} - itt a klasszikus módon van megírva ugyanaz a curryied funkciólánc.
+add(1)(2)(3); - így lesz végig meghívva.
+_________________________________________
+MODULOK
+___________________________________________
+Olyan kódrészletek, amiket egyik .js file-ból kiemelve használunk máshol is az export, import parancsokkal.
+Exportálás:
+Exportálni lehet változókat, vagy funkciókat.
+export {egyikAmitExportalok, masikAmitExportalok};
+
+Meg lehet adni alapértelmezett exportálandó adatot is egy adott file-ból így:
+export default valtozoVagyFunkcioAmitexportalok;
+VAGY eleve úgy hozom létre a változót/arrowfunkciót, hogy elé írom, hogy export default így:
+export default const funkcioNeve = () => {return 2*2};
+
+Importálás:
+import { valtozoNeve } from './jsFileNeve.js'; - itt azonos mappában van a .js- file, ezért ./-el kezdődik a hivatkozás. A kulcsszavak az import a {}-be tett változók előtt és a from a 'string formájú' elérési út elé kellenek.
+Ha szeretném átnevezni az importált változót egy saját belső névre, akkor így tudom:
+import {eredetiNev as ujNevItt} from './forrasFile.js';
+
+Mindent ki lehet importálni egy file-ból egyszerre is, de akkor kell egy objektumnév, amibe beleteszi az összes cuccot a parancs így:
+import * as tartalmazoObjektum from "./forrasFile.js"; - Azaz importálj mindent (=*) tartalmazoObjektum-ként (=as), './forrasfile.js'-ből.  Elérni pedig a tratalmát így lehet:
+tartalmazoObjektum.funkcioNeve();
+Ha adtunk meg export default anyagot, akkor azt így lehet importálni:
+import ujBelsoNev from './forrasFile.js';
+-itt az az előnye a dolognak, hogy az ujBelsoNev bármi lehet, mert nem kell specifikálni a változóz, hiszen azt már az exportnál pontosítottuk.
+
+
+---------------------------------
+DÁTUM ÉS IDŐ
+--------------------------------
+Dátumokkal való munka.
+A Js időszámítása 1970 január 1. 00:00-tól kezdődik. Az az óta eltelt időt millisecundumban fejezi ki. Az az előtti időt negatív számmal fejezi ki. 
+
+Aktuális dátum Date.now()-val:
+Csak a Ms értéket adja vissza
+
+Dátum konstruktorral:
+Aktuális dátum, idő:
+let ezAPillanat = new Date() - itt egy string formában írja ki, de valójában számban tárolja.
+Bármely dátum, idő megadása:
+Szövegesen:
+let adottPillanat = new Date('January 1, 2020 22:59:00:999') - Itt 2020 január 1., este 10 óra 59 perc és 0 másodperc, 999 millisecundum volt. Minimálisan elég lehet a hónap, nap, év is, akkor hajnali 0 óra 0 perc stb. lesz beállítva.   
+Csak a dátummal így:
+let adottPillanat = new Date(2023, 2, 13)
+- itt év, hó, nap számmal van kifejezve.
+
+Számmal:
+let azelobb = new Date(1675496670940) - itt az 1970 január 1. hajnali 0 óra óta eltelt ms-ok értékét adjuk meg számként, és abból generálja a dátumot.
+
+Ha stringként akarom kiíratni, akkor:
+console.log(valtozobaTettDateObject.toDateString());
+A .toDateString() stringgé alakítja a dátum objektumot.
+Vagy:
+A helyi szokásonak megfelelő dátumformátum beállítható a .toLocaleString() beépített funkcióval így: 
+DateObjektumom.toLocaleString('en-US', {month: 'long'}) - a {month:'long'} azt jelenti, hogy csak a hónapot írja ki, de a teljes nevét.
+.toLocaleString('hu-HU', {month:'long'}) - így a magyar szokás szerint írja ki.
+_______________________________
+IDŐZÍTŐ FUNKCIÓK
+_______________________________
+
+setInterval() - Ismételten meghív egy funkciót előre beállított időintervallumonként.
+Így:
+let myInterval = window.setInterval(callbackfn,1000) - a callback funkciót 1000 ms (1mp) időközönként futtatja le.
+A leállításához szükség van a clearInterval(myInterval) funkcióra.
+
+setTimeout() - a benne meghívott funkciót adott időkésleltetéssel futtatja le egyszer. Így:
+setTimeout(kesleltetendoFunkcio, 1000) - itt ez első argumentum a késleltetendő funkció, a második a késleltetés időtartama ms-ban.
+
+
+Objektumból tömb:
+Object.entries(objektumNeve);
+Ezzel a címke:tartalom párt ['címke','tartalom'] tömbbé változtatja, így az objektum alapján egy kétdimenziós tömb lesz. 
+
+Funkciók prototípusához tartozó beépített értékek és metódusok
+===========================================================
+Minden funkció egy objektum a Js-ben, így vannak beépített tulajdonságai, mint:
+
+Sajatfunction.name // visszadja a funkció nevét string-ként, itt: "Sajatfunction".
+
+Sajatfunction.length // visszadja a funkció elvárt paramétereinek számát
+
+Function.prototype.apply()
+____________________________________________
+A Function.prototype.apply() lehetővé teszi, hogy: 
+A) egy függvényt egy adott kontextusban (más "this" értékkel) hívjunk meg.
+	Ez arra jó, ha egy metódust akarunk meghívni egy objektumból, de azt szeretnénk, ha a this, nem az eredeti objektum belső értékeire mutasson, hanem amit mi adunk meg, azaz kvázi kölcsön vehessünk egy metódust egy másik objektumtól így:
+	const eredetiObj = {
+		value: "eredeti objektum belső értéke",
+		method: function(){console.log(this.value)},
+		}
+	const sajatObj = {value: "saját objektum belső értéke"};
+	eredetiObj.method.apply(sajatObj); // konzol kíírás: "saját objektum belső értéke"
+
+B) paramétereket egy tömbként adjuk át. 
+	De arra is jó, hogy tömbként lehessen átadni az argumentum-listát egy bármilyen funkciónak így:
+	function lista(listaelem1,listaelem2,listaelem3) {
+    console.log(listaelem1,'\n',listaelem2,'\n',listaelem3);
+	}
+	
+	lista.apply(null,["első pont","második pont","harmadik pont"])
+	Itt jól látható, hogy a this paramétert itt is elvárja, de ha az null, akkor nem keresi tovább!
+
+Function.prototype.bind()
+____________________________________________
+
+Olyan funkció, ami létrehoz egy másolatot az eredeti funkcióból, és abban a funkción belüli this értékét a megadott értékre állítja be. This kulcsszót konstruktor, vagy class típusú funkciókban használunk általában, tehát annak key:-hez kapcsolt funkciókról van szó. pl.:
+let dog= { name: "dog" bark: function(){alert(this.name + 'says: Wuff!')} }
+A dog.bark nekünk megfelelő funkció.
+Legyen pl. egy másik objektum egy másik funkcióval:
+let parrot = {name:"parrot", chirp: function(){alert(this.name + 'says: Chirp!')} }  
+Használhatjuk a .bind-ot arra, hogy kölcsönvegyünk egy másik this-t a dog-tól a parottba így:
+
+let speak = dog.bark.bind(parrot);
+//expected output: "parrot says: Wuff!" -
+Itt a dog.bark funkciónak a this értékét a parrot objektum this értékére cseréltük, így lett ez az eredmény.
+
+A .bind-al meghívott funkció első paraméterét a bind fogja megkapni, a többi megy az eredeti funkcióba így:
+
+let ujFunkcio = eredetiFn.bind(thistMeghatarozoObjektum,eredetiFnnek SzántArgumentumok);
+
+REACT-ban arra szokás használni, hogy argumentumot kössünk egy funkcióhoz, amit még nem akarunk meghívni, csak pointert rakni belőle callback-ként egy JSXfunkcióba. Ebben az esetben nem a thistMeghatarozoObjektum-ot használjuk (azt null-ra állítjuk), hanem a többi argumentumot utána akarjuk előre meghatározni így:
+let reactCallbackFn = eredetiFn.bind( null, egyébadat)
+________________________________________
+ASZINKRON FUNKCIÓK
+________________________________________
+
+A) PROMISE - ÍGÉRETEK
+------------------
+
+Az igéret (Promise) olyan objektum a Js-ben, ami meghatároz egy kimenetelt arra az esetre, ha ha az igéret teljesül (resolve) és arra is, ha nem (reject). Ezek vizsgálata a kódrészlet lefutása után is folytatódik, tehát aszinkron. Legtöbbször egy szerver válasza dönti el, hogy teljesül-e az ígéret.  Egy callback funkciót kell bele tenni, aminek két argumentumot küld majd a Promise: az első helyen a resolve függvényt, a másodikon a reject függvényt. 
+A beépített Promise() Konstruktorral lehet csinálni (példányosítani) így:
+
+let ujIgeret = new Promise((resolve,reject) => {
+if(condition here) {
+    resolve("Az igéret teljesült");
+  } else {
+    reject("Promise was rejected");
+  }
+});
+
+Az ígéretnek 3 állapota lehet: 
+pending - azaz várjuk az eredményt, illetve teljesült (fulfilled) és nem teljesült (rejected). A resolve() és reject() argumentuma bármi lehet, nem csak string, gyakrabban egy függvény.
+
+Azt hogy mi történjen mikor végre teljesül az ígéret a .then paranccsal lehet elérni. Ez is egy callback függvényt vár, aminek lepaszolja a resolve eredményét (vagy azt az argumentumot csak, amit a resolve-nak küldünk - itt: "Az igéret teljesült" string). 
+Így:
+ujIgeret.then( (eredmenyAmitKaptam) => {amit kezdeni kell az eredmenyAmitKaptam-mal} ); - a teljesült ígéret kimenetét azaz a resolve() argumentumát kapja meg argumentumként a .then is. Itt az "Az igéret teljesült" stringet. HA a resolve() egy függvényt kapott volna, akkor meg annak az eredményét passzolná tovább a .then()-nek.
+
+Ha nem teljesül az igéret, akkor a reject() argumentumát küldjük be a .catch funkcióba, így:
+ujIgeret.catch(error => { amit akkor kezdjünk, ha visszautasították a kérést pl.});
+
+Összefoglalva: Három része van: Kell egy példány a promise-ból (itt:ujIgeret), majd egy .then(), ha teljesül, és egy .catch() ha nem teljesül mégse.
+így: 	const ujIgeret = new Promise((resolve,reject)=>{resolve('jó');reject('rossz')});
+	ujIgeret.then(resolveEredmenye =>{/* mit tegyek resolveEredmenye- vel */});
+	ujIgeret.catch(rejectEredmenye =>{/* mit tegyek rejectEredmenye- vel */});
+
+HASZNÁLHATÓ ARRA:
+1.) Hogy összevárjuk több aszinkron folyamat végét. Ekkor a
+Promise.all([egyikIgeretValtozoban,masikIgeretValtozoban]).then(resolveArgumentumArray => {/*Amit csináljon az összes resolve-be küldött argumentummal*/})
+- ITT minden példányosított ígéretet amit össze akarok várni egy tömbben adok be a Promise.all() beépített metódusba, és a .then is össze van vonva, az is egy minden beküldött példány resolve-ját tartalmazó array-t kap majd.
+2.) Hogy kiválaszzuk a leghamarabb teljesülő promise-t,
+Promise.race([egyikIgeretValtozoban,masikIgeretValtozoban]).then(resolveArgumentum => {/*Amit csináljon az elsőként teljesülő promise argumentumával*/}) 
+
+
+B) ASYNC és AWAIT
+----------------------------------------
+
+Az async és az await a Promise feldolgozását egyszerűsíti, de a Promise-ok továbbra is kellenek.
+
+Miután példányosítottuk a Promise-unkat (lásd előbb) elkészítjük az aszikron funkciónkat az async szó elé írásával. A függvény "hasába" a {}-ek közé pedig az await-el írjuk a Promise példányokat. Annál a SORnál, amiben await van megáll a futás, maga elé engedi a többi kódot, és csak akkor fut le, ha a hivatkozott Promise fulfilled lesz.  így:
+
+async function aszinkronFunkcio(){
+	const promiseEredménye = await ujIgeret; 
+	console.log(ujIgeret);
+} 
+
+Itt az előző szakasz példájából vett ujIgeret pormise objektum eredményét fogjuk használni. Mivel async a funkció, így lehet kiváratni a JS-el az ujIgeret eredményét, és csak akkor definiálja a promiseEredménye változót.
+
+Hogyan lehet az async függvény eredményét a függvényen kívül használni?
+Mivel az async függvény később fut csak le, ezért ő is kénytelen egy újabb Promise-t visszaadni. Ezért az async funkció eredményét a klasszikus .then()-el lehet használni.
+
+Ha rejected lesz a Promise, akkor viszont hiba keletkezik, ezért ha lehetséges, hogy rejected eredménye lesz egy ígéretnek, akkor az async funkcióban létre kell hozni egy try és egy catch blokkot is! Így:
+
+async function aszinkronFunkcio(){
+	try {
+	const promiseEredménye = await ujIgeret; 
+	console.log(ujIgeret);
+	} catch (rejectArgumentuma){
+	console.log(rejectArgumentuma);
+	}
+} 
+Itt a catch(error) blokk ugyanaz mint a .catch(error) volt a sima promise-nál.
+
+C) API kommunikáció aszinkron funkciókkal
+----------------------------------------
+fetch() - GET 
+
+A fetch() parancs egy Url-t fogad paraméterként, ahonnan várja vissza a http választ. (Alapból GET requestet küld, de második paraméterként beadható egy objektum amivel lehet POST-olni is. Lásd később.) Mivel a HTTP válasz aszinkron (nem várja be a Js az eredményt, hanem lefut közben a többi dolog), ezért egy promise-al tér vissza, amit a .then()-el kapcsolunk hozzá. A .then()-be is egy callback funkció kell, hogy amikor megjön a lekért adat, akkor mit tegyen vele.
+
+Így:
+fetch("https://webmania.cc/firstnames/zol.json").then(response =>console.log(response)); 
+- Itt simán csak kiíratom az eredményt, ami amúgy mivel JSON a válasz egy zagyvaság lesz. Ha le is akarom fordítani értelmes adattípusra, akkor használnom kell a .json() funkciót, ami szintén aszinkron (mivel egy nagyméretű adattömb lehet, és elhúzódhat a munka vele, ezt se várja be alapból a JS) Ekkor tehát szintén .then()-t kell csatolni, és abba írni, hogy mit kell kezdeni a fordított adattal.
+ÍGY:
+fetch("https://webmania.cc/firstnames/zol.json").then(response =>response).then(data => console.log(data)); 
+-itt akkor írja ki az adatot a konzolra, amikor kész a lefordítás is. 
+
+Forrás: https://www.youtube.com/watch?v=XkanrDjnKd0
+
+A response egy objektum lesz, ami tartalmaz egy rakás adatot és funkció lehetőséget amiket lehet használni. pl. van egy response.ok - ami összefoglalja a választ annyiban, hogy minden megérkezett-e redben (true), vagy volt vmi hiba (false).
+Mivel a response gyakran JSON formában jön, eleve van hozzá egy .json() funkció, ahogy az előző példa mutatta. (Ugyanazt csinálja, mint JSON.parse("JSON szövege");).
+
+
+Mivel a fetch() internetet használ, lehet, hogy a válasz nem is érkezik meg valamilyen okból, ekkorra kell egy másik lehetőséget is megadni (fail), ezt pedig a .catch()-el lehet.  A .catch() akkor fontos, ha a then nem valósul meg, ezért oda kell fűzni így:
+ fetch('https://swapi.dev/api/planets/1/').then(/*callback, ha megérkezik a válasz*/).catch(/*callback, ha  nem érkezik meg a válasz*/);
+
+fetch() - POST
+forrás:
+https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+fetch('http://url.com' ,{ method: 'POST', 
+body: JSON.stringify(data), 
+headers:{"Content-Type": "application/json",} })
+_________________________________________________________
+TRY, CATCH, FINALLY, THROW
+--------------------------------------------------------
+The try{} statement defines a code block to run (to try). It allows you to define a block of code to be tested for errors while it is being executed. A try{} blokkba írt kód csak addig a sorig fut le, amíg a hiba meg nem történik, utána azonnal továbblép a catch(error){} blokkra. DE!! A TRY BLOKKON KÍVÜLI KÓD ZAVARTALANUL LEFUT!
+
+The catch(err){} statement defines a code block to handle any error. - Fontos! itt csak a kódban lévő hibát veszi hibának, ha nem jön meg az adat egy API-tól pl, az neki nem hiba! (Megoldása a throw-nál kifejtve.) The catch statement allows you to define a block of code to be executed, if an error occurs in the try block.
+
+The JavaScript statements try and catch come in pairs: (hasonlóan az if-else-hez, csak itt kötelező is talán a catch a try után.)
+
+try { /*Block of code to try*/ }
+catch(err) { /* Block of code to handle errors */ } 
+// -itt az err egy belső név, ami alapján lekérdezhetővé válik a visszadott objektum. 
+
+The throw{} statement defines a custom error. EZ használható arra, hogy a visszautasított API hívást is hibának jelezhessük. Ez úgy oldható meg, hogy fetch() által visszadott Promise objektum .ok key-re rákérdezünk. Ennek a value párja akkor true, ha megjött a válasz rendben, tehát ha nem, akkor dobhatunk be custom hibát így:
+
+const response = await fetch("https://swapi.dev/api/films/"); //-fetch válasz kifejezés létrehozása ami egy objektumot ad vissza (.ok key-el) 
+
+if(!response.ok){ throw new Error('Something went wrong here!'); } // -Itt 
+létrehozunk egy új hiba objektumot, amit már észlel try{} blokk és ezzel aktiválja a catch(hiba){} blokkot. Fontos! Ahhoz, hogy a try{} észlelje, abba kell beletenni így: try { throw new Error('Hiba') };
+
+The finally{} statement defines a code block to run regardless of the result.
+
+_______________________________________________________________
+ADAT TÁROLÁSA A BÖNGÉSZŐBEN 
+forrás: https://www.youtube.com/watch?v=GihQAC1I39Q
+Három féle a van: a localStorage, a Session Storage és a Cookie
+Mindháromról infót lehet találni a Google Chrome devTools / Application tab / storage szakaszában!
+1. localStorage
+A böngészőben korlátlan ideig tárolhatunk vele információt, max 10 Mb (megaBit!) méretben. Egy objektum a localstorage, amiben csak string formájú adatot lehet a címkéhez társítani.
+Adat bevitele:
+localStorage.setItem('név', 'adat mindig string formában');
+De simán is lehet így : localStorage['név'] = "string adat";
+Törlés:
+localStorage.removeItem('név');
+localStorage.clear() - Ekkor minden címkét adatostul töröl. Mivel csak egy localStorage van, minden adatot kitöröl a böngésző localStorage-éből, akármelyik oldal is mentette oda! - Nem érdemes használni.
+Hozzáférés az adathoz:
+localStorage.getItem('cimkenév');
+De lehet csak simán mint egy objektumban: 
+localStorage['cimkenév'];
+
+2. sessionStorage
+Szintén a böngészőben tárolhatunk vele információt, de max csak 5 Mb (megaBit!) méretben, és csak addig míg az aktuális böngésző fület (Tab) be nem zárjuk.
+Ugyanúgy egy objektumként működik, amiben csak string formájú adatot lehet a címkéhez társítani, és még a motódusok is pont ugyanazok (.getItem, setItem, stb..)
+
+3. cookie
+Ez is egy objektumhoz hasonló, amiknek azonban csak meghatározott címkéi lehetnek, illetve van neki forrása, lejárati (érvényességi) ideje, stb. Ez is megmarad miután becsukjuk a böngészőt, de ha lejár az érvényességi ideje, akkor már nem szokás figyelembe venni. Ez a legrégebb óta létező böngészős tárolási módszer. Ez különbözik az előzőektől, (nehézkesebb). Ezt nem lehet helyileg beállítani, csak ha szerverről jön.
+cookie címkéinek beállítása:
+document.cookie = "key=value; expires=" + new Date('2024-02-01').toUTCString()
+ITT: van egy key:value pár, ami ugyanaz, mint minden objektumban, de itt mindegyik key:value-hoz tartozik még számos más opcionális attribútum, mint:
+lejárati idő: expires - aminek az értéke UTC stringben kell legyen, ezért érdemes egy Date() objektum .toUTCString()-methódusával legeneráltatni.
+
+
+
+
+
+
+
+
